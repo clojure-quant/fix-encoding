@@ -1,288 +1,505 @@
 {:messages [{:name "Heartbeat",
              :msgtype "0",
              :category "admin",
-             :fields ({:field-name "TestReqID",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "TestReqID",
+                              :required "N"})}
             {:name "Logon",
              :msgtype "A",
              :category "admin",
-             :fields ({:field-name "EncryptMethod",
-                       :required "Y"}
-                      {:field-name "HeartBtInt",
-                       :required "Y"}
-                      {:field-name "RawDataLength",
-                       :required "N"}
-                      {:field-name "RawData", :required "N"}
-                      {:field-name "ResetSeqNumFlag",
-                       :required "N"}
-                      {:field-name "NextExpectedMsgSeqNum",
-                       :required "N"}
-                      {:field-name "MaxMessageSize",
-                       :required "N"}
-                      {:field-name "TestMessageIndicator",
-                       :required "N"}
-                      {:field-name "Username",
-                       :required "N"}
-                      {:field-name "Password",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "EncryptMethod",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "HeartBtInt",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "RawDataLength",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "RawData",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "ResetSeqNumFlag",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "NextExpectedMsgSeqNum",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "MaxMessageSize",
+                              :required "N"}
+                             {:type :group,
+                              :group-name "NoMsgTypes",
+                              :required "N",
+                              :fields ({:field-name "RefMsgType",
+                                        :required "N"}
+                                       {:field-name "MsgDirection",
+                                        :required "N"})}
+                             {:type :field,
+                              :field-name "TestMessageIndicator",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Username",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Password",
+                              :required "N"})}
             {:name "TestRequest",
              :msgtype "1",
              :category "admin",
-             :fields ({:field-name "TestReqID",
-                       :required "Y"})}
+             :fields-groups ({:type :field,
+                              :field-name "TestReqID",
+                              :required "Y"})}
             {:name "ResendRequest",
              :msgtype "2",
              :category "admin",
-             :fields ({:field-name "BeginSeqNo",
-                       :required "Y"}
-                      {:field-name "EndSeqNo",
-                       :required "Y"})}
+             :fields-groups ({:type :field,
+                              :field-name "BeginSeqNo",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "EndSeqNo",
+                              :required "Y"})}
             {:name "Reject",
              :msgtype "3",
              :category "admin",
-             :fields ({:field-name "RefSeqNum",
-                       :required "Y"}
-                      {:field-name "RefTagID",
-                       :required "N"}
-                      {:field-name "RefMsgType",
-                       :required "N"}
-                      {:field-name "SessionRejectReason",
-                       :required "N"}
-                      {:field-name "Text", :required "N"}
-                      {:field-name "EncodedTextLen",
-                       :required "N"}
-                      {:field-name "EncodedText",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "RefSeqNum",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "RefTagID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "RefMsgType",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "SessionRejectReason",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Text",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedTextLen",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedText",
+                              :required "N"})}
             {:name "SequenceReset",
              :msgtype "4",
              :category "admin",
-             :fields ({:field-name "GapFillFlag",
-                       :required "N"}
-                      {:field-name "NewSeqNo",
-                       :required "Y"})}
+             :fields-groups ({:type :field,
+                              :field-name "GapFillFlag",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "NewSeqNo",
+                              :required "Y"})}
             {:name "Logout",
              :msgtype "5",
              :category "admin",
-             :fields ({:field-name "Text", :required "N"}
-                      {:field-name "EncodedTextLen",
-                       :required "N"}
-                      {:field-name "EncodedText",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "Text",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedTextLen",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedText",
+                              :required "N"})}
             {:name "BusinessMessageReject",
              :msgtype "j",
              :category "app",
-             :fields ({:field-name "RefSeqNum",
-                       :required "N"}
-                      {:field-name "RefMsgType",
-                       :required "N"}
-                      {:field-name "BusinessRejectRefID",
-                       :required "N"}
-                      {:field-name "BusinessRejectReason",
-                       :required "Y"}
-                      {:field-name "Text", :required "N"}
-                      {:field-name "EncodedTextLen",
-                       :required "N"}
-                      {:field-name "EncodedText",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "RefSeqNum",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "RefMsgType",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "BusinessRejectRefID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "BusinessRejectReason",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Text",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedTextLen",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedText",
+                              :required "N"})}
             {:name "MarketDataRequest",
              :msgtype "V",
              :category "app",
-             :fields ({:field-name "MDReqID", :required "Y"}
-                      {:field-name "SubscriptionRequestType",
-                       :required "Y"}
-                      {:field-name "MarketDepth",
-                       :required "Y"}
-                      {:field-name "MDUpdateType",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "MDReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "SubscriptionRequestType",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "MarketDepth",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "MDUpdateType",
+                              :required "N"}
+                             {:type :group,
+                              :group-name "NoMDEntryTypes",
+                              :required "Y",
+                              :fields ({:field-name "MDEntryType",
+                                        :required "Y"})}
+                             {:type :group,
+                              :group-name "NoRelatedSym",
+                              :required "Y",
+                              :fields ({:field-name "Symbol",
+                                        :required "Y"})})}
             {:name "MarketDataIncrementalRefresh",
              :msgtype "X",
              :category "app",
-             :fields ({:field-name "MDReqID", :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "MDReqID",
+                              :required "N"}
+                             {:type :group,
+                              :group-name "NoMDEntries",
+                              :required "Y",
+                              :fields ({:field-name "MDUpdateAction",
+                                        :required "Y"}
+                                       {:field-name "MDEntryType",
+                                        :required "N"}
+                                       {:field-name "MDEntryID",
+                                        :required "Y"}
+                                       {:field-name "Symbol",
+                                        :required "Y"}
+                                       {:field-name "MDEntryPx",
+                                        :required "N"}
+                                       {:field-name "MDEntrySize",
+                                        :required "N"})})}
             {:name "MarketDataRequestReject",
              :msgtype "Y",
              :category "app",
-             :fields ({:field-name "MDReqID", :required "Y"}
-                      {:field-name "MDReqRejReason",
-                       :required "N"}
-                      {:field-name "Text", :required "N"}
-                      {:field-name "EncodedTextLen",
-                       :required "N"}
-                      {:field-name "EncodedText",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "MDReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "MDReqRejReason",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Text",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedTextLen",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "EncodedText",
+                              :required "N"})}
             {:name "MarketDataSnapshotFullRefresh",
              :msgtype "W",
              :category "app",
-             :fields ({:field-name "MDReqID", :required "N"}
-                      {:field-name "Symbol", :required "Y"})}
+             :fields-groups ({:type :field,
+                              :field-name "MDReqID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Symbol",
+                              :required "Y"}
+                             {:type :group,
+                              :group-name "NoMDEntries",
+                              :required "Y",
+                              :fields ({:field-name "MDEntryType",
+                                        :required "Y"}
+                                       {:field-name "QuoteEntryID",
+                                        :required "N"}
+                                       {:field-name "MDEntryPx",
+                                        :required "Y"}
+                                       {:field-name "MDEntrySize",
+                                        :required "N"}
+                                       {:field-name "MDEntryID",
+                                        :required "N"})})}
             {:name "OrderMassStatusRequest",
              :msgtype "AF",
              :category "app",
-             :fields ({:field-name "MassStatusReqID",
-                       :required "Y"}
-                      {:field-name "MassStatusReqType",
-                       :required "Y"}
-                      {:field-name "IssueDate",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "MassStatusReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "MassStatusReqType",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "IssueDate",
+                              :required "N"})}
             {:name "ExecutionReport",
              :msgtype "8",
              :category "app",
-             :fields ({:field-name "OrderID", :required "Y"}
-                      {:field-name "ClOrdID", :required "N"}
-                      {:field-name "OrigClOrdID",
-                       :required "N"}
-                      {:field-name "TotNumReports",
-                       :required "N"}
-                      {:field-name "ExecType",
-                       :required "Y"}
-                      {:field-name "OrdStatus",
-                       :required "Y"}
-                      {:field-name "Symbol", :required "N"}
-                      {:field-name "Side", :required "N"}
-                      {:field-name "OrderQty",
-                       :required "N"}
-                      {:field-name "OrdType", :required "N"}
-                      {:field-name "Price", :required "N"}
-                      {:field-name "StopPx", :required "N"}
-                      {:field-name "TimeInForce",
-                       :required "N"}
-                      {:field-name "ExpireTime",
-                       :required "N"}
-                      {:field-name "LastQty", :required "N"}
-                      {:field-name "LastPx", :required "N"}
-                      {:field-name "LeavesQty",
-                       :required "N"}
-                      {:field-name "CumQty", :required "N"}
-                      {:field-name "AvgPx", :required "N"}
-                      {:field-name "TransactTime",
-                       :required "N"}
-                      {:field-name "Text", :required "N"}
-                      {:field-name "OrdRejReason",
-                       :required "N"}
-                      {:field-name "PosMaintRptID",
-                       :required "N"}
-                      {:field-name "Designation",
-                       :required "N"}
-                      {:field-name "MassStatusReqID",
-                       :required "N"}
-                      {:field-name "AbsoluteTP",
-                       :required "N"}
-                      {:field-name "RelativeTP",
-                       :required "N"}
-                      {:field-name "AbsoluteSL",
-                       :required "N"}
-                      {:field-name "RelativeSL",
-                       :required "N"}
-                      {:field-name "TrailingSL",
-                       :required "N"}
-                      {:field-name "TriggerMethodSL",
-                       :required "N"}
-                      {:field-name "GuaranteedSL",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "OrderID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "ClOrdID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "OrigClOrdID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TotNumReports",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "ExecType",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "OrdStatus",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Symbol",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Side",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "OrderQty",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "OrdType",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Price",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "StopPx",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TimeInForce",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "ExpireTime",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "LastQty",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "LastPx",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "LeavesQty",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "CumQty",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "AvgPx",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TransactTime",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Text",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "OrdRejReason",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "PosMaintRptID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Designation",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "MassStatusReqID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "AbsoluteTP",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "RelativeTP",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "AbsoluteSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "RelativeSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TrailingSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TriggerMethodSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "GuaranteedSL",
+                              :required "N"})}
             {:name "NewOrderSingle",
              :msgtype "D",
              :category "app",
-             :fields ({:field-name "ClOrdID", :required "Y"}
-                      {:field-name "Symbol", :required "Y"}
-                      {:field-name "Side", :required "Y"}
-                      {:field-name "TransactTime",
-                       :required "Y"}
-                      {:field-name "OrderQty",
-                       :required "Y"}
-                      {:field-name "OrdType", :required "Y"}
-                      {:field-name "Price", :required "N"}
-                      {:field-name "StopPx", :required "N"}
-                      {:field-name "TimeInForce",
-                       :required "N"}
-                      {:field-name "ExpireTime",
-                       :required "N"}
-                      {:field-name "PosMaintRptID",
-                       :required "N"}
-                      {:field-name "Designation",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "ClOrdID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Symbol",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Side",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "TransactTime",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "OrderQty",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "OrdType",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Price",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "StopPx",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TimeInForce",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "ExpireTime",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "PosMaintRptID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "Designation",
+                              :required "N"})}
             {:name "OrderStatusRequest",
              :msgtype "H",
              :category "app",
-             :fields ({:field-name "ClOrdID", :required "Y"}
-                      {:field-name "Side", :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "ClOrdID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Side",
+                              :required "N"})}
             {:name "OrderCancelRequest",
              :msgtype "F",
              :category "app",
-             :fields ({:field-name "OrigClOrdID",
-                       :required "Y"}
-                      {:field-name "OrderID", :required "N"}
-                      {:field-name "ClOrdID", :required "Y"})}
+             :fields-groups ({:type :field,
+                              :field-name "OrigClOrdID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "OrderID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "ClOrdID",
+                              :required "Y"})}
             {:name "OrderCancelReplaceRequest",
              :msgtype "G",
              :category "app",
-             :fields ({:field-name "OrderID", :required "N"}
-                      {:field-name "OrigClOrdID",
-                       :required "Y"}
-                      {:field-name "ClOrdID", :required "Y"}
-                      {:field-name "OrderQty",
-                       :required "Y"}
-                      {:field-name "Price", :required "N"}
-                      {:field-name "StopPx", :required "N"}
-                      {:field-name "ExpireTime",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "OrderID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "OrigClOrdID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "ClOrdID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "OrderQty",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Price",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "StopPx",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "ExpireTime",
+                              :required "N"})}
             {:name "OrderCancelReject",
              :msgtype "9",
              :category "app",
-             :fields ({:field-name "OrderID", :required "Y"}
-                      {:field-name "ClOrdID", :required "Y"}
-                      {:field-name "OrigClOrdID",
-                       :required "N"}
-                      {:field-name "OrdStatus",
-                       :required "Y"}
-                      {:field-name "CxlRejResponseTo",
-                       :required "Y"}
-                      {:field-name "Text", :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "OrderID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "ClOrdID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "OrigClOrdID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "OrdStatus",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "CxlRejResponseTo",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Text",
+                              :required "N"})}
             {:name "RequestForPositions",
              :msgtype "AN",
              :category "app",
-             :fields ({:field-name "PosReqID",
-                       :required "Y"}
-                      {:field-name "PosMaintRptID",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "PosReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "PosMaintRptID",
+                              :required "N"})}
             {:name "PositionReport",
              :msgtype "AP",
              :category "app",
-             :fields ({:field-name "PosReqID",
-                       :required "Y"}
-                      {:field-name "PosMaintRptID",
-                       :required "N"}
-                      {:field-name "TotalNumPosReports",
-                       :required "Y"}
-                      {:field-name "PosReqResult",
-                       :required "Y"}
-                      {:field-name "Symbol", :required "N"}
-                      {:field-name "SettlPrice",
-                       :required "N"}
-                      {:field-name "AbsoluteTP",
-                       :required "N"}
-                      {:field-name "AbsoluteSL",
-                       :required "N"}
-                      {:field-name "TrailingSL",
-                       :required "N"}
-                      {:field-name "TriggerMethodSL",
-                       :required "N"}
-                      {:field-name "GuaranteedSL",
-                       :required "N"})}
+             :fields-groups ({:type :field,
+                              :field-name "PosReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "PosMaintRptID",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TotalNumPosReports",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "PosReqResult",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "Symbol",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "SettlPrice",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "AbsoluteTP",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "AbsoluteSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TrailingSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "TriggerMethodSL",
+                              :required "N"}
+                             {:type :field,
+                              :field-name "GuaranteedSL",
+                              :required "N"})}
             {:name "SecurityListRequest",
              :msgtype "x",
              :category "app",
-             :fields ({:field-name "SecurityReqID",
-                       :required "Y"}
-                      {:field-name "SecurityListRequestType",
-                       :required "Y"})}
+             :fields-groups ({:type :field,
+                              :field-name "SecurityReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "SecurityListRequestType",
+                              :required "Y"})}
             {:name "SecurityList",
              :msgtype "y",
              :category "app",
-             :fields ({:field-name "SecurityReqID",
-                       :required "Y"}
-                      {:field-name "SecurityResponseID",
-                       :required "Y"}
-                      {:field-name "SecurityRequestResult",
-                       :required "Y"})}],
+             :fields-groups ({:type :field,
+                              :field-name "SecurityReqID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "SecurityResponseID",
+                              :required "Y"}
+                             {:type :field,
+                              :field-name "SecurityRequestResult",
+                              :required "Y"}
+                             {:type :group,
+                              :group-name "NoRelatedSym",
+                              :required "N",
+                              :fields ()})}],
  :fields [{:number "6",
            :name "AvgPx",
            :type "PRICE",
@@ -330,33 +547,53 @@
           {:number "35",
            :name "MsgType",
            :type "STRING",
-           :values ("HEARTBEAT"
-                    "TEST_REQUEST"
-                    "RESEND_REQUEST"
-                    "REJECT"
-                    "SEQUENCE_RESET"
-                    "LOGOUT"
-                    "EXECUTION_REPORT"
-                    "ORDER_CANCEL_REJECT"
-                    "LOGON"
-                    "ORDER_SINGLE"
-                    "ORDER_LIST"
-                    "ORDER_CANCEL_REQUEST"
-                    "ORDER_CANCEL_REPLACE_REQUEST"
-                    "ORDER_STATUS_REQUEST"
-                    "MARKET_DATA_REQUEST"
-                    "MARKET_DATA_SNAPSHOT_FULL_REFRESH"
-                    "MARKET_DATA_INCREMENTAL_REFRESH"
-                    "MARKET_DATA_REQUEST_REJECT"
-                    "BUSINESS_MESSAGE_REJECT"
-                    "SECURITY_TYPE_REQUEST"
-                    "SECURITY_TYPES"
-                    "SECURITY_LIST_REQUEST"
-                    "SECURITY_LIST"
-                    "ORDER_MASS_STATUS_REQUEST"
-                    "REQUEST_FOR_POSITIONS"
-                    "REQUEST_FOR_POSITIONS_ACK"
-                    "POSITION_REPORT")}
+           :values ({:enum "0", :description "HEARTBEAT"}
+                    {:enum "1", :description "TEST_REQUEST"}
+                    {:enum "2",
+                     :description "RESEND_REQUEST"}
+                    {:enum "3", :description "REJECT"}
+                    {:enum "4",
+                     :description "SEQUENCE_RESET"}
+                    {:enum "5", :description "LOGOUT"}
+                    {:enum "8",
+                     :description "EXECUTION_REPORT"}
+                    {:enum "9",
+                     :description "ORDER_CANCEL_REJECT"}
+                    {:enum "A", :description "LOGON"}
+                    {:enum "D", :description "ORDER_SINGLE"}
+                    {:enum "E", :description "ORDER_LIST"}
+                    {:enum "F",
+                     :description "ORDER_CANCEL_REQUEST"}
+                    {:enum "G",
+                     :description "ORDER_CANCEL_REPLACE_REQUEST"}
+                    {:enum "H",
+                     :description "ORDER_STATUS_REQUEST"}
+                    {:enum "V",
+                     :description "MARKET_DATA_REQUEST"}
+                    {:enum "W",
+                     :description "MARKET_DATA_SNAPSHOT_FULL_REFRESH"}
+                    {:enum "X",
+                     :description "MARKET_DATA_INCREMENTAL_REFRESH"}
+                    {:enum "Y",
+                     :description "MARKET_DATA_REQUEST_REJECT"}
+                    {:enum "j",
+                     :description "BUSINESS_MESSAGE_REJECT"}
+                    {:enum "v",
+                     :description "SECURITY_TYPE_REQUEST"}
+                    {:enum "w",
+                     :description "SECURITY_TYPES"}
+                    {:enum "x",
+                     :description "SECURITY_LIST_REQUEST"}
+                    {:enum "y",
+                     :description "SECURITY_LIST"}
+                    {:enum "AF",
+                     :description "ORDER_MASS_STATUS_REQUEST"}
+                    {:enum "AN",
+                     :description "REQUEST_FOR_POSITIONS"}
+                    {:enum "AO",
+                     :description "REQUEST_FOR_POSITIONS_ACK"}
+                    {:enum "AP",
+                     :description "POSITION_REPORT"})}
           {:number "36",
            :name "NewSeqNo",
            :type "SEQNUM",
@@ -372,39 +609,52 @@
           {:number "39",
            :name "OrdStatus",
            :type "CHAR",
-           :values ("NEW"
-                    "PARTIALLY_FILLED"
-                    "FILLED"
-                    "CANCELED"
-                    "REPLACED"
-                    "REJECTED"
-                    "EXPIRED")}
+           :values ({:enum "0", :description "NEW"}
+                    {:enum "1",
+                     :description "PARTIALLY_FILLED"}
+                    {:enum "2", :description "FILLED"}
+                    {:enum "4", :description "CANCELED"}
+                    {:enum "5", :description "REPLACED"}
+                    {:enum "8", :description "REJECTED"}
+                    {:enum "C", :description "EXPIRED"})}
           {:number "40",
            :name "OrdType",
            :type "CHAR",
-           :values ("MARKET"
-                    "LIMIT"
-                    "STOP"
-                    "STOP_LIMIT"
-                    "MARKET_ON_CLOSE"
-                    "WITH_OR_WITHOUT"
-                    "LIMIT_OR_BETTER"
-                    "LIMIT_WITH_OR_WITHOUT"
-                    "ON_BASIS"
-                    "ON_CLOSE"
-                    "LIMIT_ON_CLOSE"
-                    "FOREX_MARKET"
-                    "PREVIOUSLY_QUOTED"
-                    "PREVIOUSLY_INDICATED"
-                    "FOREX_LIMIT"
-                    "FOREX_SWAP"
-                    "FOREX_PREVIOUSLY_QUOTED"
-                    "FUNARI"
-                    "MARKET_IF_TOUCHED"
-                    "MARKET_WITH_LEFTOVER_AS_LIMIT"
-                    "PREVIOUS_FUND_VALUATION_POINT"
-                    "NEXT_FUND_VALUATION_POINT"
-                    "PEGGED")}
+           :values ({:enum "1", :description "MARKET"}
+                    {:enum "2", :description "LIMIT"}
+                    {:enum "3", :description "STOP"}
+                    {:enum "4", :description "STOP_LIMIT"}
+                    {:enum "5",
+                     :description "MARKET_ON_CLOSE"}
+                    {:enum "6",
+                     :description "WITH_OR_WITHOUT"}
+                    {:enum "7",
+                     :description "LIMIT_OR_BETTER"}
+                    {:enum "8",
+                     :description "LIMIT_WITH_OR_WITHOUT"}
+                    {:enum "9", :description "ON_BASIS"}
+                    {:enum "A", :description "ON_CLOSE"}
+                    {:enum "B",
+                     :description "LIMIT_ON_CLOSE"}
+                    {:enum "C", :description "FOREX_MARKET"}
+                    {:enum "D",
+                     :description "PREVIOUSLY_QUOTED"}
+                    {:enum "E",
+                     :description "PREVIOUSLY_INDICATED"}
+                    {:enum "F", :description "FOREX_LIMIT"}
+                    {:enum "G", :description "FOREX_SWAP"}
+                    {:enum "H",
+                     :description "FOREX_PREVIOUSLY_QUOTED"}
+                    {:enum "I", :description "FUNARI"}
+                    {:enum "J",
+                     :description "MARKET_IF_TOUCHED"}
+                    {:enum "K",
+                     :description "MARKET_WITH_LEFTOVER_AS_LIMIT"}
+                    {:enum "L",
+                     :description "PREVIOUS_FUND_VALUATION_POINT"}
+                    {:enum "M",
+                     :description "NEXT_FUND_VALUATION_POINT"}
+                    {:enum "P", :description "PEGGED"})}
           {:number "41",
            :name "OrigClOrdID",
            :type "STRING",
@@ -436,22 +686,24 @@
           {:number "54",
            :name "Side",
            :type "CHAR",
-           :values ("BUY"
-                    "SELL"
-                    "BUY_MINUS"
-                    "SELL_PLUS"
-                    "SELL_SHORT"
-                    "SELL_SHORT_EXEMPT"
-                    "UNDISCLOSED"
-                    "CROSS"
-                    "CROSS_SHORT"
-                    "CROSS_SHORT_EXEMPT"
-                    "AS_DEFINED"
-                    "OPPOSITE"
-                    "SUBSCRIBE"
-                    "REDEEM"
-                    "LEND"
-                    "BORROW")}
+           :values ({:enum "1", :description "BUY"}
+                    {:enum "2", :description "SELL"}
+                    {:enum "3", :description "BUY_MINUS"}
+                    {:enum "4", :description "SELL_PLUS"}
+                    {:enum "5", :description "SELL_SHORT"}
+                    {:enum "6",
+                     :description "SELL_SHORT_EXEMPT"}
+                    {:enum "7", :description "UNDISCLOSED"}
+                    {:enum "8", :description "CROSS"}
+                    {:enum "9", :description "CROSS_SHORT"}
+                    {:enum "A",
+                     :description "CROSS_SHORT_EXEMPT"}
+                    {:enum "B", :description "AS_DEFINED"}
+                    {:enum "C", :description "OPPOSITE"}
+                    {:enum "D", :description "SUBSCRIBE"}
+                    {:enum "E", :description "REDEEM"}
+                    {:enum "F", :description "LEND"}
+                    {:enum "G", :description "BORROW"})}
           {:number "55",
            :name "Symbol",
            :type "STRING",
@@ -471,14 +723,19 @@
           {:number "59",
            :name "TimeInForce",
            :type "CHAR",
-           :values ("DAY"
-                    "GOOD_TILL_CANCEL"
-                    "AT_THE_OPENING"
-                    "IMMEDIATE_OR_CANCEL"
-                    "FILL_OR_KILL"
-                    "GOOD_TILL_CROSSING"
-                    "GOOD_TILL_DATE"
-                    "AT_THE_CLOSE")}
+           :values ({:enum "0", :description "DAY"}
+                    {:enum "1",
+                     :description "GOOD_TILL_CANCEL"}
+                    {:enum "2",
+                     :description "AT_THE_OPENING"}
+                    {:enum "3",
+                     :description "IMMEDIATE_OR_CANCEL"}
+                    {:enum "4", :description "FILL_OR_KILL"}
+                    {:enum "5",
+                     :description "GOOD_TILL_CROSSING"}
+                    {:enum "6",
+                     :description "GOOD_TILL_DATE"}
+                    {:enum "7", :description "AT_THE_CLOSE"})}
           {:number "60",
            :name "TransactTime",
            :type "UTCTIMESTAMP",
@@ -486,7 +743,10 @@
           {:number "77",
            :name "PositionEffect",
            :type "CHAR",
-           :values ("OPEN" "CLOSE" "ROLLED" "FIFO")}
+           :values ({:enum "O", :description "OPEN"}
+                    {:enum "C", :description "CLOSE"}
+                    {:enum "R", :description "ROLLED"}
+                    {:enum "F", :description "FIFO"})}
           {:number "89",
            :name "Signature",
            :type "DATA",
@@ -518,13 +778,13 @@
           {:number "98",
            :name "EncryptMethod",
            :type "INT",
-           :values ("NONE_OTHER"
-                    "PKCS"
-                    "DES"
-                    "PKCS_DES"
-                    "PGP_DES"
-                    "PGP_DES_MD5"
-                    "PEM_DES_MD5")}
+           :values ({:enum "0", :description "NONE_OTHER"}
+                    {:enum "1", :description "PKCS"}
+                    {:enum "2", :description "DES"}
+                    {:enum "3", :description "PKCS_DES"}
+                    {:enum "4", :description "PGP_DES"}
+                    {:enum "5", :description "PGP_DES_MD5"}
+                    {:enum "6", :description "PEM_DES_MD5"})}
           {:number "99",
            :name "StopPx",
            :type "PRICE",
@@ -532,23 +792,38 @@
           {:number "103",
            :name "OrdRejReason",
            :type "INT",
-           :values ("BROKER_EXCHANGE_OPTION"
-                    "UNKNOWN_SYMBOL"
-                    "EXCHANGE_CLOSED"
-                    "ORDER_EXCEEDS_LIMIT"
-                    "TOO_LATE_TO_ENTER"
-                    "UNKNOWN_ORDER"
-                    "DUPLICATE_ORDER"
-                    "DUPLICATE_OF_A_VERBALLY_COMMUNICATED_ORDER"
-                    "STALE_ORDER"
-                    "TRADE_ALONG_REQUIRED"
-                    "INVALID_INVESTOR_ID"
-                    "UNSUPPORTED_ORDER_CHARACTERISTIC"
-                    "SURVEILLENCE_OPTION"
-                    "INCORRECT_QUANTITY"
-                    "INCORRECT_ALLOCATED_QUANTITY"
-                    "UNKNOWN_ACCOUNT"
-                    "OTHER")}
+           :values ({:enum "0",
+                     :description "BROKER_EXCHANGE_OPTION"}
+                    {:enum "1",
+                     :description "UNKNOWN_SYMBOL"}
+                    {:enum "2",
+                     :description "EXCHANGE_CLOSED"}
+                    {:enum "3",
+                     :description "ORDER_EXCEEDS_LIMIT"}
+                    {:enum "4",
+                     :description "TOO_LATE_TO_ENTER"}
+                    {:enum "5",
+                     :description "UNKNOWN_ORDER"}
+                    {:enum "6",
+                     :description "DUPLICATE_ORDER"}
+                    {:enum "7",
+                     :description "DUPLICATE_OF_A_VERBALLY_COMMUNICATED_ORDER"}
+                    {:enum "8", :description "STALE_ORDER"}
+                    {:enum "9",
+                     :description "TRADE_ALONG_REQUIRED"}
+                    {:enum "10",
+                     :description "INVALID_INVESTOR_ID"}
+                    {:enum "11",
+                     :description "UNSUPPORTED_ORDER_CHARACTERISTIC"}
+                    {:enum "12",
+                     :description "SURVEILLENCE_OPTION"}
+                    {:enum "13",
+                     :description "INCORRECT_QUANTITY"}
+                    {:enum "14",
+                     :description "INCORRECT_ALLOCATED_QUANTITY"}
+                    {:enum "15",
+                     :description "UNKNOWN_ACCOUNT"}
+                    {:enum "99", :description "OTHER"})}
           {:number "108",
            :name "HeartBtInt",
            :type "INT",
@@ -616,13 +891,13 @@
           {:number "150",
            :name "ExecType",
            :type "CHAR",
-           :values ("NEW"
-                    "CANCELED"
-                    "REPLACE"
-                    "REJECTED"
-                    "EXPIRED"
-                    "TRADE"
-                    "ORDER_STATUS")}
+           :values ({:enum "0", :description "NEW"}
+                    {:enum "4", :description "CANCELED"}
+                    {:enum "5", :description "REPLACE"}
+                    {:enum "8", :description "REJECTED"}
+                    {:enum "C", :description "EXPIRED"}
+                    {:enum "F", :description "TRADE"}
+                    {:enum "I", :description "ORDER_STATUS"})}
           {:number "151",
            :name "LeavesQty",
            :type "QTY",
@@ -638,9 +913,11 @@
           {:number "263",
            :name "SubscriptionRequestType",
            :type "CHAR",
-           :values ("SNAPSHOT"
-                    "SNAPSHOT_PLUS_UPDATES"
-                    "DISABLE_PREVIOUS_SNAPSHOT_PLUS_UPDATE_REQUEST")}
+           :values ({:enum "0", :description "SNAPSHOT"}
+                    {:enum "1",
+                     :description "SNAPSHOT_PLUS_UPDATES"}
+                    {:enum "2",
+                     :description "DISABLE_PREVIOUS_SNAPSHOT_PLUS_UPDATE_REQUEST"})}
           {:number "264",
            :name "MarketDepth",
            :type "INT",
@@ -648,7 +925,9 @@
           {:number "265",
            :name "MDUpdateType",
            :type "INT",
-           :values ("FULL_REFRESH" "INCREMENTAL_REFRESH")}
+           :values ({:enum "0", :description "FULL_REFRESH"}
+                    {:enum "1",
+                     :description "INCREMENTAL_REFRESH"})}
           {:number "267",
            :name "NoMDEntryTypes",
            :type "NUMINGROUP",
@@ -660,19 +939,26 @@
           {:number "269",
            :name "MDEntryType",
            :type "CHAR",
-           :values ("BID"
-                    "OFFER"
-                    "TRADE"
-                    "INDEX_VALUE"
-                    "OPENING_PRICE"
-                    "CLOSING_PRICE"
-                    "SETTLEMENT_PRICE"
-                    "TRADING_SESSION_HIGH_PRICE"
-                    "TRADING_SESSION_LOW_PRICE"
-                    "TRADING_SESSION_VWAP_PRICE"
-                    "IMBALANCE"
-                    "TRADE_VOLUME"
-                    "OPEN_INTEREST")}
+           :values ({:enum "0", :description "BID"}
+                    {:enum "1", :description "OFFER"}
+                    {:enum "2", :description "TRADE"}
+                    {:enum "3", :description "INDEX_VALUE"}
+                    {:enum "4",
+                     :description "OPENING_PRICE"}
+                    {:enum "5",
+                     :description "CLOSING_PRICE"}
+                    {:enum "6",
+                     :description "SETTLEMENT_PRICE"}
+                    {:enum "7",
+                     :description "TRADING_SESSION_HIGH_PRICE"}
+                    {:enum "8",
+                     :description "TRADING_SESSION_LOW_PRICE"}
+                    {:enum "9",
+                     :description "TRADING_SESSION_VWAP_PRICE"}
+                    {:enum "A", :description "IMBALANCE"}
+                    {:enum "B", :description "TRADE_VOLUME"}
+                    {:enum "C",
+                     :description "OPEN_INTEREST"})}
           {:number "270",
            :name "MDEntryPx",
            :type "PRICE",
@@ -688,23 +974,38 @@
           {:number "279",
            :name "MDUpdateAction",
            :type "CHAR",
-           :values ("NEW" "CHANGE" "DELETE")}
+           :values ({:enum "0", :description "NEW"}
+                    {:enum "1", :description "CHANGE"}
+                    {:enum "2", :description "DELETE"})}
           {:number "281",
            :name "MDReqRejReason",
            :type "CHAR",
-           :values ("UNKNOWN_SYMBOL"
-                    "DUPLICATE_MDREQID"
-                    "INSUFFICIENT_BANDWIDTH"
-                    "INSUFFICIENT_PERMISSIONS"
-                    "UNSUPPORTED_SUBSCRIPTIONREQUESTTYPE"
-                    "UNSUPPORTED_MARKETDEPTH"
-                    "UNSUPPORTED_MDUPDATETYPE"
-                    "UNSUPPORTED_AGGREGATEDBOOK"
-                    "UNSUPPORTED_MDENTRYTYPE"
-                    "UNSUPPORTED_TRADINGSESSIONID"
-                    "UNSUPPORTED_SCOPE"
-                    "UNSUPPORTED_OPENCLOSESETTLEFLAG"
-                    "UNSUPPORTED_MDIMPLICITDELETE")}
+           :values ({:enum "0",
+                     :description "UNKNOWN_SYMBOL"}
+                    {:enum "1",
+                     :description "DUPLICATE_MDREQID"}
+                    {:enum "2",
+                     :description "INSUFFICIENT_BANDWIDTH"}
+                    {:enum "3",
+                     :description "INSUFFICIENT_PERMISSIONS"}
+                    {:enum "4",
+                     :description "UNSUPPORTED_SUBSCRIPTIONREQUESTTYPE"}
+                    {:enum "5",
+                     :description "UNSUPPORTED_MARKETDEPTH"}
+                    {:enum "6",
+                     :description "UNSUPPORTED_MDUPDATETYPE"}
+                    {:enum "7",
+                     :description "UNSUPPORTED_AGGREGATEDBOOK"}
+                    {:enum "8",
+                     :description "UNSUPPORTED_MDENTRYTYPE"}
+                    {:enum "9",
+                     :description "UNSUPPORTED_TRADINGSESSIONID"}
+                    {:enum "A",
+                     :description "UNSUPPORTED_SCOPE"}
+                    {:enum "B",
+                     :description "UNSUPPORTED_OPENCLOSESETTLEFLAG"}
+                    {:enum "C",
+                     :description "UNSUPPORTED_MDIMPLICITDELETE"})}
           {:number "299",
            :name "QuoteEntryID",
            :type "STRING",
@@ -720,10 +1021,12 @@
           {:number "347",
            :name "MessageEncoding",
            :type "STRING",
-           :values ("ISO_2022_JP"
-                    "EUC_JP"
-                    "SHIFT_JIS"
-                    "UTF_8")}
+           :values ({:enum "ISO-2022-JP",
+                     :description "ISO_2022_JP"}
+                    {:enum "EUC-JP", :description "EUC_JP"}
+                    {:enum "SHIFT_JIS",
+                     :description "SHIFT_JIS"}
+                    {:enum "UTF-8", :description "UTF_8"})}
           {:number "354",
            :name "EncodedTextLen",
            :type "LENGTH",
@@ -747,25 +1050,43 @@
           {:number "373",
            :name "SessionRejectReason",
            :type "INT",
-           :values ("INVALID_TAG_NUMBER"
-                    "REQUIRED_TAG_MISSING"
-                    "TAG_NOT_DEFINED_FOR_THIS_MESSAGE_TYPE"
-                    "UNDEFINED_TAG"
-                    "TAG_SPECIFIED_WITHOUT_A_VALUE"
-                    "VALUE_IS_INCORRECT"
-                    "INCORRECT_DATA_FORMAT_FOR_VALUE"
-                    "DECRYPTION_PROBLEM"
-                    "SIGNATURE_PROBLEM"
-                    "COMPID_PROBLEM"
-                    "SENDINGTIME_ACCURACY_PROBLEM"
-                    "INVALID_MSGTYPE"
-                    "XML_VALIDATION_ERROR"
-                    "TAG_APPEARS_MORE_THAN_ONCE"
-                    "TAG_SPECIFIED_OUT_OF_REQUIRED_ORDER"
-                    "REPEATING_GROUP_FIELDS_OUT_OF_ORDER"
-                    "INCORRECT_NUMINGROUP_COUNT_FOR_REPEATING_GROUP"
-                    "NON_DATA_VALUE_INCLUDES_FIELD_DELIMITER"
-                    "OTHER")}
+           :values ({:enum "0",
+                     :description "INVALID_TAG_NUMBER"}
+                    {:enum "1",
+                     :description "REQUIRED_TAG_MISSING"}
+                    {:enum "2",
+                     :description "TAG_NOT_DEFINED_FOR_THIS_MESSAGE_TYPE"}
+                    {:enum "3",
+                     :description "UNDEFINED_TAG"}
+                    {:enum "4",
+                     :description "TAG_SPECIFIED_WITHOUT_A_VALUE"}
+                    {:enum "5",
+                     :description "VALUE_IS_INCORRECT"}
+                    {:enum "6",
+                     :description "INCORRECT_DATA_FORMAT_FOR_VALUE"}
+                    {:enum "7",
+                     :description "DECRYPTION_PROBLEM"}
+                    {:enum "8",
+                     :description "SIGNATURE_PROBLEM"}
+                    {:enum "9",
+                     :description "COMPID_PROBLEM"}
+                    {:enum "10",
+                     :description "SENDINGTIME_ACCURACY_PROBLEM"}
+                    {:enum "11",
+                     :description "INVALID_MSGTYPE"}
+                    {:enum "12",
+                     :description "XML_VALIDATION_ERROR"}
+                    {:enum "13",
+                     :description "TAG_APPEARS_MORE_THAN_ONCE"}
+                    {:enum "14",
+                     :description "TAG_SPECIFIED_OUT_OF_REQUIRED_ORDER"}
+                    {:enum "15",
+                     :description "REPEATING_GROUP_FIELDS_OUT_OF_ORDER"}
+                    {:enum "16",
+                     :description "INCORRECT_NUMINGROUP_COUNT_FOR_REPEATING_GROUP"}
+                    {:enum "17",
+                     :description "NON_DATA_VALUE_INCLUDES_FIELD_DELIMITER"}
+                    {:enum "99", :description "OTHER"})}
           {:number "379",
            :name "BusinessRejectRefID",
            :type "STRING",
@@ -773,14 +1094,20 @@
           {:number "380",
            :name "BusinessRejectReason",
            :type "INT",
-           :values ("OTHER"
-                    "UNKOWN_ID"
-                    "UNKNOWN_SECURITY"
-                    "UNSUPPORTED_MESSAGE_TYPE"
-                    "APPLICATION_NOT_AVAILABLE"
-                    "CONDITIONALLY_REQUIRED_FIELD_MISSING"
-                    "NOT_AUTHORIZED"
-                    "DELIVERTO_FIRM_NOT_AVAILABLE_AT_THIS_TIME")}
+           :values ({:enum "0", :description "OTHER"}
+                    {:enum "1", :description "UNKOWN_ID"}
+                    {:enum "2",
+                     :description "UNKNOWN_SECURITY"}
+                    {:enum "3",
+                     :description "UNSUPPORTED_MESSAGE_TYPE"}
+                    {:enum "4",
+                     :description "APPLICATION_NOT_AVAILABLE"}
+                    {:enum "5",
+                     :description "CONDITIONALLY_REQUIRED_FIELD_MISSING"}
+                    {:enum "6",
+                     :description "NOT_AUTHORIZED"}
+                    {:enum "7",
+                     :description "DELIVERTO_FIRM_NOT_AVAILABLE_AT_THIS_TIME"})}
           {:number "383",
            :name "MaxMessageSize",
            :type "LENGTH",
@@ -792,12 +1119,15 @@
           {:number "385",
            :name "MsgDirection",
            :type "CHAR",
-           :values ("SEND" "RECEIVE")}
+           :values ({:enum "S", :description "SEND"}
+                    {:enum "R", :description "RECEIVE"})}
           {:number "434",
            :name "CxlRejResponseTo",
            :type "CHAR",
-           :values ("ORDER_CANCEL_REQUEST"
-                    "ORDER_CANCEL_REPLACE_REQUEST")}
+           :values ({:enum "1",
+                     :description "ORDER_CANCEL_REQUEST"}
+                    {:enum "2",
+                     :description "ORDER_CANCEL_REPLACE_REQUEST"})}
           {:number "464",
            :name "TestMessageIndicator",
            :type "BOOLEAN",
@@ -817,20 +1147,29 @@
           {:number "559",
            :name "SecurityListRequestType",
            :type "INT",
-           :values ("SYMBOL"
-                    "SECURITYTYPE_AND_OR_CFICODE"
-                    "PRODUCT"
-                    "TRADINGSESSIONID"
-                    "ALL_SECURITIES")}
+           :values ({:enum "0", :description "SYMBOL"}
+                    {:enum "1",
+                     :description "SECURITYTYPE_AND_OR_CFICODE"}
+                    {:enum "2", :description "PRODUCT"}
+                    {:enum "3",
+                     :description "TRADINGSESSIONID"}
+                    {:enum "4",
+                     :description "ALL_SECURITIES"})}
           {:number "560",
            :name "SecurityRequestResult",
            :type "INT",
-           :values ("VALID_REQUEST"
-                    "INVALID_OR_UNSUPPORTED_REQUEST"
-                    "NO_INSTRUMENTS_FOUND_THAT_MATCH_SELECTION_CRITERIA"
-                    "NOT_AUTHORIZED_TO_RETRIEVE_INSTRUMENT_DATA"
-                    "INSTRUMENT_DATA_TEMPORARILY_UNAVAILABLE"
-                    "REQUEST_FOR_INSTRUMENT_DATA_NOT_SUPPORTED")}
+           :values ({:enum "0",
+                     :description "VALID_REQUEST"}
+                    {:enum "1",
+                     :description "INVALID_OR_UNSUPPORTED_REQUEST"}
+                    {:enum "2",
+                     :description "NO_INSTRUMENTS_FOUND_THAT_MATCH_SELECTION_CRITERIA"}
+                    {:enum "3",
+                     :description "NOT_AUTHORIZED_TO_RETRIEVE_INSTRUMENT_DATA"}
+                    {:enum "4",
+                     :description "INSTRUMENT_DATA_TEMPORARILY_UNAVAILABLE"}
+                    {:enum "5",
+                     :description "REQUEST_FOR_INSTRUMENT_DATA_NOT_SUPPORTED"})}
           {:number "584",
            :name "MassStatusReqID",
            :type "STRING",
@@ -838,14 +1177,22 @@
           {:number "585",
            :name "MassStatusReqType",
            :type "INT",
-           :values ("STATUS_FOR_ORDERS_FOR_A_SECURITY"
-                    "STATUS_FOR_ORDERS_FOR_AN_UNDERLYING_SECURITY"
-                    "STATUS_FOR_ORDERS_FOR_A_PRODUCT"
-                    "STATUS_FOR_ORDERS_FOR_A_CFICODE"
-                    "STATUS_FOR_ORDERS_FOR_A_SECURITYTYPE"
-                    "STATUS_FOR_ORDERS_FOR_A_TRADING_SESSION"
-                    "STATUS_FOR_ALL_ORDERS"
-                    "STATUS_FOR_ORDERS_FOR_A_PARTYID")}
+           :values ({:enum "1",
+                     :description "STATUS_FOR_ORDERS_FOR_A_SECURITY"}
+                    {:enum "2",
+                     :description "STATUS_FOR_ORDERS_FOR_AN_UNDERLYING_SECURITY"}
+                    {:enum "3",
+                     :description "STATUS_FOR_ORDERS_FOR_A_PRODUCT"}
+                    {:enum "4",
+                     :description "STATUS_FOR_ORDERS_FOR_A_CFICODE"}
+                    {:enum "5",
+                     :description "STATUS_FOR_ORDERS_FOR_A_SECURITYTYPE"}
+                    {:enum "6",
+                     :description "STATUS_FOR_ORDERS_FOR_A_TRADING_SESSION"}
+                    {:enum "7",
+                     :description "STATUS_FOR_ALL_ORDERS"}
+                    {:enum "8",
+                     :description "STATUS_FOR_ORDERS_FOR_A_PARTYID"})}
           {:number "702",
            :name "NoPositions",
            :type "NUMINGROUP",
@@ -873,12 +1220,17 @@
           {:number "728",
            :name "PosReqResult",
            :type "INT",
-           :values ("VALID_REQUEST"
-                    "INVALID_OR_UNSUPPORTED_REQUEST"
-                    "NO_POSITIONS_FOUND_THAT_MATCH_CRITERIA"
-                    "NOT_AUTHORIZED_TO_REQUEST_POSITIONS"
-                    "REQUEST_FOR_POSITION_NOT_SUPPORTED"
-                    "OTHER")}
+           :values ({:enum "0",
+                     :description "VALID_REQUEST"}
+                    {:enum "1",
+                     :description "INVALID_OR_UNSUPPORTED_REQUEST"}
+                    {:enum "2",
+                     :description "NO_POSITIONS_FOUND_THAT_MATCH_CRITERIA"}
+                    {:enum "3",
+                     :description "NOT_AUTHORIZED_TO_REQUEST_POSITIONS"}
+                    {:enum "4",
+                     :description "REQUEST_FOR_POSITION_NOT_SUPPORTED"}
+                    {:enum "99", :description "OTHER"})}
           {:number "730",
            :name "SettlPrice",
            :type "PRICE",
@@ -914,10 +1266,11 @@
           {:number "1005",
            :name "TriggerMethodSL",
            :type "INT",
-           :values ("TRADE"
-                    "OPPOSITE"
-                    "DOUBLE_TRADE"
-                    "DOUBLE_OPPOSITE")}
+           :values ({:enum "1", :description "TRADE"}
+                    {:enum "2", :description "OPPOSITE"}
+                    {:enum "3", :description "DOUBLE_TRADE"}
+                    {:enum "4",
+                     :description "DOUBLE_OPPOSITE"})}
           {:number "1006",
            :name "GuaranteedSL",
            :type "BOOLEAN",
@@ -929,4 +1282,9 @@
           {:number "1008",
            :name "SymbolDigits",
            :type "INT",
-           :values ("0" "1" "2" "3" "4" "5")}]}
+           :values ({:enum "0", :description "0"}
+                    {:enum "1", :description "1"}
+                    {:enum "2", :description "2"}
+                    {:enum "3", :description "3"}
+                    {:enum "4", :description "4"}
+                    {:enum "5", :description "5"})}]}
