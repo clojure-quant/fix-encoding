@@ -433,8 +433,13 @@
   (let [pairs (->tag-value-pairs fix-msg-str)
         fields (enrich-message decoder pairs)
         msg (read-message decoder fields)
+        fix-msg-no-checksum (subs fix-msg-str 0 (- (count fix-msg-str) 7))
         ]
-    (assoc msg :wire fix-msg-str)))
+    (assoc msg 
+           :wire fix-msg-str
+           ;:wire-no-c fix-msg-no-checksum
+           :checksum (checksum fix-msg-no-checksum)
+           )))
 
 
   

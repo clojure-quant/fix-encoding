@@ -35,3 +35,4 @@ ctrader
 (decode-fix-msg ctrader m/quote-subscribe-msg)
 
 (decode-fix-msg ctrader m/logout-msg)
+
