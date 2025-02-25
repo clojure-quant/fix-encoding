@@ -117,6 +117,15 @@
 (defn keywordize-names [items]
   (map keywordize-name items))
 
+(defn to-bool [s]
+  (= s "Y"))
+
+(defn required-to-bool [item]
+  (update item :required to-bool))
+
+(defn required-to-bool-seq [items]
+  (map required-to-bool items))
+
 (defn sanitize-message-group-fields [content]
   ;(println "content: " content)
   (->> content
@@ -137,6 +146,7 @@
   (-> msg-type
       (update :content keywordize-names)
       (update :content sanitize-message-group-fields)
+      (update :content required-to-bool-seq)
       keywordize-name))
 
 (defn keywordize-description [item]

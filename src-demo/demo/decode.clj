@@ -52,7 +52,7 @@ ctrader
 (decode-fix-msg ctrader m/logout-msg)
 
 
-(def out-msg 
+(def out-logout-msg 
 {:header
  {:target-comp-id "demo.tradeviewmarkets.3152195",
   :sending-time #time/instant "2025-02-24T21:13:01.525Z",
@@ -62,9 +62,14 @@ ctrader
   :msg-type "5",
   :begin-string "FIX.4.4",
   :target-sub-id "QUOTE",
-  :sender-sub-id "QUOTE"}})
+  :sender-sub-id "QUOTE"}
+ :payload {:text "RET_NO_SUCH_LOGIN"}
+ })
 
 
-(encode-fix-msg ctrader out-msg)
+
+
+(encode-fix-msg ctrader out-logout-msg)
+
 
 (:header ctrader)

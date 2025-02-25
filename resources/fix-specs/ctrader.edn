@@ -29,167 +29,167 @@
  :messages ({:name :heartbeat,
              :msgtype "0",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :test-req-id,
-                        :required "N"}]}
+                        :required false})}
             {:name :logon,
              :msgtype "A",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :encrypt-method,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :heart-bt-int,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :raw-data-length,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :raw-data,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :reset-seq-num-flag,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :next-expected-msg-seq-num,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :max-message-size,
-                        :required "N"}
+                        :required false}
                        {:type :group,
                         :name :no-msg-types,
-                        :required "N",
+                        :required false,
                         :fields [{:name :ref-msg-type,
                                   :required false}
                                  {:name :msg-direction,
                                   :required false}]}
                        {:type :field,
                         :name :test-message-indicator,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :username,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :password,
-                        :required "N"}]}
+                        :required false})}
             {:name :test-request,
              :msgtype "1",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :test-req-id,
-                        :required "Y"}]}
+                        :required true})}
             {:name :resend-request,
              :msgtype "2",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :begin-seq-no,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :end-seq-no,
-                        :required "Y"}]}
+                        :required true})}
             {:name :reject,
              :msgtype "3",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :ref-seq-num,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :ref-tag-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :ref-msg-type,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :session-reject-reason,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :text,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text-len,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text,
-                        :required "N"}]}
+                        :required false})}
             {:name :sequence-reset,
              :msgtype "4",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :gap-fill-flag,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :new-seq-no,
-                        :required "Y"}]}
+                        :required true})}
             {:name :logout,
              :msgtype "5",
              :category "admin",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :text,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text-len,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text,
-                        :required "N"}]}
+                        :required false})}
             {:name :business-message-reject,
              :msgtype "j",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :ref-seq-num,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :ref-msg-type,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :business-reject-ref-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :business-reject-reason,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :text,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text-len,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text,
-                        :required "N"}]}
+                        :required false})}
             {:name :market-data-request,
              :msgtype "V",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :mdreq-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :subscription-request-type,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :market-depth,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :mdupdate-type,
-                        :required "N"}
+                        :required false}
                        {:type :group,
                         :name :no-mdentry-types,
-                        :required "Y",
+                        :required true,
                         :fields [{:name :mdentry-type,
                                   :required true}]}
                        {:type :group,
                         :name :no-related-sym,
-                        :required "Y",
+                        :required true,
                         :fields [{:name :symbol,
-                                  :required true}]}]}
+                                  :required true}]})}
             {:name :market-data-incremental-refresh,
              :msgtype "X",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :mdreq-id,
-                        :required "N"}
+                        :required false}
                        {:type :group,
                         :name :no-mdentries,
-                        :required "Y",
+                        :required true,
                         :fields [{:name :mdupdate-action,
                                   :required true}
                                  {:name :mdentry-type,
@@ -201,37 +201,37 @@
                                  {:name :mdentry-px,
                                   :required false}
                                  {:name :mdentry-size,
-                                  :required false}]}]}
+                                  :required false}]})}
             {:name :market-data-request-reject,
              :msgtype "Y",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :mdreq-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :mdreq-rej-reason,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :text,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text-len,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :encoded-text,
-                        :required "N"}]}
+                        :required false})}
             {:name :market-data-snapshot-full-refresh,
              :msgtype "W",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :mdreq-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :symbol,
-                        :required "Y"}
+                        :required true}
                        {:type :group,
                         :name :no-mdentries,
-                        :required "Y",
+                        :required true,
                         :fields [{:name :mdentry-type,
                                   :required true}
                                  {:name :quote-entry-id,
@@ -241,293 +241,293 @@
                                  {:name :mdentry-size,
                                   :required false}
                                  {:name :mdentry-id,
-                                  :required false}]}]}
+                                  :required false}]})}
             {:name :order-mass-status-request,
              :msgtype "AF",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :mass-status-req-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :mass-status-req-type,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :issue-date,
-                        :required "N"}]}
+                        :required false})}
             {:name :execution-report,
              :msgtype "8",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :order-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :cl-ord-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :orig-cl-ord-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :tot-num-reports,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :exec-type,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :ord-status,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :symbol,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :side,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :order-qty,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :ord-type,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :price,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :stop-px,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :time-in-force,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :expire-time,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :last-qty,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :last-px,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :leaves-qty,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :cum-qty,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :avg-px,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :transact-time,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :text,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :ord-rej-reason,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :pos-maint-rpt-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :designation,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :mass-status-req-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :absolute-tp,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :relative-tp,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :absolute-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :relative-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :trailing-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :trigger-method-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :guaranteed-sl,
-                        :required "N"}]}
+                        :required false})}
             {:name :new-order-single,
              :msgtype "D",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :cl-ord-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :symbol,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :side,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :transact-time,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :order-qty,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :ord-type,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :price,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :stop-px,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :time-in-force,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :expire-time,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :pos-maint-rpt-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :designation,
-                        :required "N"}]}
+                        :required false})}
             {:name :order-status-request,
              :msgtype "H",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :cl-ord-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :side,
-                        :required "N"}]}
+                        :required false})}
             {:name :order-cancel-request,
              :msgtype "F",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :orig-cl-ord-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :order-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :cl-ord-id,
-                        :required "Y"}]}
+                        :required true})}
             {:name :order-cancel-replace-request,
              :msgtype "G",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :order-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :orig-cl-ord-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :cl-ord-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :order-qty,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :price,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :stop-px,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :expire-time,
-                        :required "N"}]}
+                        :required false})}
             {:name :order-cancel-reject,
              :msgtype "9",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :order-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :cl-ord-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :orig-cl-ord-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :ord-status,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :cxl-rej-response-to,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :text,
-                        :required "N"}]}
+                        :required false})}
             {:name :request-for-positions,
              :msgtype "AN",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :pos-req-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :pos-maint-rpt-id,
-                        :required "N"}]}
+                        :required false})}
             {:name :position-report,
              :msgtype "AP",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :pos-req-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :pos-maint-rpt-id,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :total-num-pos-reports,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :pos-req-result,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :symbol,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :settl-price,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :absolute-tp,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :absolute-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :trailing-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :trigger-method-sl,
-                        :required "N"}
+                        :required false}
                        {:type :field,
                         :name :guaranteed-sl,
-                        :required "N"}]}
+                        :required false})}
             {:name :security-list-request,
              :msgtype "x",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :security-req-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :security-list-request-type,
-                        :required "Y"}]}
+                        :required true})}
             {:name :security-list,
              :msgtype "y",
              :category "app",
-             :content [{:type :field,
+             :content ({:type :field,
                         :name :security-req-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :security-response-id,
-                        :required "Y"}
+                        :required true}
                        {:type :field,
                         :name :security-request-result,
-                        :required "Y"}
+                        :required true}
                        {:type :group,
                         :name :no-related-sym,
-                        :required "N",
-                        :fields []}]}),
+                        :required false,
+                        :fields []})}),
  :fields ({:tag "6",
            :name :avg-px,
            :type "PRICE",

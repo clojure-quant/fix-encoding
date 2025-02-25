@@ -116,9 +116,10 @@
 
 (defn write [writer field] (swap! (:items writer) conj field))
 
-(defn get-all  [writer] @(:items writer))
-
-
+(defn pop-items  [writer]
+  (let [items @(:items writer)]
+    (reset! (:items writer) [])
+    items))
 
 (defn linearize-map [{:keys [name content] :as _section} m item-writer]
   (println "linearizing " name " spec-items: " (count content))
@@ -147,8 +148,18 @@
                       fix-msg]
   (let [writer (create-writer)
         _ (linearize-map {:name :header :content header} (:header fix-msg) writer)
-        field-seq (get-all writer)]
-    (encode-fields decoder field-seq)
+        header (->> (pop-items writer)
+                    (encode-fields decoder))
+        msg-type (get-in fix-msg [:header :msg-type])
+        message-spec (get-msg-type decoder msg-type)
+        _ (linearize-map message-spec (:payload fix-msg) writer)
+        payload (->> (pop-items writer)
+                     (encode-fields decoder))
+        ]
+      {:header header
+       :msg-type msg-type
+       :payload payload
+       }    
     
     
     ))
