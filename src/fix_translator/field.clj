@@ -35,7 +35,19 @@
 ;(parse-utc-timestamp "20250224-21:13:01")     ;; => #inst "2025-02-24T21:13:01Z"
 
 
+(defn format-utc-timestamp
+  "Returns a UTC timestamp in a specified format."
+  [inst]
+  (let [format "yyyyMMdd-HH:mm:ss"]
+    ; instant cannot be formatted
+    (t/format (t/formatter format) (t/date-time inst))  
+    )
+  )
 
+; (format-utc-timestamp (t/instant))
+
+
+(t/format (t/formatter "yyyyMMdd-HH:mm:ss") (t/instant))
 
 (defn decode-value [{:keys [name type values] :as _field} value]
   ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
@@ -81,7 +93,6 @@
 
 ; encode
 
-
 (defn encode-value [{:keys [name type values] :as _field} value]
   ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
   (let [parser {"LOCALMKTDATE" str; todo
@@ -95,7 +106,7 @@
                 "NUMINGROUP" str
                 "DATA" str ; todo
                 "BOOLEAN" str ; todo
-                "UTCTIMESTAMP" str ; identity ; todo
+                "UTCTIMESTAMP" format-utc-timestamp 
                 }]
     (cond
       ; do not change msgtype

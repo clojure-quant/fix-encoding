@@ -21,13 +21,22 @@
      :outbound-seq-num (atom 1)}))
 
 
-(defn encode-msg [{:keys [config outbound-seq-num] :as session} msg-type payload]
+(defn encode-msg [{:keys [config outbound-seq-num decoder] :as session} msg-type payload]
   (let [seq-num (swap! outbound-seq-num inc)
         header (assoc (:header config)
                       :msg-type msg-type
+                      ; added fields
                       :msg-seq-num seq-num
+                      :sending-time (t/instant)
+                      ; calculated fields
                       :body-length 0
-                      :sending-time (t/instant))]
-    {:header header
-     :payload payload}))
+                      )]
+    
+    (encode-fix-msg decoder {:header header
+                             :payload payload})
+    ))
 
+(defn decode-msg [{:keys [config outbound-seq-num decoder] :as session} fix-msg-str]
+  (decode-fix-msg decoder fix-msg-str)
+  
+  )
