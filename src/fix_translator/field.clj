@@ -1,8 +1,8 @@
 (ns fix-translator.field
-   (:require
-    [clojure.string :as s]
-    [tick.core :as t]
-    [cljc.java-time.local-date-time :as ldt]))
+  (:require
+   [clojure.string :as s]
+   [tick.core :as t]
+   [cljc.java-time.local-date-time :as ldt]))
 
 (defn to-keyword [s]
   (let [k (-> s
@@ -11,7 +11,7 @@
               keyword            ;; Convert to keyword
               )]
     ;(println "s: " s " kw: " k)
-    k))   
+    k))
 
 
 ;; tag=value pairs separated by \u0001 (SOH),  tag can be 1-2 alphanumeric characters
@@ -46,7 +46,7 @@
 ;(to-keyword "BodyLength")     ;; => :body-length
 ;(to-keyword "SenderCompID")   ;; => :sender-comp-id
 
-(defn convert-value [{:keys [name type values] :as _field} value]
+(defn decode-value [{:keys [name type values] :as _field} value]
   ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
   (let [parser {"LOCALMKTDATE" identity ; todo
                 "SEQNUM" parse-long
@@ -75,22 +75,16 @@
         (parse-fn value)
         value))))
 
-(defn convert-fields [{:keys [tag->field]} message]
-  (map (fn [{:keys [tag value] :as entry}]
-         (let [{:keys [name _values type] :as field} (get tag->field tag {:name "Unknown"})]
+(defn decode-fields [{:keys [tag->field]} fix-msg-str]
+  (->> fix-msg-str
+       (->tag-value-pairs)
+       (map (fn [{:keys [tag value] :as entry}]
+              (let [{:keys [name _values type] :as field} (get tag->field tag {:name "Unknown"})]
            ;(println "field: " field)
-           (assoc entry
-                  :name name
-                  :type type
-                  :value-str value
-                  :value (convert-value field value))))
-       message))
-
-
-
-(defn decode-fields [decoder fix-msg-str]
-  (let [pairs (->tag-value-pairs fix-msg-str)
-        fields (convert-fields decoder pairs)]
-    fields))
+                (assoc entry
+                       :name name
+                       :type type
+                       :value-str value
+                       :value (decode-value field value)))))))
 
 

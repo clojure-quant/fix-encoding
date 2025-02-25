@@ -26,6 +26,7 @@ ctrader
 (decode-fields ctrader m/new-order-msg)
 
 
+
 (decode-fields ctrader m/quote-subscribe-msg)
 
 (decode-fields ctrader m/logout-msg)

@@ -1,9 +1,6 @@
 (ns fix-translator.message
-  (:require 
-    [fix-translator.field :refer [to-keyword decode-fields]]
-   )
-  
-  )
+  (:require
+   [fix-translator.field :refer [to-keyword decode-fields]]))
 
 (defn checksum
   "Returns a 3-character string (left-padded with zeroes) representing the
@@ -44,7 +41,7 @@
                                  :nr (:value item)}
                                 item-reader)
                       (:value item))
-                data (assoc data 
+                data (assoc data
                             ;(:name section)
                             (to-keyword (:name section))
                             val)]
@@ -56,8 +53,7 @@
           (do (move-next section-reader)
               (if (more? section-reader)
                 (recur data)
-                data)
-              ))))))
+                data)))))))
 
 (defn read-vec [{:keys [name _content nr] :as section} item-reader]
   (println "read-vec: " name " nr: " nr)
@@ -73,7 +69,7 @@
 ;{:keys [message items idx] :as _items}
 
 (defn read-message [{:keys [header trailer messages] :as spec} items]
-  (let [item-reader (create-reader items) 
+  (let [item-reader (create-reader items)
         header (read-map {:name :header :content header} item-reader)
         ;msg-type (get header "MsgType")
         msg-type (:msg-type header)
@@ -81,10 +77,10 @@
         payload (read-map payload-section item-reader)
         trailer (read-map {:name :trailer :content trailer} item-reader)]
     ;(assoc data :type msg-type :payload payload-section)
-    {:header header 
+    {:header header
      :payload payload
      :trailer trailer}))
- 
+
 
 (def checksum-count (count "10=080"))
 (def begin-string-count (count "8=FIX.4.4"))
@@ -103,11 +99,9 @@
         fix-count (count fix-msg-str)
         checksum-length (- fix-count checksum-count)
         fix-msg-no-checksum (subs fix-msg-str 0 checksum-length)
-        body-length (- fix-count body-length-exclude)
-        ]
-    (assoc msg 
+        body-length (- fix-count body-length-exclude)]
+    (assoc msg
            :wire fix-msg-str
            ;:wire-no-c fix-msg-no-checksum
            :checksum (checksum fix-msg-no-checksum)
-           :body-length body-length
-           )))
+           :body-length body-length)))
