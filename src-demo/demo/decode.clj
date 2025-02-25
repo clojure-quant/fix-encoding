@@ -72,4 +72,23 @@ ctrader
 (encode-fix-msg ctrader out-logout-msg)
 
 
-(:header ctrader)
+(def out-quote-subscribe-msg
+{:header
+ {:target-comp-id "CSERVER",
+  :sending-time #time/instant "2025-02-24T21:13:01Z",
+  :body-length 146,
+  :sender-comp-id "demo.tradeviewmarkets.3152195",
+  :msg-seq-num 6,
+  :msg-type "V",
+  :begin-string "FIX.4.4",
+  :target-sub-id "QUOTE",
+  :sender-sub-id "QUOTE"},
+ :payload
+ {:mdreq-id "6",
+  :subscription-request-type :snapshot-plus-updates,
+  :market-depth 1,
+  :mdupdate-type :incremental-refresh,
+  :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
+  :no-related-sym [{:symbol "4"}]}})
+  
+(encode-fix-msg ctrader out-quote-subscribe-msg)

@@ -1,6 +1,6 @@
 (ns fix-translator.message
     (:require
-     [fix-translator.field :refer [decode-fields encode-fields]]
+     [fix-translator.field :refer [decode-fields encode-field]]
      [fix-translator.schema :refer [get-msg-type]])
     (:import [java.io StringWriter]))
 
@@ -121,18 +121,32 @@
       (reset! (:items writer) [])
       items))
 
-  (defn linearize-map [{:keys [name content] :as _section} m item-writer]
+  (defn linearize-vec [decoder vec-name vec-value item-writer]
+     (let [; example of vec item: [{:mdentry-type :bid} {:mdentry-type :offer}]
+          size (count vec-value)]
+      (println "vector field: " vec-value)
+                         ; encode size
+      (write item-writer (encode-field decoder {:name vec-name
+                                                :value size})))
+
+  )
+
+  (defn linearize-map [decoder {:keys [name content] :as _section} m item-writer]
     (println "linearizing " name " spec-items: " (count content))
-    (println "m: " m)
-    (println "spec-items:" content)
+    ;(println "m: " m)
+    ;(println "spec-items:" content)
     (doall
-     (map (fn [{:keys [name required] :as section-field}]
+     (map (fn [{:keys [name required type] :as section-field}]
             (println "processing field: " section-field)
             (if-let [item (get m name)]
               (do
                 (println "=" section-field item)
-                (write item-writer {:name name
-                                    :value item}))
+                (if (= type :group)
+                  ; vector field
+                  (linearize-vec decoder name item item-writer)
+                  ; simple field
+                  (write item-writer (encode-field decoder {:name name
+                                                            :value item}))))
               (do
                 (println "x" section-field "no item")
                 (when required
@@ -151,19 +165,17 @@
 (defn encode-fix-msg [{:keys [header trailer messages] :as decoder}
                       fix-msg]
   (let [writer (create-writer)
-        _ (linearize-map {:name :header :content header} (:header fix-msg) writer)
-        header (->> (pop-items writer)
-                    (encode-fields decoder))
+        _ (linearize-map decoder {:name :header :content header} (:header fix-msg) writer)
+        header (pop-items writer)
         msg-type (get-in fix-msg [:header :msg-type])
         message-spec (get-msg-type decoder msg-type)
-        _ (linearize-map message-spec (:payload fix-msg) writer)
-        payload (->> (pop-items writer)
-                     (encode-fields decoder))
+        _ (linearize-map decoder message-spec (:payload fix-msg) writer)
+        payload (pop-items writer)
         ; fix-str
         sw (StringWriter.)
         _ (write-fields sw header)
         _ (write-fields sw payload)
-       wire (.toString sw)]
+        wire (.toString sw)]
     {:header header
      :msg-type msg-type
      :payload payload

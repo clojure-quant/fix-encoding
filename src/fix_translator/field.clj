@@ -112,12 +112,14 @@
         (encode-fn value)
         value))))
 
+(defn encode-field [decoder {:keys [name value] :as fix-field}]
+  (let [{:keys [tag _values type] :as field} (get-field-by-name decoder name)]
+             ;(println "field: " field)
+    (assoc fix-field
+           :tag tag
+           :type type
+           :value-str (encode-value field value))))
+
 (defn encode-fields [decoder fix-field-seq]
   (->> fix-field-seq
-       (map (fn [{:keys [name value] :as entry}]
-              (let [{:keys [tag _values type] :as field} (get-field-by-name decoder name)]
-           ;(println "field: " field)
-                (assoc entry 
-                       :tag tag
-                       :type type
-                       :value-str (encode-value field value)))))))
+       (map #(encode-field decoder %))))
