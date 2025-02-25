@@ -1,5 +1,5 @@
 {:ctrader-tradeviewmarkets-quote
- {:spec "resources/fix-specs/ctrader.edn"
+ {:spec "fix-specs/ctrader.edn"
   :header {:begin-string "FIX.4.4"
            :target-comp-id "demo.tradeviewmarkets.3152195"
            :sender-comp-id "CSERVER"

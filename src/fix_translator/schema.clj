@@ -3,10 +3,13 @@
    [clojure.java.io :as io]
    [clojure.edn :as edn]))
 
-(defn load-schema [filepath]
+#_(defn load-schema [filepath]
   (with-open [rdr (io/reader filepath)]
     (edn/read (java.io.PushbackReader. rdr))))
 
+(defn load-schema [resource-path]
+  (with-open [rdr (io/reader (io/resource resource-path))]
+    (edn/read (java.io.PushbackReader. rdr))))
 
 (defn build-tag->field [schema]
   (->> (:fields schema)
@@ -25,8 +28,8 @@
        ;(map (juxt :name identity))
        (into {})))
 
-(defn create-decoder [filepath]
-  (let [schema (load-schema filepath)]
+(defn create-decoder [resource-path]
+  (let [schema (load-schema resource-path)]
     {:tag->field (build-tag->field schema)
      :name->field (build-name->field schema)
      :header (:header schema)

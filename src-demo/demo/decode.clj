@@ -13,6 +13,8 @@
 
 (def ctrader (create-decoder "resources/fix-specs/ctrader.edn"))
 
+(def ctrader (create-decoder "fix-specs/ctrader.edn"))
+
 ctrader
 (keys ctrader)
 (:messages ctrader)

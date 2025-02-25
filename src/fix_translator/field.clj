@@ -120,6 +120,6 @@
            :type type
            :value-str (encode-value field value))))
 
-(defn encode-fields [decoder fix-field-seq]
+#_(defn encode-fields [decoder fix-field-seq]
   (->> fix-field-seq
        (map #(encode-field decoder %))))
