@@ -284,6 +284,7 @@
            ))
        message))
 
+(declare read-group)
 
 (defn read-section [{:keys [name content] :as _section} 
                     {:keys [message items idx] :as _items} ]
@@ -313,7 +314,10 @@
             (if (and (< item-idx items-count)
                      (< section-idx section-count))
               (do
-                 (when group? (println "group!! "))
+                 (when group? 
+                   (println "group!! ")
+                   (read-group section (:value item) {:message {} :items items :idx (inc item-idx)})
+                   )
                  (recur data (inc item-idx) (inc section-idx))  
                 )
               
@@ -328,6 +332,25 @@
             
             )))))
   
+(defn read-group [{:keys [name fields] :as section} nr {:keys [message items idx]}]
+  (println "read-group: " section " nr: " nr)
+  (let [nr (parse-long nr)
+        section {:name name :content fields}
+        idx-a (atom idx)
+        read-next (fn [i]
+                    (println "group idx: " i)
+                    (let [{:keys [message idx]}
+                          (read-section section {:message {}
+                                                 :items items
+                                                 :idx @idx-a})]
+                      (reset! idx-a idx)
+                      message))
+        v (map read-next (range nr))]
+    
+    (println "group data: " v)
+    nil))
+
+;{:keys [message items idx] :as _items}
 
 (defn read-message [{:keys [header trailer messages] :as spec} items]
   (let [{:keys [message idx]} (read-section {:name :header :content header}
