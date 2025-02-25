@@ -1,6 +1,6 @@
 (ns demo.xml-convert
   (:require 
-   [fix-translator.xml-convert :refer [extract-fix-data]]
+   [fix-translator.xml-convert :refer [extract-fix-data sanitize-message-group-fields]]
    [fix-translator.fipp :refer [spit-edn]]))
 
 
@@ -46,3 +46,28 @@
 
 (spit-edn "resources/fix-specs/ctrader.edn"  fix-data)
 
+(->> (extract-fix-data "resources/fix-specs/ctrader/FIX44-CSERVER.xml")
+     (spit-edn "resources/fix-specs/ctrader.edn"))
+ 
+ 
+
+(def msg 
+  {:name :logon,
+   :msgtype "A",
+   :category "admin",
+   :content [{:type :field,
+              :name :max-message-size,
+              :required "N"}
+             {:type :group,
+              :name :no-msg-types,
+              :required "N",
+              :fields [{:name "RefMsgType",
+                        :required false}
+                       {:name "MsgDirection",
+                        :required false}]}
+             {:type :field,
+              :name :test-message-indicator}]})
+ 
+(println msg)
+
+(update msg :content sanitize-message-group-fields)

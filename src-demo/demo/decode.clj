@@ -1,6 +1,8 @@
 (ns demo.decode
   (:require 
-   [fix-translator.schema :refer [types-in-spec create-decoder]]
+   [fix-translator.schema :refer [ create-decoder
+                                  ; debugging of schema:
+                                  types-in-spec get-msg-type get-field]]
    [fix-translator.field :refer [decode-fields]]
    [fix-translator.message :refer [decode-fix-msg]]
    [demo.messages :as m]
@@ -12,6 +14,8 @@
 ctrader
 (keys ctrader)
 (:messages ctrader)
+(-> ctrader :messages keys)
+
 (:trailer ctrader)
 (:tag->field ctrader)
 
@@ -21,6 +25,13 @@ ctrader
 
 (types-in-spec ctrader)
 
+(get-field ctrader "35")
+
+; for message type lookup we have to use tag, because
+; the fxcm dictionary is misleading.
+(get-msg-type ctrader :order-single)
+(get-msg-type ctrader "D")
+(get-msg-type ctrader "V")
 
 
 (decode-fields ctrader m/new-order-msg)

@@ -1,6 +1,8 @@
 (ns fix-translator.message
   (:require
-   [fix-translator.field :refer [to-keyword decode-fields]]))
+   [fix-translator.field :refer [decode-fields]]
+   [fix-translator.schema :refer [get-msg-type]])
+  (:import [java.io StringWriter]))
 
 (defn checksum
   "Returns a 3-character string (left-padded with zeroes) representing the
@@ -42,8 +44,7 @@
                                 item-reader)
                       (:value item))
                 data (assoc data
-                            ;(:name section)
-                            (to-keyword (:name section))
+                            (:name section)
                             val)]
             (if (and (more? item-reader)
                      (more? section-reader))
@@ -56,7 +57,7 @@
                 data)))))))
 
 (defn read-vec [{:keys [name _content nr] :as section} item-reader]
-  (println "read-vec: " name " nr: " nr)
+  (println "read-vec: " name " nr: " nr "section: " section)
   (let [;nr (parse-long nr)
         read-idx (fn [i]
                    (println "group idx: " i)
@@ -68,12 +69,12 @@
 
 ;{:keys [message items idx] :as _items}
 
-(defn read-message [{:keys [header trailer messages] :as spec} items]
+(defn decode-message [{:keys [header trailer messages] :as decoder} items]
   (let [item-reader (create-reader items)
         header (read-map {:name :header :content header} item-reader)
         ;msg-type (get header "MsgType")
         msg-type (:msg-type header)
-        payload-section (get messages msg-type)
+        payload-section (get-msg-type decoder msg-type)
         payload (read-map payload-section item-reader)
         trailer (read-map {:name :trailer :content trailer} item-reader)]
     ;(assoc data :type msg-type :payload payload-section)
@@ -93,7 +94,7 @@
 
 (defn decode-fix-msg [decoder fix-msg-str]
   (let [fields (decode-fields decoder fix-msg-str)
-        msg (read-message decoder fields)
+        msg (decode-message decoder fields)
         ;BodyLength after the BodyLength field  and before the CheckSum field.
         ; exclude BeginString + bodylength + checksum
         fix-count (count fix-msg-str)
@@ -105,3 +106,66 @@
            ;:wire-no-c fix-msg-no-checksum
            :checksum (checksum fix-msg-no-checksum)
            :body-length body-length)))
+
+
+
+;; encode
+
+(defn create-writer []
+  {:items (atom [])})
+
+(defn write [writer field] (swap! (:items writer) conj field))
+
+(defn get-all  [writer] @(:items writer))
+
+
+
+(defn linearize-map [{:keys [name content] :as _section} m item-writer]
+  (println "linearizing " name " spec-items: " (count content))
+  (let [section-reader (create-reader content)]
+    (loop [data {}]
+      (let [section (get-current section-reader)
+            item (get-current item-reader)
+            match? (= (:name section) (:name item))
+            group? (= (:type section) :group)]
+        (println (if match? "=" "x") section item)
+        (if match?
+          ; match
+          (let [_ (move-next item-reader)
+                _ (move-next section-reader)
+                val (if group?
+                      (read-vec {:name (:name section)
+                                 :content (:fields section)
+                                 :nr (:value item)}
+                                item-reader)
+                      (:value item))
+                data (assoc data
+                            (:name section)
+                            val)]
+            (if (and (more? item-reader)
+                     (more? section-reader))
+              (recur data)
+              data))
+          ; no match
+          (do (move-next section-reader)
+              (if (more? section-reader)
+                (recur data)
+                data)))))))
+
+
+(defn encode-fix-msg [{:keys [header trailer messages] :as decoder}
+                      {:keys [header payload] :as fix-msg}]
+  (let [writer (create-writer)
+        _ (linearize-map {:name :header :content header} (:header fix-msg) writer)]
+    
+    (get-all writer)
+    ))
+
+
+ 
+
+(defn write-to-string []
+  (let [sw (StringWriter.)]
+    (.write sw "Hello, ")
+    (.write sw "World!")
+    (.toString sw)))
