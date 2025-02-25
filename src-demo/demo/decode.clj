@@ -3,23 +3,28 @@
    [fix-translator.schema :refer [types-in-spec create-decoder]]
    [fix-translator.field :refer [decode-fields]]
    [fix-translator.message :refer [decode-fix-msg]]
-   [demo.messages :as m]))
+   [demo.messages :as m]
+   [lambdaisland.deep-diff2 :as ddiff]))
 
 
 (def ctrader (create-decoder "resources/fix-specs/ctrader.edn"))
-
 
 ctrader
 (keys ctrader)
 (:messages ctrader)
 (:trailer ctrader)
-(:fields ctrader)
+(:tag->field ctrader)
+
+;(ddiff/pretty-print 
+; (ddiff/diff (:tag->field ctrader) (:fields ctrader)))
+
 
 (types-in-spec ctrader)
 
 
 
 (decode-fields ctrader m/new-order-msg)
+
 
 (decode-fields ctrader m/quote-subscribe-msg)
 

@@ -9,10 +9,11 @@
     (edn/read (java.io.PushbackReader. rdr))))
 
 
-(defn build-tag-map [schema]
-  (into {} (map (fn [{:keys [tag name type values]}]
-                  [tag {:name name :type type :values values}])
-                (:fields schema))))
+(defn build-tag->field [schema]
+  (->> (:fields schema)
+       (map (juxt :tag identity))
+       (into {})))
+  
 
 (defn message-dict [messages]
   (let [msg-type (fn [message]
@@ -23,9 +24,8 @@
           (map (juxt msg-type identity) messages))))
 
 (defn create-decoder [filepath]
-  (let [schema (load-schema filepath)
-        tag-map (build-tag-map schema)]
-    {:fields tag-map
+  (let [schema (load-schema filepath)]
+    {:tag->field (build-tag->field schema)
      :header (:header schema)
      :trailer (:trailer schema)
      :messages (-> schema :messages message-dict) ;(:messages schema)
@@ -33,7 +33,7 @@
 
 (defn types-in-spec [decoder]
   (->> decoder
-       :fields
+       :tag->field
        vals
        (map :type)
        (into #{})))

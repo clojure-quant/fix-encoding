@@ -75,9 +75,9 @@
         (parse-fn value)
         value))))
 
-(defn convert-fields [{:keys [fields]} message]
+(defn convert-fields [{:keys [tag->field]} message]
   (map (fn [{:keys [tag value] :as entry}]
-         (let [{:keys [name _values type] :as field} (get fields tag {:name "Unknown"})]
+         (let [{:keys [name _values type] :as field} (get tag->field tag {:name "Unknown"})]
            ;(println "field: " field)
            (assoc entry
                   :name name
@@ -85,6 +85,7 @@
                   :value-str value
                   :value (convert-value field value))))
        message))
+
 
 
 (defn decode-fields [decoder fix-msg-str]
