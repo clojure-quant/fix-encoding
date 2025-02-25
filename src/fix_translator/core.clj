@@ -222,7 +222,7 @@
          (map (partial translate-to-map decoder))
          (into {}))))
 
-
+;; 2025 02 20 awb99: structured parsing
 
 ;; tag=value pairs separated by \u0001 (SOH),  tag can be 1-2 alphanumeric characters
 (def tag-value-regex #"([A-Za-z0-9]{1,4})=([^\u0001]+)")
@@ -271,13 +271,17 @@
 
 (defn enrich-message [{:keys [fields]} message]
   (map (fn [{:keys [tag value] :as entry}]
-         (let [{:keys [name values]} (get fields tag {:name "Unknown"})
+         (let [{:keys [name values type]} (get fields tag {:name "Unknown"})
                ;_ (println "values: " values)
                value2 (when values
                         (some #(when (= (:enum %) value) (:description %)) values))]
            (assoc entry
                   :name name
-                  :value2 (or value2 ""))))
+                  :value2 (or value2 "")
+                  :type type
+                  )
+           
+           ))
        message))
 
 
@@ -304,10 +308,15 @@
                  )
         (if match?
           ; match
-          (let [data (assoc data (:name section) (:value item))]
+          (let [data (assoc data (:name section) (:value item))
+                group? (= (:type section) :group)]
             (if (and (< item-idx items-count)
                      (< section-idx section-count))
-              (recur data (inc item-idx) (inc section-idx))
+              (do
+                 (when group? (println "group!! "))
+                 (recur data (inc item-idx) (inc section-idx))  
+                )
+              
               {:message (assoc message name data)
                :idx (inc item-idx)}))
           ; no match
@@ -320,7 +329,7 @@
             )))))
   
 
-(defn read-header [{:keys [header trailer messages] :as spec} items]
+(defn read-message [{:keys [header trailer messages] :as spec} items]
   (let [{:keys [message idx]} (read-section {:name :header :content header}
                                          {:message {} :items items :idx 0})
         msg-type (get-in message [:header "MsgType" ])
