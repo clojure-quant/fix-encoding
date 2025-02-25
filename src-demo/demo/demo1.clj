@@ -59,7 +59,7 @@
  
  
  (def logout-msg
-   "8=FIX.4.49=11835=534=149=CSERVER50=QUOTE52=20250224-21:13:01.52556=demo.tradeviewmarkets.315219557=QUOTE58=RET_NO_SUCH_LOGIN10=172")
+   "8=FIX.4.49=11835=549=CSERVER56=demo.tradeviewmarkets.315219534=150=QUOTE57=QUOTE52=20250224-21:13:01.52558=RET_NO_SUCH_LOGIN10=172")
 
 (def quote-subscribe-msg 
   "8=FIX.4.49=14635=V49=demo.tradeviewmarkets.315219556=CSERVER50=QUOTE57=QUOTE34=652=20250224-21:13:01262=6263=1265=1264=1267=2269=0269=1146=155=410=080"
@@ -70,13 +70,15 @@
 
 
 ctrader
+ (:messages ctrader)
+ (:trailer ctrader)
 ;; (def 
 ;; (def )
 ;; (def message '({:tag "8", :value "FIX.4.4"} ...))
 
-(->> ;logout-msg
+(->> logout-msg
      ;new-order-msg
- quote-subscribe-msg
+ ;quote-subscribe-msg
  parse-fix-message
  (enrich-message ctrader)
  ;(read-section (:header ctrader))
@@ -85,6 +87,18 @@ ctrader
  )
 
 
+
+({:tag "8", :value "FIX.4.4", :name "BeginString", :value2 ""}
+ {:tag "9", :value "118", :name "BodyLength", :value2 ""}
+ {:tag "35", :value "5", :name "MsgType", :value2 "LOGOUT"}
+ {:tag "34", :value "1", :name "MsgSeqNum", :value2 ""}
+ {:tag "49", :value "CSERVER", :name "SenderCompID", :value2 ""}
+ {:tag "50", :value "QUOTE", :name "SenderSubID", :value2 ""}
+ {:tag "52", :value "20250224-21:13:01.525", :name "SendingTime", :value2 ""}
+ {:tag "56", :value "demo.tradeviewmarkets.3152195", :name "TargetCompID", :value2 ""}
+ {:tag "57", :value "QUOTE", :name "TargetSubID", :value2 ""}
+ {:tag "58", :value "RET_NO_SUCH_LOGIN", :name "Text", :value2 ""}
+ {:tag "10", :value "172", :name "CheckSum", :value2 ""})
 
 
 

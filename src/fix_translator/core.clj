@@ -248,11 +248,21 @@
                 (:fields schema))))
 
 
+(defn message-dict [messages]
+  (into {}
+        (map (juxt :msgtype identity) messages)
+        )
+                    
+                    )
+
 (defn create-decoder [filepath]
   (let [schema (load-schema filepath)
         tag-map (build-tag-map schema)]
     {:fields tag-map
-     :header (:header schema)}))
+     :header (:header schema)
+     :trailer (:trailer schema)
+     :messages (-> schema :messages message-dict) ;(:messages schema)
+     }))
 
 ;(defn enrich-message [decoder message]
 ;  (map (fn [{:keys [tag value] :as entry}]
@@ -273,6 +283,7 @@
 
 (defn read-section [{:keys [name content] :as _section} 
                     {:keys [message items idx] :as _items} ]
+  (println "reading " name " spec-items: " (count content))
   (let [section-fields content
         items-count (dec (count items))
         section-count (dec (count section-fields))
@@ -283,29 +294,48 @@
            section-idx 0]
       (let [section (get section-fields section-idx)
             item (get items item-idx)
-            match? (= (:name section) (:name item))
-            more? (and (< item-idx items-count)
-                       (< section-idx section-count))]
-        (println "match? " match? " more? " more?
-                 "idx-item " item-idx "idx section " section-idx
-                 "item: " item
-                 "section: " section)
-        (cond
-          (and match? more?)
-          (recur (assoc data (:name section) (:value item))
-                 (inc item-idx) (inc section-idx))
-
-          (not more?)
-          {:data (assoc message name data)
-           :idx item-idx}
-
-          (not match?)
-          (recur data item-idx (inc section-idx)))))))
+            match? (= (:name section) (:name item))]
+        (println (if match? "=" "x")
+                  section
+                 ;" more? " more?
+                 ;"idx-item " item-idx "idx section " section-idx
+                 ;"item: " 
+                 item
+                 )
+        (if match?
+          ; match
+          (let [data (assoc data (:name section) (:value item))]
+            (if (and (< item-idx items-count)
+                     (< section-idx section-count))
+              (recur data (inc item-idx) (inc section-idx))
+              {:message (assoc message name data)
+               :idx (inc item-idx)}))
+          ; no match
+            (if (< section-idx section-count)
+              (recur data item-idx (inc section-idx)) 
+              {:message (assoc message name data)
+               :idx item-idx}
+              )
+            
+            )))))
   
 
-(defn read-header [{:keys [header] :as spec} items]
-  (read-section {:name :header :content header}
-                {:message {} :items items :idx 0})
+(defn read-header [{:keys [header trailer messages] :as spec} items]
+  (let [{:keys [message idx]} (read-section {:name :header :content header}
+                                         {:message {} :items items :idx 0})
+        msg-type (get-in message [:header "MsgType" ])
+        payload-section (get messages msg-type)
+        {:keys [message idx]} (read-section payload-section
+                            {:message message :items items :idx idx})
+        {:keys [message idx]} (read-section {:name :trailer :content trailer}
+                                         {:message message :items items :idx idx})
+        ]
+    ;(assoc data :type msg-type :payload payload-section)
+    message
+    
+    )
+  
+
   )
  
   
