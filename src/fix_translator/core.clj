@@ -228,7 +228,7 @@
 (def tag-value-regex #"([A-Za-z0-9]{1,4})=([^\u0001]+)")
 
 ;; Parse FIX message into list of tag-value maps
-(defn parse-fix-message [msg]
+(defn ->tag-value-pairs [msg]
   (map (fn [[_ tag value]]
          {:tag tag
           :value value})
@@ -409,4 +409,13 @@
      :trailer trailer}))
  
   
+
+(defn decode-fix-msg [decoder fix-msg-str]
+  (let [pairs (->tag-value-pairs fix-msg-str)
+        fields (enrich-message decoder pairs)
+        msg (read-message decoder fields)
+        ]
+    (assoc msg :wire fix-msg-str)))
+
+
   

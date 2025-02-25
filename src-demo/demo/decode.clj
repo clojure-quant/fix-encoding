@@ -2,9 +2,11 @@
   (:require 
    [fix-translator.core :refer [create-decoder
                                 types-in-spec
-                                parse-fix-message
+                                ->tag-value-pairs
                                 enrich-message
-                                read-message]]
+                                read-message
+                                decode-fix-msg
+                                ]]
    [demo.messages :as m]))
 
 
@@ -24,13 +26,14 @@ ctrader
      
  ;m/quote-subscribe-msg
  m/new-order-msg
- parse-fix-message
+ ->tag-value-pairs
  (enrich-message ctrader)
  (read-message ctrader)
  )
 
 
+(decode-fix-msg ctrader m/new-order-msg)
 
-(str 1.0M)
+(decode-fix-msg ctrader m/quote-subscribe-msg)
 
-(-> "1" bigdec str)
+(decode-fix-msg ctrader m/logout-msg)
