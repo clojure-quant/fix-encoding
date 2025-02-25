@@ -18,7 +18,7 @@
        (filter #(= :field (:tag %)))
        (map (fn [field]
               {:name (get-in field [:attrs :name])
-               :required   (get-in field [:attrs :required])}))))
+               :required  (= "Y" (get-in field [:attrs :required])) }))))
 
 ;; Extract header fields
 (defn extract-header [z]
@@ -83,7 +83,7 @@
                         (:attrs node)
                         (get-in node [:attrs :number])
                         (get-in node [:attrs :type]))
-                 (let [field {:number (get-in node [:attrs :number])
+                 (let [field {:tag (get-in node [:attrs :number])
                               :name   (get-in node [:attrs :name])
                               :type   (get-in node [:attrs :type])
                               :values (map (fn [v]

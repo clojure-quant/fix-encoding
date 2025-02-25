@@ -1,30 +1,30 @@
-{:header ({:name "BeginString", :required "Y"}
-          {:name "BodyLength", :required "Y"}
-          {:name "MsgType", :required "Y"}
-          {:name "SenderCompID", :required "Y"}
-          {:name "TargetCompID", :required "Y"}
-          {:name "OnBehalfOfCompID", :required "N"}
-          {:name "DeliverToCompID", :required "N"}
-          {:name "SecureDataLen", :required "N"}
-          {:name "SecureData", :required "N"}
-          {:name "MsgSeqNum", :required "Y"}
-          {:name "SenderSubID", :required "N"}
-          {:name "SenderLocationID", :required "N"}
-          {:name "TargetSubID", :required "N"}
-          {:name "TargetLocationID", :required "N"}
-          {:name "OnBehalfOfSubID", :required "N"}
-          {:name "OnBehalfOfLocationID", :required "N"}
-          {:name "DeliverToSubID", :required "N"}
-          {:name "DeliverToLocationID", :required "N"}
-          {:name "PossDupFlag", :required "N"}
-          {:name "PossResend", :required "N"}
-          {:name "SendingTime", :required "Y"}
-          {:name "OrigSendingTime", :required "N"}
-          {:name "MessageEncoding", :required "N"}
-          {:name "LastMsgSeqNumProcessed", :required "N"}),
- :trailer ({:name "SignatureLength", :required "N"}
-           {:name "Signature", :required "N"}
-           {:name "CheckSum", :required "Y"}),
+{:header ({:name "BeginString", :required true}
+          {:name "BodyLength", :required true}
+          {:name "MsgType", :required true}
+          {:name "SenderCompID", :required true}
+          {:name "TargetCompID", :required true}
+          {:name "OnBehalfOfCompID", :required false}
+          {:name "DeliverToCompID", :required false}
+          {:name "SecureDataLen", :required false}
+          {:name "SecureData", :required false}
+          {:name "MsgSeqNum", :required true}
+          {:name "SenderSubID", :required false}
+          {:name "SenderLocationID", :required false}
+          {:name "TargetSubID", :required false}
+          {:name "TargetLocationID", :required false}
+          {:name "OnBehalfOfSubID", :required false}
+          {:name "OnBehalfOfLocationID", :required false}
+          {:name "DeliverToSubID", :required false}
+          {:name "DeliverToLocationID", :required false}
+          {:name "PossDupFlag", :required false}
+          {:name "PossResend", :required false}
+          {:name "SendingTime", :required true}
+          {:name "OrigSendingTime", :required false}
+          {:name "MessageEncoding", :required false}
+          {:name "LastMsgSeqNumProcessed", :required false}),
+ :trailer ({:name "SignatureLength", :required false}
+           {:name "Signature", :required false}
+           {:name "CheckSum", :required true}),
  :messages [{:name "Heartbeat",
              :msgtype "0",
              :category "admin",
@@ -59,9 +59,9 @@
                         :name "NoMsgTypes",
                         :required "N",
                         :fields ({:name "RefMsgType",
-                                  :required "N"}
+                                  :required false}
                                  {:name "MsgDirection",
-                                  :required "N"})}
+                                  :required false})}
                        {:type :field,
                         :name "TestMessageIndicator",
                         :required "N"}
@@ -174,12 +174,12 @@
                         :name "NoMDEntryTypes",
                         :required "Y",
                         :fields ({:name "MDEntryType",
-                                  :required "Y"})}
+                                  :required true})}
                        {:type :group,
                         :name "NoRelatedSym",
                         :required "Y",
                         :fields ({:name "Symbol",
-                                  :required "Y"})})}
+                                  :required true})})}
             {:name "MarketDataIncrementalRefresh",
              :msgtype "X",
              :category "app",
@@ -190,17 +190,17 @@
                         :name "NoMDEntries",
                         :required "Y",
                         :fields ({:name "MDUpdateAction",
-                                  :required "Y"}
+                                  :required true}
                                  {:name "MDEntryType",
-                                  :required "N"}
+                                  :required false}
                                  {:name "MDEntryID",
-                                  :required "Y"}
+                                  :required true}
                                  {:name "Symbol",
-                                  :required "Y"}
+                                  :required true}
                                  {:name "MDEntryPx",
-                                  :required "N"}
+                                  :required false}
                                  {:name "MDEntrySize",
-                                  :required "N"})})}
+                                  :required false})})}
             {:name "MarketDataRequestReject",
              :msgtype "Y",
              :category "app",
@@ -232,15 +232,15 @@
                         :name "NoMDEntries",
                         :required "Y",
                         :fields ({:name "MDEntryType",
-                                  :required "Y"}
+                                  :required true}
                                  {:name "QuoteEntryID",
-                                  :required "N"}
+                                  :required false}
                                  {:name "MDEntryPx",
-                                  :required "Y"}
+                                  :required true}
                                  {:name "MDEntrySize",
-                                  :required "N"}
+                                  :required false}
                                  {:name "MDEntryID",
-                                  :required "N"})})}
+                                  :required false})})}
             {:name "OrderMassStatusRequest",
              :msgtype "AF",
              :category "app",
@@ -527,51 +527,51 @@
                         :name "NoRelatedSym",
                         :required "N",
                         :fields ()})}],
- :fields [{:number "6",
+ :fields [{:tag "6",
            :name "AvgPx",
            :type "PRICE",
            :values ()}
-          {:number "7",
+          {:tag "7",
            :name "BeginSeqNo",
            :type "SEQNUM",
            :values ()}
-          {:number "8",
+          {:tag "8",
            :name "BeginString",
            :type "STRING",
            :values ()}
-          {:number "9",
+          {:tag "9",
            :name "BodyLength",
            :type "LENGTH",
            :values ()}
-          {:number "10",
+          {:tag "10",
            :name "CheckSum",
            :type "STRING",
            :values ()}
-          {:number "11",
+          {:tag "11",
            :name "ClOrdID",
            :type "STRING",
            :values ()}
-          {:number "14",
+          {:tag "14",
            :name "CumQty",
            :type "QTY",
            :values ()}
-          {:number "16",
+          {:tag "16",
            :name "EndSeqNo",
            :type "SEQNUM",
            :values ()}
-          {:number "31",
+          {:tag "31",
            :name "LastPx",
            :type "PRICE",
            :values ()}
-          {:number "32",
+          {:tag "32",
            :name "LastQty",
            :type "QTY",
            :values ()}
-          {:number "34",
+          {:tag "34",
            :name "MsgSeqNum",
            :type "SEQNUM",
            :values ()}
-          {:number "35",
+          {:tag "35",
            :name "MsgType",
            :type "STRING",
            :values ({:enum "0", :description "HEARTBEAT"}
@@ -621,19 +621,19 @@
                      :description "REQUEST_FOR_POSITIONS_ACK"}
                     {:enum "AP",
                      :description "POSITION_REPORT"})}
-          {:number "36",
+          {:tag "36",
            :name "NewSeqNo",
            :type "SEQNUM",
            :values ()}
-          {:number "37",
+          {:tag "37",
            :name "OrderID",
            :type "STRING",
            :values ()}
-          {:number "38",
+          {:tag "38",
            :name "OrderQty",
            :type "QTY",
            :values ()}
-          {:number "39",
+          {:tag "39",
            :name "OrdStatus",
            :type "CHAR",
            :values ({:enum "0", :description "NEW"}
@@ -644,7 +644,7 @@
                     {:enum "5", :description "REPLACED"}
                     {:enum "8", :description "REJECTED"}
                     {:enum "C", :description "EXPIRED"})}
-          {:number "40",
+          {:tag "40",
            :name "OrdType",
            :type "CHAR",
            :values ({:enum "1", :description "MARKET"}
@@ -682,35 +682,35 @@
                     {:enum "M",
                      :description "NEXT_FUND_VALUATION_POINT"}
                     {:enum "P", :description "PEGGED"})}
-          {:number "41",
+          {:tag "41",
            :name "OrigClOrdID",
            :type "STRING",
            :values ()}
-          {:number "43",
+          {:tag "43",
            :name "PossDupFlag",
            :type "BOOLEAN",
            :values ()}
-          {:number "44",
+          {:tag "44",
            :name "Price",
            :type "PRICE",
            :values ()}
-          {:number "45",
+          {:tag "45",
            :name "RefSeqNum",
            :type "SEQNUM",
            :values ()}
-          {:number "49",
+          {:tag "49",
            :name "SenderCompID",
            :type "STRING",
            :values ()}
-          {:number "50",
+          {:tag "50",
            :name "SenderSubID",
            :type "STRING",
            :values ()}
-          {:number "52",
+          {:tag "52",
            :name "SendingTime",
            :type "UTCTIMESTAMP",
            :values ()}
-          {:number "54",
+          {:tag "54",
            :name "Side",
            :type "CHAR",
            :values ({:enum "1", :description "BUY"}
@@ -731,23 +731,23 @@
                     {:enum "E", :description "REDEEM"}
                     {:enum "F", :description "LEND"}
                     {:enum "G", :description "BORROW"})}
-          {:number "55",
+          {:tag "55",
            :name "Symbol",
            :type "STRING",
            :values ()}
-          {:number "56",
+          {:tag "56",
            :name "TargetCompID",
            :type "STRING",
            :values ()}
-          {:number "57",
+          {:tag "57",
            :name "TargetSubID",
            :type "STRING",
            :values ()}
-          {:number "58",
+          {:tag "58",
            :name "Text",
            :type "STRING",
            :values ()}
-          {:number "59",
+          {:tag "59",
            :name "TimeInForce",
            :type "CHAR",
            :values ({:enum "0", :description "DAY"}
@@ -763,46 +763,46 @@
                     {:enum "6",
                      :description "GOOD_TILL_DATE"}
                     {:enum "7", :description "AT_THE_CLOSE"})}
-          {:number "60",
+          {:tag "60",
            :name "TransactTime",
            :type "UTCTIMESTAMP",
            :values ()}
-          {:number "77",
+          {:tag "77",
            :name "PositionEffect",
            :type "CHAR",
            :values ({:enum "O", :description "OPEN"}
                     {:enum "C", :description "CLOSE"}
                     {:enum "R", :description "ROLLED"}
                     {:enum "F", :description "FIFO"})}
-          {:number "89",
+          {:tag "89",
            :name "Signature",
            :type "DATA",
            :values ()}
-          {:number "90",
+          {:tag "90",
            :name "SecureDataLen",
            :type "LENGTH",
            :values ()}
-          {:number "91",
+          {:tag "91",
            :name "SecureData",
            :type "DATA",
            :values ()}
-          {:number "93",
+          {:tag "93",
            :name "SignatureLength",
            :type "LENGTH",
            :values ()}
-          {:number "95",
+          {:tag "95",
            :name "RawDataLength",
            :type "LENGTH",
            :values ()}
-          {:number "96",
+          {:tag "96",
            :name "RawData",
            :type "DATA",
            :values ()}
-          {:number "97",
+          {:tag "97",
            :name "PossResend",
            :type "BOOLEAN",
            :values ()}
-          {:number "98",
+          {:tag "98",
            :name "EncryptMethod",
            :type "INT",
            :values ({:enum "0", :description "NONE_OTHER"}
@@ -812,11 +812,11 @@
                     {:enum "4", :description "PGP_DES"}
                     {:enum "5", :description "PGP_DES_MD5"}
                     {:enum "6", :description "PEM_DES_MD5"})}
-          {:number "99",
+          {:tag "99",
            :name "StopPx",
            :type "PRICE",
            :values ()}
-          {:number "103",
+          {:tag "103",
            :name "OrdRejReason",
            :type "INT",
            :values ({:enum "0",
@@ -851,71 +851,71 @@
                     {:enum "15",
                      :description "UNKNOWN_ACCOUNT"}
                     {:enum "99", :description "OTHER"})}
-          {:number "108",
+          {:tag "108",
            :name "HeartBtInt",
            :type "INT",
            :values ()}
-          {:number "110",
+          {:tag "110",
            :name "MinQty",
            :type "QTY",
            :values ()}
-          {:number "112",
+          {:tag "112",
            :name "TestReqID",
            :type "STRING",
            :values ()}
-          {:number "115",
+          {:tag "115",
            :name "OnBehalfOfCompID",
            :type "STRING",
            :values ()}
-          {:number "116",
+          {:tag "116",
            :name "OnBehalfOfSubID",
            :type "STRING",
            :values ()}
-          {:number "122",
+          {:tag "122",
            :name "OrigSendingTime",
            :type "UTCTIMESTAMP",
            :values ()}
-          {:number "123",
+          {:tag "123",
            :name "GapFillFlag",
            :type "BOOLEAN",
            :values ()}
-          {:number "126",
+          {:tag "126",
            :name "ExpireTime",
            :type "UTCTIMESTAMP",
            :values ()}
-          {:number "128",
+          {:tag "128",
            :name "DeliverToCompID",
            :type "STRING",
            :values ()}
-          {:number "129",
+          {:tag "129",
            :name "DeliverToSubID",
            :type "STRING",
            :values ()}
-          {:number "141",
+          {:tag "141",
            :name "ResetSeqNumFlag",
            :type "BOOLEAN",
            :values ()}
-          {:number "142",
+          {:tag "142",
            :name "SenderLocationID",
            :type "STRING",
            :values ()}
-          {:number "143",
+          {:tag "143",
            :name "TargetLocationID",
            :type "STRING",
            :values ()}
-          {:number "144",
+          {:tag "144",
            :name "OnBehalfOfLocationID",
            :type "STRING",
            :values ()}
-          {:number "145",
+          {:tag "145",
            :name "DeliverToLocationID",
            :type "STRING",
            :values ()}
-          {:number "146",
+          {:tag "146",
            :name "NoRelatedSym",
            :type "NUMINGROUP",
            :values ()}
-          {:number "150",
+          {:tag "150",
            :name "ExecType",
            :type "CHAR",
            :values ({:enum "0", :description "NEW"}
@@ -925,19 +925,19 @@
                     {:enum "C", :description "EXPIRED"}
                     {:enum "F", :description "TRADE"}
                     {:enum "I", :description "ORDER_STATUS"})}
-          {:number "151",
+          {:tag "151",
            :name "LeavesQty",
            :type "QTY",
            :values ()}
-          {:number "225",
+          {:tag "225",
            :name "IssueDate",
            :type "LOCALMKTDATE",
            :values ()}
-          {:number "262",
+          {:tag "262",
            :name "MDReqID",
            :type "STRING",
            :values ()}
-          {:number "263",
+          {:tag "263",
            :name "SubscriptionRequestType",
            :type "CHAR",
            :values ({:enum "0", :description "SNAPSHOT"}
@@ -945,25 +945,25 @@
                      :description "SNAPSHOT_PLUS_UPDATES"}
                     {:enum "2",
                      :description "DISABLE_PREVIOUS_SNAPSHOT_PLUS_UPDATE_REQUEST"})}
-          {:number "264",
+          {:tag "264",
            :name "MarketDepth",
            :type "INT",
            :values ()}
-          {:number "265",
+          {:tag "265",
            :name "MDUpdateType",
            :type "INT",
            :values ({:enum "0", :description "FULL_REFRESH"}
                     {:enum "1",
                      :description "INCREMENTAL_REFRESH"})}
-          {:number "267",
+          {:tag "267",
            :name "NoMDEntryTypes",
            :type "NUMINGROUP",
            :values ()}
-          {:number "268",
+          {:tag "268",
            :name "NoMDEntries",
            :type "NUMINGROUP",
            :values ()}
-          {:number "269",
+          {:tag "269",
            :name "MDEntryType",
            :type "CHAR",
            :values ({:enum "0", :description "BID"}
@@ -986,25 +986,25 @@
                     {:enum "B", :description "TRADE_VOLUME"}
                     {:enum "C",
                      :description "OPEN_INTEREST"})}
-          {:number "270",
+          {:tag "270",
            :name "MDEntryPx",
            :type "PRICE",
            :values ()}
-          {:number "271",
+          {:tag "271",
            :name "MDEntrySize",
            :type "QTY",
            :values ()}
-          {:number "278",
+          {:tag "278",
            :name "MDEntryID",
            :type "STRING",
            :values ()}
-          {:number "279",
+          {:tag "279",
            :name "MDUpdateAction",
            :type "CHAR",
            :values ({:enum "0", :description "NEW"}
                     {:enum "1", :description "CHANGE"}
                     {:enum "2", :description "DELETE"})}
-          {:number "281",
+          {:tag "281",
            :name "MDReqRejReason",
            :type "CHAR",
            :values ({:enum "0",
@@ -1033,19 +1033,19 @@
                      :description "UNSUPPORTED_OPENCLOSESETTLEFLAG"}
                     {:enum "C",
                      :description "UNSUPPORTED_MDIMPLICITDELETE"})}
-          {:number "299",
+          {:tag "299",
            :name "QuoteEntryID",
            :type "STRING",
            :values ()}
-          {:number "320",
+          {:tag "320",
            :name "SecurityReqID",
            :type "STRING",
            :values ()}
-          {:number "322",
+          {:tag "322",
            :name "SecurityResponseID",
            :type "STRING",
            :values ()}
-          {:number "347",
+          {:tag "347",
            :name "MessageEncoding",
            :type "STRING",
            :values ({:enum "ISO-2022-JP",
@@ -1054,27 +1054,27 @@
                     {:enum "SHIFT_JIS",
                      :description "SHIFT_JIS"}
                     {:enum "UTF-8", :description "UTF_8"})}
-          {:number "354",
+          {:tag "354",
            :name "EncodedTextLen",
            :type "LENGTH",
            :values ()}
-          {:number "355",
+          {:tag "355",
            :name "EncodedText",
            :type "DATA",
            :values ()}
-          {:number "369",
+          {:tag "369",
            :name "LastMsgSeqNumProcessed",
            :type "SEQNUM",
            :values ()}
-          {:number "371",
+          {:tag "371",
            :name "RefTagID",
            :type "INT",
            :values ()}
-          {:number "372",
+          {:tag "372",
            :name "RefMsgType",
            :type "STRING",
            :values ()}
-          {:number "373",
+          {:tag "373",
            :name "SessionRejectReason",
            :type "INT",
            :values ({:enum "0",
@@ -1114,11 +1114,11 @@
                     {:enum "17",
                      :description "NON_DATA_VALUE_INCLUDES_FIELD_DELIMITER"}
                     {:enum "99", :description "OTHER"})}
-          {:number "379",
+          {:tag "379",
            :name "BusinessRejectRefID",
            :type "STRING",
            :values ()}
-          {:number "380",
+          {:tag "380",
            :name "BusinessRejectReason",
            :type "INT",
            :values ({:enum "0", :description "OTHER"}
@@ -1135,43 +1135,43 @@
                      :description "NOT_AUTHORIZED"}
                     {:enum "7",
                      :description "DELIVERTO_FIRM_NOT_AVAILABLE_AT_THIS_TIME"})}
-          {:number "383",
+          {:tag "383",
            :name "MaxMessageSize",
            :type "LENGTH",
            :values ()}
-          {:number "384",
+          {:tag "384",
            :name "NoMsgTypes",
            :type "NUMINGROUP",
            :values ()}
-          {:number "385",
+          {:tag "385",
            :name "MsgDirection",
            :type "CHAR",
            :values ({:enum "S", :description "SEND"}
                     {:enum "R", :description "RECEIVE"})}
-          {:number "434",
+          {:tag "434",
            :name "CxlRejResponseTo",
            :type "CHAR",
            :values ({:enum "1",
                      :description "ORDER_CANCEL_REQUEST"}
                     {:enum "2",
                      :description "ORDER_CANCEL_REPLACE_REQUEST"})}
-          {:number "464",
+          {:tag "464",
            :name "TestMessageIndicator",
            :type "BOOLEAN",
            :values ()}
-          {:number "494",
+          {:tag "494",
            :name "Designation",
            :type "STRING",
            :values ()}
-          {:number "553",
+          {:tag "553",
            :name "Username",
            :type "STRING",
            :values ()}
-          {:number "554",
+          {:tag "554",
            :name "Password",
            :type "STRING",
            :values ()}
-          {:number "559",
+          {:tag "559",
            :name "SecurityListRequestType",
            :type "INT",
            :values ({:enum "0", :description "SYMBOL"}
@@ -1182,7 +1182,7 @@
                      :description "TRADINGSESSIONID"}
                     {:enum "4",
                      :description "ALL_SECURITIES"})}
-          {:number "560",
+          {:tag "560",
            :name "SecurityRequestResult",
            :type "INT",
            :values ({:enum "0",
@@ -1197,11 +1197,11 @@
                      :description "INSTRUMENT_DATA_TEMPORARILY_UNAVAILABLE"}
                     {:enum "5",
                      :description "REQUEST_FOR_INSTRUMENT_DATA_NOT_SUPPORTED"})}
-          {:number "584",
+          {:tag "584",
            :name "MassStatusReqID",
            :type "STRING",
            :values ()}
-          {:number "585",
+          {:tag "585",
            :name "MassStatusReqType",
            :type "INT",
            :values ({:enum "1",
@@ -1220,31 +1220,31 @@
                      :description "STATUS_FOR_ALL_ORDERS"}
                     {:enum "8",
                      :description "STATUS_FOR_ORDERS_FOR_A_PARTYID"})}
-          {:number "702",
+          {:tag "702",
            :name "NoPositions",
            :type "NUMINGROUP",
            :values ()}
-          {:number "704",
+          {:tag "704",
            :name "LongQty",
            :type "QTY",
            :values ()}
-          {:number "705",
+          {:tag "705",
            :name "ShortQty",
            :type "QTY",
            :values ()}
-          {:number "710",
+          {:tag "710",
            :name "PosReqID",
            :type "STRING",
            :values ()}
-          {:number "721",
+          {:tag "721",
            :name "PosMaintRptID",
            :type "STRING",
            :values ()}
-          {:number "727",
+          {:tag "727",
            :name "TotalNumPosReports",
            :type "INT",
            :values ()}
-          {:number "728",
+          {:tag "728",
            :name "PosReqResult",
            :type "INT",
            :values ({:enum "0",
@@ -1258,39 +1258,39 @@
                     {:enum "4",
                      :description "REQUEST_FOR_POSITION_NOT_SUPPORTED"}
                     {:enum "99", :description "OTHER"})}
-          {:number "730",
+          {:tag "730",
            :name "SettlPrice",
            :type "PRICE",
            :values ()}
-          {:number "789",
+          {:tag "789",
            :name "NextExpectedMsgSeqNum",
            :type "SEQNUM",
            :values ()}
-          {:number "911",
+          {:tag "911",
            :name "TotNumReports",
            :type "INT",
            :values ()}
-          {:number "1000",
+          {:tag "1000",
            :name "AbsoluteTP",
            :type "PRICE",
            :values ()}
-          {:number "1001",
+          {:tag "1001",
            :name "RelativeTP",
            :type "PRICE",
            :values ()}
-          {:number "1002",
+          {:tag "1002",
            :name "AbsoluteSL",
            :type "PRICE",
            :values ()}
-          {:number "1003",
+          {:tag "1003",
            :name "RelativeSL",
            :type "PRICE",
            :values ()}
-          {:number "1004",
+          {:tag "1004",
            :name "TrailingSL",
            :type "BOOLEAN",
            :values ()}
-          {:number "1005",
+          {:tag "1005",
            :name "TriggerMethodSL",
            :type "INT",
            :values ({:enum "1", :description "TRADE"}
@@ -1298,15 +1298,15 @@
                     {:enum "3", :description "DOUBLE_TRADE"}
                     {:enum "4",
                      :description "DOUBLE_OPPOSITE"})}
-          {:number "1006",
+          {:tag "1006",
            :name "GuaranteedSL",
            :type "BOOLEAN",
            :values ()}
-          {:number "1007",
+          {:tag "1007",
            :name "SymbolName",
            :type "STRING",
            :values ()}
-          {:number "1008",
+          {:tag "1008",
            :name "SymbolDigits",
            :type "INT",
            :values ({:enum "0", :description "0"}
