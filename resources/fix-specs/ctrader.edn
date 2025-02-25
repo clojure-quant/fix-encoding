@@ -1,505 +1,532 @@
-{:messages [{:name "Heartbeat",
+{:header ({:name "BeginString", :required "Y"}
+          {:name "BodyLength", :required "Y"}
+          {:name "MsgType", :required "Y"}
+          {:name "SenderCompID", :required "Y"}
+          {:name "TargetCompID", :required "Y"}
+          {:name "OnBehalfOfCompID", :required "N"}
+          {:name "DeliverToCompID", :required "N"}
+          {:name "SecureDataLen", :required "N"}
+          {:name "SecureData", :required "N"}
+          {:name "MsgSeqNum", :required "Y"}
+          {:name "SenderSubID", :required "N"}
+          {:name "SenderLocationID", :required "N"}
+          {:name "TargetSubID", :required "N"}
+          {:name "TargetLocationID", :required "N"}
+          {:name "OnBehalfOfSubID", :required "N"}
+          {:name "OnBehalfOfLocationID", :required "N"}
+          {:name "DeliverToSubID", :required "N"}
+          {:name "DeliverToLocationID", :required "N"}
+          {:name "PossDupFlag", :required "N"}
+          {:name "PossResend", :required "N"}
+          {:name "SendingTime", :required "Y"}
+          {:name "OrigSendingTime", :required "N"}
+          {:name "MessageEncoding", :required "N"}
+          {:name "LastMsgSeqNumProcessed", :required "N"}),
+ :trailer ({:name "SignatureLength", :required "N"}
+           {:name "Signature", :required "N"}
+           {:name "CheckSum", :required "Y"}),
+ :messages [{:name "Heartbeat",
              :msgtype "0",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "TestReqID",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "TestReqID",
+                        :required "N"})}
             {:name "Logon",
              :msgtype "A",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "EncryptMethod",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "HeartBtInt",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "RawDataLength",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "RawData",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "ResetSeqNumFlag",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "NextExpectedMsgSeqNum",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "MaxMessageSize",
-                              :required "N"}
-                             {:type :group,
-                              :group-name "NoMsgTypes",
-                              :required "N",
-                              :fields ({:field-name "RefMsgType",
-                                        :required "N"}
-                                       {:field-name "MsgDirection",
-                                        :required "N"})}
-                             {:type :field,
-                              :field-name "TestMessageIndicator",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Username",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Password",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "EncryptMethod",
+                        :required "Y"}
+                       {:type :field,
+                        :name "HeartBtInt",
+                        :required "Y"}
+                       {:type :field,
+                        :name "RawDataLength",
+                        :required "N"}
+                       {:type :field,
+                        :name "RawData",
+                        :required "N"}
+                       {:type :field,
+                        :name "ResetSeqNumFlag",
+                        :required "N"}
+                       {:type :field,
+                        :name "NextExpectedMsgSeqNum",
+                        :required "N"}
+                       {:type :field,
+                        :name "MaxMessageSize",
+                        :required "N"}
+                       {:type :group,
+                        :name "NoMsgTypes",
+                        :required "N",
+                        :fields ({:name "RefMsgType",
+                                  :required "N"}
+                                 {:name "MsgDirection",
+                                  :required "N"})}
+                       {:type :field,
+                        :name "TestMessageIndicator",
+                        :required "N"}
+                       {:type :field,
+                        :name "Username",
+                        :required "N"}
+                       {:type :field,
+                        :name "Password",
+                        :required "N"})}
             {:name "TestRequest",
              :msgtype "1",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "TestReqID",
-                              :required "Y"})}
+             :content ({:type :field,
+                        :name "TestReqID",
+                        :required "Y"})}
             {:name "ResendRequest",
              :msgtype "2",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "BeginSeqNo",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "EndSeqNo",
-                              :required "Y"})}
+             :content ({:type :field,
+                        :name "BeginSeqNo",
+                        :required "Y"}
+                       {:type :field,
+                        :name "EndSeqNo",
+                        :required "Y"})}
             {:name "Reject",
              :msgtype "3",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "RefSeqNum",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "RefTagID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "RefMsgType",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "SessionRejectReason",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Text",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedTextLen",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedText",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "RefSeqNum",
+                        :required "Y"}
+                       {:type :field,
+                        :name "RefTagID",
+                        :required "N"}
+                       {:type :field,
+                        :name "RefMsgType",
+                        :required "N"}
+                       {:type :field,
+                        :name "SessionRejectReason",
+                        :required "N"}
+                       {:type :field,
+                        :name "Text",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedTextLen",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedText",
+                        :required "N"})}
             {:name "SequenceReset",
              :msgtype "4",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "GapFillFlag",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "NewSeqNo",
-                              :required "Y"})}
+             :content ({:type :field,
+                        :name "GapFillFlag",
+                        :required "N"}
+                       {:type :field,
+                        :name "NewSeqNo",
+                        :required "Y"})}
             {:name "Logout",
              :msgtype "5",
              :category "admin",
-             :fields-groups ({:type :field,
-                              :field-name "Text",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedTextLen",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedText",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "Text",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedTextLen",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedText",
+                        :required "N"})}
             {:name "BusinessMessageReject",
              :msgtype "j",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "RefSeqNum",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "RefMsgType",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "BusinessRejectRefID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "BusinessRejectReason",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Text",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedTextLen",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedText",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "RefSeqNum",
+                        :required "N"}
+                       {:type :field,
+                        :name "RefMsgType",
+                        :required "N"}
+                       {:type :field,
+                        :name "BusinessRejectRefID",
+                        :required "N"}
+                       {:type :field,
+                        :name "BusinessRejectReason",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Text",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedTextLen",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedText",
+                        :required "N"})}
             {:name "MarketDataRequest",
              :msgtype "V",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "MDReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "SubscriptionRequestType",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "MarketDepth",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "MDUpdateType",
-                              :required "N"}
-                             {:type :group,
-                              :group-name "NoMDEntryTypes",
-                              :required "Y",
-                              :fields ({:field-name "MDEntryType",
-                                        :required "Y"})}
-                             {:type :group,
-                              :group-name "NoRelatedSym",
-                              :required "Y",
-                              :fields ({:field-name "Symbol",
-                                        :required "Y"})})}
+             :content ({:type :field,
+                        :name "MDReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "SubscriptionRequestType",
+                        :required "Y"}
+                       {:type :field,
+                        :name "MarketDepth",
+                        :required "Y"}
+                       {:type :field,
+                        :name "MDUpdateType",
+                        :required "N"}
+                       {:type :group,
+                        :name "NoMDEntryTypes",
+                        :required "Y",
+                        :fields ({:name "MDEntryType",
+                                  :required "Y"})}
+                       {:type :group,
+                        :name "NoRelatedSym",
+                        :required "Y",
+                        :fields ({:name "Symbol",
+                                  :required "Y"})})}
             {:name "MarketDataIncrementalRefresh",
              :msgtype "X",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "MDReqID",
-                              :required "N"}
-                             {:type :group,
-                              :group-name "NoMDEntries",
-                              :required "Y",
-                              :fields ({:field-name "MDUpdateAction",
-                                        :required "Y"}
-                                       {:field-name "MDEntryType",
-                                        :required "N"}
-                                       {:field-name "MDEntryID",
-                                        :required "Y"}
-                                       {:field-name "Symbol",
-                                        :required "Y"}
-                                       {:field-name "MDEntryPx",
-                                        :required "N"}
-                                       {:field-name "MDEntrySize",
-                                        :required "N"})})}
+             :content ({:type :field,
+                        :name "MDReqID",
+                        :required "N"}
+                       {:type :group,
+                        :name "NoMDEntries",
+                        :required "Y",
+                        :fields ({:name "MDUpdateAction",
+                                  :required "Y"}
+                                 {:name "MDEntryType",
+                                  :required "N"}
+                                 {:name "MDEntryID",
+                                  :required "Y"}
+                                 {:name "Symbol",
+                                  :required "Y"}
+                                 {:name "MDEntryPx",
+                                  :required "N"}
+                                 {:name "MDEntrySize",
+                                  :required "N"})})}
             {:name "MarketDataRequestReject",
              :msgtype "Y",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "MDReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "MDReqRejReason",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Text",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedTextLen",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "EncodedText",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "MDReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "MDReqRejReason",
+                        :required "N"}
+                       {:type :field,
+                        :name "Text",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedTextLen",
+                        :required "N"}
+                       {:type :field,
+                        :name "EncodedText",
+                        :required "N"})}
             {:name "MarketDataSnapshotFullRefresh",
              :msgtype "W",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "MDReqID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Symbol",
-                              :required "Y"}
-                             {:type :group,
-                              :group-name "NoMDEntries",
-                              :required "Y",
-                              :fields ({:field-name "MDEntryType",
-                                        :required "Y"}
-                                       {:field-name "QuoteEntryID",
-                                        :required "N"}
-                                       {:field-name "MDEntryPx",
-                                        :required "Y"}
-                                       {:field-name "MDEntrySize",
-                                        :required "N"}
-                                       {:field-name "MDEntryID",
-                                        :required "N"})})}
+             :content ({:type :field,
+                        :name "MDReqID",
+                        :required "N"}
+                       {:type :field,
+                        :name "Symbol",
+                        :required "Y"}
+                       {:type :group,
+                        :name "NoMDEntries",
+                        :required "Y",
+                        :fields ({:name "MDEntryType",
+                                  :required "Y"}
+                                 {:name "QuoteEntryID",
+                                  :required "N"}
+                                 {:name "MDEntryPx",
+                                  :required "Y"}
+                                 {:name "MDEntrySize",
+                                  :required "N"}
+                                 {:name "MDEntryID",
+                                  :required "N"})})}
             {:name "OrderMassStatusRequest",
              :msgtype "AF",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "MassStatusReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "MassStatusReqType",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "IssueDate",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "MassStatusReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "MassStatusReqType",
+                        :required "Y"}
+                       {:type :field,
+                        :name "IssueDate",
+                        :required "N"})}
             {:name "ExecutionReport",
              :msgtype "8",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "OrderID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "ClOrdID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "OrigClOrdID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TotNumReports",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "ExecType",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "OrdStatus",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Symbol",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Side",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "OrderQty",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "OrdType",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Price",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "StopPx",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TimeInForce",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "ExpireTime",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "LastQty",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "LastPx",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "LeavesQty",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "CumQty",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "AvgPx",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TransactTime",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Text",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "OrdRejReason",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "PosMaintRptID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Designation",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "MassStatusReqID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "AbsoluteTP",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "RelativeTP",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "AbsoluteSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "RelativeSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TrailingSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TriggerMethodSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "GuaranteedSL",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "OrderID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "ClOrdID",
+                        :required "N"}
+                       {:type :field,
+                        :name "OrigClOrdID",
+                        :required "N"}
+                       {:type :field,
+                        :name "TotNumReports",
+                        :required "N"}
+                       {:type :field,
+                        :name "ExecType",
+                        :required "Y"}
+                       {:type :field,
+                        :name "OrdStatus",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Symbol",
+                        :required "N"}
+                       {:type :field,
+                        :name "Side",
+                        :required "N"}
+                       {:type :field,
+                        :name "OrderQty",
+                        :required "N"}
+                       {:type :field,
+                        :name "OrdType",
+                        :required "N"}
+                       {:type :field,
+                        :name "Price",
+                        :required "N"}
+                       {:type :field,
+                        :name "StopPx",
+                        :required "N"}
+                       {:type :field,
+                        :name "TimeInForce",
+                        :required "N"}
+                       {:type :field,
+                        :name "ExpireTime",
+                        :required "N"}
+                       {:type :field,
+                        :name "LastQty",
+                        :required "N"}
+                       {:type :field,
+                        :name "LastPx",
+                        :required "N"}
+                       {:type :field,
+                        :name "LeavesQty",
+                        :required "N"}
+                       {:type :field,
+                        :name "CumQty",
+                        :required "N"}
+                       {:type :field,
+                        :name "AvgPx",
+                        :required "N"}
+                       {:type :field,
+                        :name "TransactTime",
+                        :required "N"}
+                       {:type :field,
+                        :name "Text",
+                        :required "N"}
+                       {:type :field,
+                        :name "OrdRejReason",
+                        :required "N"}
+                       {:type :field,
+                        :name "PosMaintRptID",
+                        :required "N"}
+                       {:type :field,
+                        :name "Designation",
+                        :required "N"}
+                       {:type :field,
+                        :name "MassStatusReqID",
+                        :required "N"}
+                       {:type :field,
+                        :name "AbsoluteTP",
+                        :required "N"}
+                       {:type :field,
+                        :name "RelativeTP",
+                        :required "N"}
+                       {:type :field,
+                        :name "AbsoluteSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "RelativeSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "TrailingSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "TriggerMethodSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "GuaranteedSL",
+                        :required "N"})}
             {:name "NewOrderSingle",
              :msgtype "D",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "ClOrdID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Symbol",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Side",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "TransactTime",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "OrderQty",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "OrdType",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Price",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "StopPx",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TimeInForce",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "ExpireTime",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "PosMaintRptID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "Designation",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "ClOrdID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Symbol",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Side",
+                        :required "Y"}
+                       {:type :field,
+                        :name "TransactTime",
+                        :required "Y"}
+                       {:type :field,
+                        :name "OrderQty",
+                        :required "Y"}
+                       {:type :field,
+                        :name "OrdType",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Price",
+                        :required "N"}
+                       {:type :field,
+                        :name "StopPx",
+                        :required "N"}
+                       {:type :field,
+                        :name "TimeInForce",
+                        :required "N"}
+                       {:type :field,
+                        :name "ExpireTime",
+                        :required "N"}
+                       {:type :field,
+                        :name "PosMaintRptID",
+                        :required "N"}
+                       {:type :field,
+                        :name "Designation",
+                        :required "N"})}
             {:name "OrderStatusRequest",
              :msgtype "H",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "ClOrdID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Side",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "ClOrdID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Side",
+                        :required "N"})}
             {:name "OrderCancelRequest",
              :msgtype "F",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "OrigClOrdID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "OrderID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "ClOrdID",
-                              :required "Y"})}
+             :content ({:type :field,
+                        :name "OrigClOrdID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "OrderID",
+                        :required "N"}
+                       {:type :field,
+                        :name "ClOrdID",
+                        :required "Y"})}
             {:name "OrderCancelReplaceRequest",
              :msgtype "G",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "OrderID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "OrigClOrdID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "ClOrdID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "OrderQty",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Price",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "StopPx",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "ExpireTime",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "OrderID",
+                        :required "N"}
+                       {:type :field,
+                        :name "OrigClOrdID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "ClOrdID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "OrderQty",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Price",
+                        :required "N"}
+                       {:type :field,
+                        :name "StopPx",
+                        :required "N"}
+                       {:type :field,
+                        :name "ExpireTime",
+                        :required "N"})}
             {:name "OrderCancelReject",
              :msgtype "9",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "OrderID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "ClOrdID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "OrigClOrdID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "OrdStatus",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "CxlRejResponseTo",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Text",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "OrderID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "ClOrdID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "OrigClOrdID",
+                        :required "N"}
+                       {:type :field,
+                        :name "OrdStatus",
+                        :required "Y"}
+                       {:type :field,
+                        :name "CxlRejResponseTo",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Text",
+                        :required "N"})}
             {:name "RequestForPositions",
              :msgtype "AN",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "PosReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "PosMaintRptID",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "PosReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "PosMaintRptID",
+                        :required "N"})}
             {:name "PositionReport",
              :msgtype "AP",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "PosReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "PosMaintRptID",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TotalNumPosReports",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "PosReqResult",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "Symbol",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "SettlPrice",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "AbsoluteTP",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "AbsoluteSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TrailingSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "TriggerMethodSL",
-                              :required "N"}
-                             {:type :field,
-                              :field-name "GuaranteedSL",
-                              :required "N"})}
+             :content ({:type :field,
+                        :name "PosReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "PosMaintRptID",
+                        :required "N"}
+                       {:type :field,
+                        :name "TotalNumPosReports",
+                        :required "Y"}
+                       {:type :field,
+                        :name "PosReqResult",
+                        :required "Y"}
+                       {:type :field,
+                        :name "Symbol",
+                        :required "N"}
+                       {:type :field,
+                        :name "SettlPrice",
+                        :required "N"}
+                       {:type :field,
+                        :name "AbsoluteTP",
+                        :required "N"}
+                       {:type :field,
+                        :name "AbsoluteSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "TrailingSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "TriggerMethodSL",
+                        :required "N"}
+                       {:type :field,
+                        :name "GuaranteedSL",
+                        :required "N"})}
             {:name "SecurityListRequest",
              :msgtype "x",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "SecurityReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "SecurityListRequestType",
-                              :required "Y"})}
+             :content ({:type :field,
+                        :name "SecurityReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "SecurityListRequestType",
+                        :required "Y"})}
             {:name "SecurityList",
              :msgtype "y",
              :category "app",
-             :fields-groups ({:type :field,
-                              :field-name "SecurityReqID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "SecurityResponseID",
-                              :required "Y"}
-                             {:type :field,
-                              :field-name "SecurityRequestResult",
-                              :required "Y"}
-                             {:type :group,
-                              :group-name "NoRelatedSym",
-                              :required "N",
-                              :fields ()})}],
+             :content ({:type :field,
+                        :name "SecurityReqID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "SecurityResponseID",
+                        :required "Y"}
+                       {:type :field,
+                        :name "SecurityRequestResult",
+                        :required "Y"}
+                       {:type :group,
+                        :name "NoRelatedSym",
+                        :required "N",
+                        :fields ()})}],
  :fields [{:number "6",
            :name "AvgPx",
            :type "PRICE",
