@@ -250,10 +250,7 @@
 
 (defn message-dict [messages]
   (into {}
-        (map (juxt :msgtype identity) messages)
-        )
-                    
-                    )
+        (map (juxt :msgtype identity) messages)))
 
 (defn create-decoder [filepath]
   (let [schema (load-schema filepath)
@@ -278,16 +275,13 @@
            (assoc entry
                   :name name
                   :value2 (or value2 "")
-                  :type type
-                  )
-           
-           ))
+                  :type type)))
        message))
 
 (declare read-group)
 
-(defn read-section [{:keys [name content] :as _section} 
-                    {:keys [message items idx] :as _items} ]
+(defn read-section [{:keys [name content] :as _section}
+                    {:keys [message items idx] :as _items}]
   (println "reading " name " spec-items: " (count content))
   (let [section-fields content
         items-count (dec (count items))
@@ -301,37 +295,32 @@
             item (get items item-idx)
             match? (= (:name section) (:name item))]
         (println (if match? "=" "x")
-                  section
+                 section
                  ;" more? " more?
                  ;"idx-item " item-idx "idx section " section-idx
                  ;"item: " 
-                 item
-                 )
+                 item)
         (if match?
           ; match
-          (let [data (assoc data (:name section) (:value item))
-                group? (= (:type section) :group)]
-            (if (and (< item-idx items-count)
+          (let [group? (= (:type section) :group)
+                ;_ (println "group: " group?)
+                {:keys [field-data idx-next]}
+                (if group?
+                  (read-group section (:value item) {:message {} :items items :idx (inc item-idx)})
+                  {:field-data (:value item)
+                   :idx-next (inc item-idx)})
+                data (assoc data (:name section) field-data)]
+            (if (and (< idx-next items-count)
                      (< section-idx section-count))
-              (do
-                 (when group? 
-                   (println "group!! ")
-                   (read-group section (:value item) {:message {} :items items :idx (inc item-idx)})
-                   )
-                 (recur data (inc item-idx) (inc section-idx))  
-                )
-              
+              (recur data (inc idx-next) (inc section-idx))
               {:message (assoc message name data)
                :idx (inc item-idx)}))
           ; no match
-            (if (< section-idx section-count)
-              (recur data item-idx (inc section-idx)) 
-              {:message (assoc message name data)
-               :idx item-idx}
-              )
-            
-            )))))
-  
+          (if (< section-idx section-count)
+            (recur data item-idx (inc section-idx))
+            {:message (assoc message name data)
+             :idx item-idx}))))))
+
 (defn read-group [{:keys [name fields] :as section} nr {:keys [message items idx]}]
   (println "read-group: " section " nr: " nr)
   (let [nr (parse-long nr)
@@ -346,29 +335,24 @@
                       (reset! idx-a idx)
                       message))
         v (map read-next (range nr))]
-    
-    (println "group data: " v)
-    nil))
+    {:field-data  v
+     :count nr
+     :idx-next @idx-a}))
+
 
 ;{:keys [message items idx] :as _items}
 
 (defn read-message [{:keys [header trailer messages] :as spec} items]
   (let [{:keys [message idx]} (read-section {:name :header :content header}
-                                         {:message {} :items items :idx 0})
-        msg-type (get-in message [:header "MsgType" ])
+                                            {:message {} :items items :idx 0})
+        msg-type (get-in message [:header "MsgType"])
         payload-section (get messages msg-type)
         {:keys [message idx]} (read-section payload-section
-                            {:message message :items items :idx idx})
+                                            {:message message :items items :idx idx})
         {:keys [message idx]} (read-section {:name :trailer :content trailer}
-                                         {:message message :items items :idx idx})
-        ]
+                                            {:message message :items items :idx idx})]
     ;(assoc data :type msg-type :payload payload-section)
-    message
-    
-    )
-  
-
-  )
+    message))
  
   
   

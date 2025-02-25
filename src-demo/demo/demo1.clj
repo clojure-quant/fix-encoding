@@ -84,9 +84,10 @@ ctrader
  parse-fix-message
  (enrich-message ctrader)
  ;(read-section (:header ctrader))
- (read-message ctrader)
+ ;(read-message ctrader)
  
  )
+
 
 
 
@@ -113,13 +114,12 @@ ctrader
  {:tag "52", :value "20250224-21:13:01", :name "SendingTime", :value2 ""}
  {:tag "262", :value "6", :name "MDReqID", :value2 ""}
  {:tag "263", :value "1", :name "SubscriptionRequestType", :value2 "SNAPSHOT_PLUS_UPDATES"}
- {:tag "265", :value "1", :name "MDUpdateType", :value2 "INCREMENTAL_REFRESH"}
  {:tag "264", :value "1", :name "MarketDepth", :value2 ""}
+ {:tag "265", :value "1", :name "MDUpdateType", :value2 "INCREMENTAL_REFRESH"}
  {:tag "267", :value "2", :name "NoMDEntryTypes", :value2 ""}
  {:tag "269", :value "0", :name "MDEntryType", :value2 "BID"}
  {:tag "269", :value "1", :name "MDEntryType", :value2 "OFFER"}
  {:tag "146", :value "1", :name "NoRelatedSym", :value2 ""}
  {:tag "55", :value "4", :name "Symbol", :value2 ""}
  {:tag "10", :value "080", :name "CheckSum", :value2 ""})
-
 
