@@ -4,9 +4,10 @@
    [cheshire.core :as c]
    [clojure.string :as s]
    [clojure.edn :as edn]
-   ; awb99: time formatting is not used herer!
-   ;[tick.core :as t]
-   ;(clj-time [core :as t] [format :as f])
+   [tick.core :as t]
+   [tick.protocols :as tp]
+   [cljc.java-time.instant :as cljc-instant]
+   [cljc.java-time.local-date-time]
    ))
 
 
@@ -285,6 +286,26 @@
   )
 
 
+(defn parse-utc-timestamp [s]
+  (let [;cleaned (s/replace s #"\.(\d{1,3})$" (fn [[_ ms]] (format ".%03d" (Integer/parseInt ms)))) ;; Normalize milliseconds
+        cleaned s
+        formats ["yyyyMMdd-HH:mm:ss.SSS" "yyyyMMdd-HH:mm:ss"]
+        ldt (some (fn [fmt]
+                    (try
+                      (println "fmt: " fmt)
+                      (cljc.java-time.local-date-time/parse cleaned (t/formatter fmt))
+                      (catch Exception _ nil)))
+                  formats)]
+    (-> ldt
+        (t/in "UTC")              ;; Convert to UTC timezone
+        t/instant)
+    
+
+    ))
+
+;; Example usage:
+;(parse-utc-timestamp "20250224-21:13:01.525") ;; => #inst "2025-02-24T21:13:01.525Z"
+;(parse-utc-timestamp "20250224-21:13:01")     ;; => #inst "2025-02-24T21:13:01Z"
 
 
 ;(to-keyword "BodyLength")     ;; => :body-length
@@ -303,7 +324,7 @@
                 "NUMINGROUP" parse-long
                 "DATA" identity ; todo
                 "BOOLEAN" identity ; todo
-                "UTCTIMESTAMP" identity ; todo
+                "UTCTIMESTAMP" parse-utc-timestamp ; identity ; todo
                 }]
     (cond 
       ; do not change msgtype
@@ -318,8 +339,6 @@
       (if-let [parse-fn (get parser type)]
         (parse-fn value)
         value))))
-
-
 
 (defn enrich-message [{:keys [fields]} message]
   (map (fn [{:keys [tag value] :as entry}]

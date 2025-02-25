@@ -9,8 +9,6 @@
                                 ]]
    [demo.messages :as m]))
 
-
-
 (def ctrader (create-decoder "resources/fix-specs/ctrader.edn"))
 
 
