@@ -74,9 +74,6 @@ ctrader
  (:messages ctrader)
  (:trailer ctrader)
  (:fields ctrader)
-;; (def 
-;; (def )
-;; (def message '({:tag "8", :value "FIX.4.4"} ...))
 
 (->> ;logout-msg
      ;new-order-msg
@@ -84,7 +81,7 @@ ctrader
  parse-fix-message
  (enrich-message ctrader)
  ;(read-section (:header ctrader))
- ;(read-message ctrader)
+(read-message ctrader)
  
  )
 

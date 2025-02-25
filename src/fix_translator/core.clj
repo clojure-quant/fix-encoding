@@ -278,81 +278,77 @@
                   :type type)))
        message))
 
-(declare read-group)
+; item-reader
 
-(defn read-section [{:keys [name content] :as _section}
-                    {:keys [message items idx] :as _items}]
+(defn create-reader [items]
+  {:items-count (count items)
+   :items (into [] items)
+   :item-idx (atom 0)})
+
+(defn get-current [reader] (get (:items reader) @(:item-idx reader)))
+(defn more? [reader] (< @(:item-idx reader) (:items-count reader)))
+(defn move-next [reader] (swap! (:item-idx reader) inc))
+
+
+(declare read-vec)
+
+(defn read-map [{:keys [name content] :as _section} item-reader]
   (println "reading " name " spec-items: " (count content))
-  (let [section-fields content
-        items-count (dec (count items))
-        section-count (dec (count section-fields))
-        section-fields (into [] section-fields)
-        items (into [] items)]
-    (loop [data {}
-           item-idx idx
-           section-idx 0]
-      (let [section (get section-fields section-idx)
-            item (get items item-idx)
-            match? (= (:name section) (:name item))]
+  (let [section-reader (create-reader content)]
+    (loop [data {}]
+      (let [section (get-current section-reader)
+            item (get-current item-reader)
+            match? (= (:name section) (:name item))
+            group? (= (:type section) :group)]
         (println (if match? "=" "x")
                  section
-                 ;" more? " more?
-                 ;"idx-item " item-idx "idx section " section-idx
-                 ;"item: " 
                  item)
         (if match?
           ; match
-          (let [group? (= (:type section) :group)
-                ;_ (println "group: " group?)
-                {:keys [field-data idx-next]}
-                (if group?
-                  (read-group section (:value item) {:message {} :items items :idx (inc item-idx)})
-                  {:field-data (:value item)
-                   :idx-next (inc item-idx)})
-                data (assoc data (:name section) field-data)]
-            (if (and (< idx-next items-count)
-                     (< section-idx section-count))
-              (recur data (inc idx-next) (inc section-idx))
-              {:message (assoc message name data)
-               :idx (inc item-idx)}))
+          (let [_ (move-next item-reader)
+                _ (move-next section-reader)
+                val (if group?
+                      (read-vec {:name (:name section)
+                                 :content (:fields section)
+                                 :nr (:value item)}
+                                item-reader)
+                      (:value item))
+                data (assoc data (:name section) val)]
+            (if (and (more? item-reader)
+                     (more? section-reader))
+              (recur data)
+              data))
           ; no match
-          (if (< section-idx section-count)
-            (recur data item-idx (inc section-idx))
-            {:message (assoc message name data)
-             :idx item-idx}))))))
+          (do (move-next section-reader)
+              (if (more? section-reader)
+                (recur data)
+                data)
+              ))))))
 
-(defn read-group [{:keys [name fields] :as section} nr {:keys [message items idx]}]
-  (println "read-group: " section " nr: " nr)
+(defn read-vec [{:keys [name _content nr] :as section} item-reader]
+  (println "read-vec: " name " nr: " nr)
   (let [nr (parse-long nr)
-        section {:name name :content fields}
-        idx-a (atom idx)
-        read-next (fn [i]
-                    (println "group idx: " i)
-                    (let [{:keys [message idx]}
-                          (read-section section {:message {}
-                                                 :items items
-                                                 :idx @idx-a})]
-                      (reset! idx-a idx)
-                      message))
-        v (map read-next (range nr))]
-    {:field-data  v
-     :count nr
-     :idx-next @idx-a}))
+        read-idx (fn [i]
+                   (println "group idx: " i)
+                   (read-map section item-reader))
+        v (map read-idx (range nr))]
+    (into [] v) ; this is crucial, as it gets eager
+    ))
 
 
 ;{:keys [message items idx] :as _items}
 
 (defn read-message [{:keys [header trailer messages] :as spec} items]
-  (let [{:keys [message idx]} (read-section {:name :header :content header}
-                                            {:message {} :items items :idx 0})
-        msg-type (get-in message [:header "MsgType"])
+  (let [item-reader (create-reader items) 
+        header (read-map {:name :header :content header} item-reader)
+        msg-type (get header "MsgType")
         payload-section (get messages msg-type)
-        {:keys [message idx]} (read-section payload-section
-                                            {:message message :items items :idx idx})
-        {:keys [message idx]} (read-section {:name :trailer :content trailer}
-                                            {:message message :items items :idx idx})]
+        payload (read-map payload-section item-reader)
+        trailer (read-map {:name :trailer :content trailer} item-reader)]
     ;(assoc data :type msg-type :payload payload-section)
-    message))
+    {:header header 
+     :payload payload
+     :trailer trailer}))
  
   
   
