@@ -278,6 +278,22 @@
                   :type type)))
        message))
 
+
+(defn to-keyword [s]
+  (let [k (-> s
+              (s/replace #"(?<=[a-z0-9])([A-Z])" "-$1") ;; Insert hyphen before uppercase if preceded by lowercase/number
+              s/lower-case                              ;; Convert to lowercase
+              keyword            ;; Convert to keyword
+              )
+        
+        ]
+    (println "s: " s " kw: " k)
+    k
+    ))                        
+
+;(to-keyword "BodyLength")     ;; => :body-length
+;(to-keyword "SenderCompID")   ;; => :sender-comp-id
+
 ; item-reader
 
 (defn create-reader [items]
@@ -300,9 +316,7 @@
             item (get-current item-reader)
             match? (= (:name section) (:name item))
             group? (= (:type section) :group)]
-        (println (if match? "=" "x")
-                 section
-                 item)
+        (println (if match? "=" "x") section item)
         (if match?
           ; match
           (let [_ (move-next item-reader)
@@ -313,7 +327,10 @@
                                  :nr (:value item)}
                                 item-reader)
                       (:value item))
-                data (assoc data (:name section) val)]
+                data (assoc data 
+                            ;(:name section)
+                            (to-keyword (:name section))
+                            val)]
             (if (and (more? item-reader)
                      (more? section-reader))
               (recur data)
@@ -341,7 +358,8 @@
 (defn read-message [{:keys [header trailer messages] :as spec} items]
   (let [item-reader (create-reader items) 
         header (read-map {:name :header :content header} item-reader)
-        msg-type (get header "MsgType")
+        ;msg-type (get header "MsgType")
+        msg-type (:msg-type header)
         payload-section (get messages msg-type)
         payload (read-map payload-section item-reader)
         trailer (read-map {:name :trailer :content trailer} item-reader)]
