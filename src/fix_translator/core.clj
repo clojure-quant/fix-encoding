@@ -243,14 +243,29 @@
 ;  (into {} (map (fn [{:keys [number name]}] [number name]) (:fields schema))))
 
 (defn build-tag-map [schema]
-  (into {} (map (fn [{:keys [tag name values]}]
-                  [tag {:name name :values values}])
+  (into {} (map (fn [{:keys [tag name type values]}]
+                  [tag {:name name :type type :values values}])
                 (:fields schema))))
+
+(defn to-keyword [s]
+  (let [k (-> s
+              (s/replace #"(?<=[a-z0-9])([A-Z])" "-$1") ;; Insert hyphen before uppercase if preceded by lowercase/number
+              s/lower-case                              ;; Convert to lowercase
+              keyword            ;; Convert to keyword
+              )]
+    ;(println "s: " s " kw: " k)
+    k))   
 
 
 (defn message-dict [messages]
+  (let [msg-type (fn [message]
+                   (:msgtype message)
+                   ;(-> message :name to-keyword)
+                   )]
   (into {}
-        (map (juxt :msgtype identity) messages)))
+        (map (juxt msg-type identity) messages))  
+    )
+  )
 
 (defn create-decoder [filepath]
   (let [schema (load-schema filepath)
@@ -261,38 +276,63 @@
      :messages (-> schema :messages message-dict) ;(:messages schema)
      }))
 
-;(defn enrich-message [decoder message]
-;  (map (fn [{:keys [tag value] :as entry}]
-;         (assoc entry :name (get decoder tag "Unknown")))
-;       message))
-
-(defn enrich-message [{:keys [fields]} message]
-  (map (fn [{:keys [tag value] :as entry}]
-         (let [{:keys [name values type]} (get fields tag {:name "Unknown"})
-               ;_ (println "values: " values)
-               value2 (when values
-                        (some #(when (= (:enum %) value) (:description %)) values))]
-           (assoc entry
-                  :name name
-                  :value2 (or value2 "")
-                  :type type)))
-       message))
+(defn types-in-spec [decoder]
+(->> decoder
+     :fields
+     vals
+     (map :type)
+     (into #{}))  
+  )
 
 
-(defn to-keyword [s]
-  (let [k (-> s
-              (s/replace #"(?<=[a-z0-9])([A-Z])" "-$1") ;; Insert hyphen before uppercase if preceded by lowercase/number
-              s/lower-case                              ;; Convert to lowercase
-              keyword            ;; Convert to keyword
-              )
-        
-        ]
-    (println "s: " s " kw: " k)
-    k
-    ))                        
+
 
 ;(to-keyword "BodyLength")     ;; => :body-length
 ;(to-keyword "SenderCompID")   ;; => :sender-comp-id
+
+(defn convert-value [{:keys [name type values] :as _field} value]
+  ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
+  (let [parser {"LOCALMKTDATE" identity ; todo
+                "SEQNUM" parse-long
+                "LENGTH" parse-long
+                "QTY" bigdec
+                "STRING" identity
+                "INT" parse-long
+                "PRICE" bigdec
+                "CHAR" identity
+                "NUMINGROUP" parse-long
+                "DATA" identity ; todo
+                "BOOLEAN" identity ; todo
+                "UTCTIMESTAMP" identity ; todo
+                }]
+    (cond 
+      ; do not change msgtype
+      (= name "MsgType")
+      value 
+      ; enums
+      (seq values)
+      (some #(when (= (:enum %) value)
+               (to-keyword (:description %))) values)
+      ; parse
+      :else 
+      (if-let [parse-fn (get parser type)]
+        (parse-fn value)
+        value))))
+
+
+
+(defn enrich-message [{:keys [fields]} message]
+  (map (fn [{:keys [tag value] :as entry}]
+         (let [{:keys [name _values type] :as field} (get fields tag {:name "Unknown"})]
+           ;(println "field: " field)
+           (assoc entry
+                  :name name
+                  :type type
+                  :value-str value
+                  :value (convert-value field value)
+                  )))
+       message))
+              
 
 ; item-reader
 
@@ -344,7 +384,7 @@
 
 (defn read-vec [{:keys [name _content nr] :as section} item-reader]
   (println "read-vec: " name " nr: " nr)
-  (let [nr (parse-long nr)
+  (let [;nr (parse-long nr)
         read-idx (fn [i]
                    (println "group idx: " i)
                    (read-map section item-reader))
