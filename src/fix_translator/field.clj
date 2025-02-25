@@ -1,8 +1,9 @@
 (ns fix-translator.field
   (:require
+   [clojure.set :refer [rename-keys]]
    [tick.core :as t]
    [cljc.java-time.local-date-time :as ldt]
-   [fix-translator.schema :refer [get-field]]
+   [fix-translator.schema :refer [get-field get-field-by-name]]
    ))
 
 ;; tag=value pairs separated by \u0001 (SOH),  tag can be 1-2 alphanumeric characters
@@ -78,4 +79,45 @@
                        :value-str value
                        :value (decode-value field value)))))))
 
+; encode
 
+
+(defn encode-value [{:keys [name type values] :as _field} value]
+  ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
+  (let [parser {"LOCALMKTDATE" str; todo
+                "SEQNUM" str
+                "LENGTH" str
+                "QTY" str
+                "STRING" identity
+                "INT" str
+                "PRICE" str
+                "CHAR" str
+                "NUMINGROUP" str
+                "DATA" str ; todo
+                "BOOLEAN" str ; todo
+                "UTCTIMESTAMP" str ; identity ; todo
+                }]
+    (cond
+      ; do not change msgtype
+      ;(= name "MsgType")
+      (= name :msg-type)
+      value
+      ; enums
+      ;(seq values)
+      ;(some #(when (= (:enum %) value)
+      ;         (:description %)) values)
+      ; parse
+      :else
+      (if-let [encode-fn (get parser type)]
+        (encode-fn value)
+        value))))
+
+(defn encode-fields [decoder fix-field-seq]
+  (->> fix-field-seq
+       (map (fn [{:keys [name value] :as entry}]
+              (let [{:keys [tag _values type] :as field} (get-field-by-name decoder name)]
+           ;(println "field: " field)
+                (assoc entry 
+                       :tag tag
+                       :type type
+                       :value-str (encode-value field value)))))))

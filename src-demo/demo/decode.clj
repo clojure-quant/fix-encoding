@@ -4,7 +4,9 @@
                                   ; debugging of schema:
                                   types-in-spec get-msg-type get-field]]
    [fix-translator.field :refer [decode-fields]]
-   [fix-translator.message :refer [decode-fix-msg]]
+   [fix-translator.message :refer [decode-fix-msg
+                                   encode-fix-msg
+                                   ]]
    [demo.messages :as m]
    [lambdaisland.deep-diff2 :as ddiff]))
 
@@ -49,3 +51,20 @@ ctrader
 
 (decode-fix-msg ctrader m/logout-msg)
 
+
+(def out-msg 
+{:header
+ {:target-comp-id "demo.tradeviewmarkets.3152195",
+  :sending-time #time/instant "2025-02-24T21:13:01.525Z",
+  :body-length 118,
+  :sender-comp-id "CSERVER",
+  :msg-seq-num 1,
+  :msg-type "5",
+  :begin-string "FIX.4.4",
+  :target-sub-id "QUOTE",
+  :sender-sub-id "QUOTE"}})
+
+
+(encode-fix-msg ctrader out-msg)
+
+(:header ctrader)

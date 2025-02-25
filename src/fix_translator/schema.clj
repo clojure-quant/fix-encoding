@@ -13,6 +13,11 @@
        (map (juxt :tag identity))
        (into {})))
   
+(defn build-name->field [schema]
+  (->> (:fields schema)
+       (map (juxt :name identity))
+       (into {})))
+  
 
 (defn msg-type->message [schema]
   (->> (:messages schema )
@@ -23,6 +28,7 @@
 (defn create-decoder [filepath]
   (let [schema (load-schema filepath)]
     {:tag->field (build-tag->field schema)
+     :name->field (build-name->field schema)
      :header (:header schema)
      :trailer (:trailer schema)
      :messages (msg-type->message schema)
@@ -32,6 +38,11 @@
   (if-let [field (get tag->field tag)]
     field
     (throw (ex-info "fix-encoding - unknown field-tag" {:tag tag}))))
+
+(defn get-field-by-name [{:keys [name->field] :as _decoder} field-name]
+  (if-let [field (get name->field field-name)]
+    field
+    (throw (ex-info "fix-encoding - unknown field-name" {:field-name field-name}))))
 
 (defn get-msg-type [{:keys [messages] :as _decoder} msg-type] 
   (if-let [msg (get messages msg-type)]

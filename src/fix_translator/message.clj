@@ -1,6 +1,6 @@
 (ns fix-translator.message
   (:require
-   [fix-translator.field :refer [decode-fields]]
+   [fix-translator.field :refer [decode-fields encode-fields]]
    [fix-translator.schema :refer [get-msg-type]])
   (:import [java.io StringWriter]))
 
@@ -122,43 +122,35 @@
 
 (defn linearize-map [{:keys [name content] :as _section} m item-writer]
   (println "linearizing " name " spec-items: " (count content))
-  (let [section-reader (create-reader content)]
-    (loop [data {}]
-      (let [section (get-current section-reader)
-            item (get-current item-reader)
-            match? (= (:name section) (:name item))
-            group? (= (:type section) :group)]
-        (println (if match? "=" "x") section item)
-        (if match?
-          ; match
-          (let [_ (move-next item-reader)
-                _ (move-next section-reader)
-                val (if group?
-                      (read-vec {:name (:name section)
-                                 :content (:fields section)
-                                 :nr (:value item)}
-                                item-reader)
-                      (:value item))
-                data (assoc data
-                            (:name section)
-                            val)]
-            (if (and (more? item-reader)
-                     (more? section-reader))
-              (recur data)
-              data))
-          ; no match
-          (do (move-next section-reader)
-              (if (more? section-reader)
-                (recur data)
-                data)))))))
+  (println "m: " m)
+  (println "spec-items:" content)
+  (doall 
+   (map (fn [{:keys [name required] :as section-field} ]
+          (println "processing field: " section-field)
+          (if-let [item (get m name)]
+            (do 
+              (println "=" section-field item) 
+              (write item-writer {:name name 
+                                  :value item}))
+            (do 
+              (println "x" section-field "no item")
+              (when required 
+                (throw (ex-info "fix-encode-payload-missing" {:name name}))
+                )
+              )
+            ))
+        content
+        )))
 
 
 (defn encode-fix-msg [{:keys [header trailer messages] :as decoder}
-                      {:keys [header payload] :as fix-msg}]
+                      fix-msg]
   (let [writer (create-writer)
-        _ (linearize-map {:name :header :content header} (:header fix-msg) writer)]
+        _ (linearize-map {:name :header :content header} (:header fix-msg) writer)
+        field-seq (get-all writer)]
+    (encode-fields decoder field-seq)
     
-    (get-all writer)
+    
     ))
 
 
