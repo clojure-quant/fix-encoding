@@ -121,29 +121,35 @@
       (reset! (:items writer) [])
       items))
 
-  (defn linearize-vec [decoder vec-name vec-value item-writer]
-     (let [; example of vec item: [{:mdentry-type :bid} {:mdentry-type :offer}]
-          size (count vec-value)]
-      (println "vector field: " vec-value)
-                         ; encode size
-      (write item-writer (encode-field decoder {:name vec-name
-                                                :value size})))
+  (declare linearize-map)
 
-  )
+  (defn linearize-vec [decoder vec-name fields vec-value item-writer]
+    (let [; fields: [{:name :mdentry-type :required true}]
+           ; example of vec item: [{:mdentry-type :bid} {:mdentry-type :offer}]
+          size (count vec-value)
+          section {:name vec-name :content fields}]
+      (println "vector field: " vec-value)
+      ; encode size
+      (write item-writer (encode-field decoder {:name vec-name
+                                                :value size}))
+       ; encode each map in vec-value
+      (->>  vec-value
+            (map #(linearize-map decoder section % item-writer))
+            doall)))
 
   (defn linearize-map [decoder {:keys [name content] :as _section} m item-writer]
     (println "linearizing " name " spec-items: " (count content))
     ;(println "m: " m)
     ;(println "spec-items:" content)
     (doall
-     (map (fn [{:keys [name required type] :as section-field}]
+     (map (fn [{:keys [name required type fields] :as section-field}]
             (println "processing field: " section-field)
             (if-let [item (get m name)]
               (do
                 (println "=" section-field item)
                 (if (= type :group)
                   ; vector field
-                  (linearize-vec decoder name item item-writer)
+                  (linearize-vec decoder name fields item item-writer)
                   ; simple field
                   (write item-writer (encode-field decoder {:name name
                                                             :value item}))))
