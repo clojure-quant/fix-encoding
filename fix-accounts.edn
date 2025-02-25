@@ -1,0 +1,20 @@
+{:ctrader-tradeviewmarkets-quote
+ {:spec "resources/fix-specs/ctrader.edn"
+  :header {:begin-string "FIX.4.4"
+           :target-comp-id "demo.tradeviewmarkets.3152195"
+           :sender-comp-id "CSERVER"
+           :target-sub-id "QUOTE"
+           :sender-sub-id "QUOTE"}
+  :host "h35.p.ctrader.com"
+  :port 5201
+  :username "3152195"
+  :password "2023Florian"
+  :log? true}}
+
+;:sending-time #time/instant "2025-02-24T21:13:01.525Z",
+;  :body-length 118,
+; :msg-type "5",
+;:msg-seq-num 1,
+;  "outbound-seq-num" : 1,
+; "inbound-seq-num" : 1,
+; "last-logout" : "20231206",

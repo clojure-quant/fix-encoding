@@ -3,21 +3,18 @@
    [clojure.java.io :as io]
    [cheshire.core :as c]
    [clojure.string :as s]
-   [clojure.edn :as edn]
-   [tick.core :as t]
-   [tick.protocols :as tp]
-   [cljc.java-time.instant :as cljc-instant]
-   [cljc.java-time.local-date-time]
    ))
 
 
 (def codecs (atom {}))
 
-(def ^:const tag-delimiter "\u0001")
+(def ^:const tag-delimiter "\u0001") ; 
 (def ^:const msg-type-tag "35")
 (def ^:const tag-number first)
 (def ^:const tag-name first)
 (def ^:const translation-fn second)
+
+(println tag-delimiter)
 
 (defn invert-map
   "Switches the role of keys and values in a map."
@@ -222,224 +219,7 @@
          (map #(drop 1 %))
          (map (partial translate-to-map decoder))
          (into {}))))
-
-;; 2025 02 20 awb99: structured parsing
-
-;; tag=value pairs separated by \u0001 (SOH),  tag can be 1-2 alphanumeric characters
-(def tag-value-regex #"([A-Za-z0-9]{1,4})=([^\u0001]+)")
-
-;; Parse FIX message into list of tag-value maps
-(defn ->tag-value-pairs [msg]
-  (map (fn [[_ tag value]]
-         {:tag tag
-          :value value})
-       (re-seq tag-value-regex msg)))
-
-
-(defn load-schema [filepath]
-  (with-open [rdr (io/reader filepath)]
-    (edn/read (java.io.PushbackReader. rdr))))
-
-;(defn build-tag-map [schema]
-;  (into {} (map (fn [{:keys [number name]}] [number name]) (:fields schema))))
-
-(defn build-tag-map [schema]
-  (into {} (map (fn [{:keys [tag name type values]}]
-                  [tag {:name name :type type :values values}])
-                (:fields schema))))
-
-(defn to-keyword [s]
-  (let [k (-> s
-              (s/replace #"(?<=[a-z0-9])([A-Z])" "-$1") ;; Insert hyphen before uppercase if preceded by lowercase/number
-              s/lower-case                              ;; Convert to lowercase
-              keyword            ;; Convert to keyword
-              )]
-    ;(println "s: " s " kw: " k)
-    k))   
-
-
-(defn message-dict [messages]
-  (let [msg-type (fn [message]
-                   (:msgtype message)
-                   ;(-> message :name to-keyword)
-                   )]
-  (into {}
-        (map (juxt msg-type identity) messages))  
-    )
-  )
-
-(defn create-decoder [filepath]
-  (let [schema (load-schema filepath)
-        tag-map (build-tag-map schema)]
-    {:fields tag-map
-     :header (:header schema)
-     :trailer (:trailer schema)
-     :messages (-> schema :messages message-dict) ;(:messages schema)
-     }))
-
-(defn types-in-spec [decoder]
-(->> decoder
-     :fields
-     vals
-     (map :type)
-     (into #{}))  
-  )
-
-
-(defn parse-utc-timestamp [s]
-  (let [;cleaned (s/replace s #"\.(\d{1,3})$" (fn [[_ ms]] (format ".%03d" (Integer/parseInt ms)))) ;; Normalize milliseconds
-        cleaned s
-        formats ["yyyyMMdd-HH:mm:ss.SSS" "yyyyMMdd-HH:mm:ss"]
-        ldt (some (fn [fmt]
-                    (try
-                      (println "fmt: " fmt)
-                      (cljc.java-time.local-date-time/parse cleaned (t/formatter fmt))
-                      (catch Exception _ nil)))
-                  formats)]
-    (-> ldt
-        (t/in "UTC")              ;; Convert to UTC timezone
-        t/instant)
-    
-
-    ))
-
-;; Example usage:
-;(parse-utc-timestamp "20250224-21:13:01.525") ;; => #inst "2025-02-24T21:13:01.525Z"
-;(parse-utc-timestamp "20250224-21:13:01")     ;; => #inst "2025-02-24T21:13:01Z"
-
-
-;(to-keyword "BodyLength")     ;; => :body-length
-;(to-keyword "SenderCompID")   ;; => :sender-comp-id
-
-(defn convert-value [{:keys [name type values] :as _field} value]
-  ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
-  (let [parser {"LOCALMKTDATE" identity ; todo
-                "SEQNUM" parse-long
-                "LENGTH" parse-long
-                "QTY" bigdec
-                "STRING" identity
-                "INT" parse-long
-                "PRICE" bigdec
-                "CHAR" identity
-                "NUMINGROUP" parse-long
-                "DATA" identity ; todo
-                "BOOLEAN" identity ; todo
-                "UTCTIMESTAMP" parse-utc-timestamp ; identity ; todo
-                }]
-    (cond 
-      ; do not change msgtype
-      (= name "MsgType")
-      value 
-      ; enums
-      (seq values)
-      (some #(when (= (:enum %) value)
-               (to-keyword (:description %))) values)
-      ; parse
-      :else 
-      (if-let [parse-fn (get parser type)]
-        (parse-fn value)
-        value))))
-
-(defn enrich-message [{:keys [fields]} message]
-  (map (fn [{:keys [tag value] :as entry}]
-         (let [{:keys [name _values type] :as field} (get fields tag {:name "Unknown"})]
-           ;(println "field: " field)
-           (assoc entry
-                  :name name
-                  :type type
-                  :value-str value
-                  :value (convert-value field value)
-                  )))
-       message))
-              
-
-; item-reader
-
-(defn create-reader [items]
-  {:items-count (count items)
-   :items (into [] items)
-   :item-idx (atom 0)})
-
-(defn get-current [reader] (get (:items reader) @(:item-idx reader)))
-(defn more? [reader] (< @(:item-idx reader) (:items-count reader)))
-(defn move-next [reader] (swap! (:item-idx reader) inc))
-
-
-(declare read-vec)
-
-(defn read-map [{:keys [name content] :as _section} item-reader]
-  (println "reading " name " spec-items: " (count content))
-  (let [section-reader (create-reader content)]
-    (loop [data {}]
-      (let [section (get-current section-reader)
-            item (get-current item-reader)
-            match? (= (:name section) (:name item))
-            group? (= (:type section) :group)]
-        (println (if match? "=" "x") section item)
-        (if match?
-          ; match
-          (let [_ (move-next item-reader)
-                _ (move-next section-reader)
-                val (if group?
-                      (read-vec {:name (:name section)
-                                 :content (:fields section)
-                                 :nr (:value item)}
-                                item-reader)
-                      (:value item))
-                data (assoc data 
-                            ;(:name section)
-                            (to-keyword (:name section))
-                            val)]
-            (if (and (more? item-reader)
-                     (more? section-reader))
-              (recur data)
-              data))
-          ; no match
-          (do (move-next section-reader)
-              (if (more? section-reader)
-                (recur data)
-                data)
-              ))))))
-
-(defn read-vec [{:keys [name _content nr] :as section} item-reader]
-  (println "read-vec: " name " nr: " nr)
-  (let [;nr (parse-long nr)
-        read-idx (fn [i]
-                   (println "group idx: " i)
-                   (read-map section item-reader))
-        v (map read-idx (range nr))]
-    (into [] v) ; this is crucial, as it gets eager
-    ))
-
-
-;{:keys [message items idx] :as _items}
-
-(defn read-message [{:keys [header trailer messages] :as spec} items]
-  (let [item-reader (create-reader items) 
-        header (read-map {:name :header :content header} item-reader)
-        ;msg-type (get header "MsgType")
-        msg-type (:msg-type header)
-        payload-section (get messages msg-type)
-        payload (read-map payload-section item-reader)
-        trailer (read-map {:name :trailer :content trailer} item-reader)]
-    ;(assoc data :type msg-type :payload payload-section)
-    {:header header 
-     :payload payload
-     :trailer trailer}))
- 
-  
-
-(defn decode-fix-msg [decoder fix-msg-str]
-  (let [pairs (->tag-value-pairs fix-msg-str)
-        fields (enrich-message decoder pairs)
-        msg (read-message decoder fields)
-        fix-msg-no-checksum (subs fix-msg-str 0 (- (count fix-msg-str) 7))
-        ]
-    (assoc msg 
-           :wire fix-msg-str
-           ;:wire-no-c fix-msg-no-checksum
-           :checksum (checksum fix-msg-no-checksum)
-           )))
+         
 
 
   
