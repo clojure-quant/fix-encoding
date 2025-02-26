@@ -17,8 +17,9 @@
   :demo {:extra-paths ["src-demo"]
          :extra-deps {aleph/aleph {:mvn/version "0.7.0"}
                       org.clj-commons/byte-streams {:mvn/version "0.3.4"}
-                      
-         }
+                      org.clj-commons/gloss {:mvn/version "0.3.6"}
+                      nano-id/nano-id {:mvn/version "1.1.0"}
+                      }
 
                       }
 
