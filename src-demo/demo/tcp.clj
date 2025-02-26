@@ -28,10 +28,14 @@ s
   []
   (let [tcp-config (select-keys (:config s) [:host :port])]
     (println "connecting fix to: " tcp-config)
+    (spit "msg.log" "\nCONNECTING" :append true)
     @(tcp/client tcp-config)))
 
 
+
+
 (def c (create-client))
+
 
 (handle-incoming c)
 
@@ -54,8 +58,19 @@ s
                  :password "2025Florian"}
    })
 
+
+(def subscribe-payload
+  {:fix-type "V"
+   :fix-payload {:mdreq-id "1455",
+                 :subscription-request-type :snapshot-plus-updates,
+                 :market-depth 1,
+                 :mdupdate-type :incremental-refresh,
+                 :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
+                 :no-related-sym [{:symbol "4"}]}})
+
 @(s/put! c (create-fix-msg login-payload))
 
+@(s/put! c (create-fix-msg subscribe-payload))
 
 
 

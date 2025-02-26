@@ -1,3 +1,94 @@
 
 OUT: 8=FIX.4.49=15335=A49=cServer56=demo.tradeviewmarkets.319329934=450=QUOTE57=QUOTE52=20250226-03:55:53.12898=:none-other108=60141=Y553=3193299554=2025Florian10=167
 IN: 8=FIX.4.49=16535=534=149=demo.tradeviewmarkets.319329950=QUOTE52=20250226-03:55:53.24356=cServer57=QUOTE58=Invalid Logon message: Incorrect data format for value, field=9810=038
+OUT: 8=FIX.4.49=14335=A49=cServer56=demo.tradeviewmarkets.319329934=250=QUOTE57=QUOTE52=20250226-04:03:49.98198=0108=60141=Y553=3193299554=2025Florian10=161
+IN: 8=FIX.4.49=12635=534=149=demo.tradeviewmarkets.319329950=QUOTE52=20250226-04:03:50.08456=cServer57=QUOTE58=SenderCompID is not valid10=068
+
+
+OUT: 8=FIX.4.49=14335=A
+49=demo.tradeviewmarkets.319329956=cServer
+34=2
+50=QUOTE57=QUOTE
+52=20250226-04:06:26.52198=0108=60141=Y
+553=3193299554=2025Florian10=149
+
+8=FIX.4.49=13935=A
+49=demo.tradeviewmarkets.319329956=CSERVER
+34=1
+50=QUOTE57=QUOTE
+52=20250226-00:02:2698=0108=60141=Y
+553=3193299554=2025Florian10=011"
+
+
+
+IN: 8=FIX.4.49=11735=534=1
+49=cServer50=QUOTE
+52=20250226-04:06:26.687
+56=demo.tradeviewmarkets.319329957=QUOTE
+58=RET_INVALID_DATA
+10=003
+CONNECTING
+OUT: 8=FIX.4.49=14335=A49=demo.tradeviewmarkets.319329956=cServer34=250=QUOTE57=QUOTE52=20250226-04:14:29.98398=0108=60141=Y553=3193299554=2025Florian10=163
+IN: 8=FIX.4.49=11735=534=149=cServer50=QUOTE52=20250226-04:14:30.14456=demo.tradeviewmarkets.319329957=QUOTE58=RET_INVALID_DATA10=241
+CONNECTING
+OUT: 8=FIX.4.49=14335=A49=demo.tradeviewmarkets.319329956=cServer34=150=QUOTE57=QUOTE52=20250226-04:16:43.84698=0108=60141=Y553=3193299554=2025Florian10=158
+IN: 8=FIX.4.49=11735=534=149=cServer50=QUOTE52=20250226-04:16:44.02156=demo.tradeviewmarkets.3193299
+57=QUOTE58=RET_INVALID_DATA10=242
+CONNECTING
+
+CONNECTING
+
+
+MY 
+8=FIX.4.49=14335=A49=demo.tradeviewmarkets.319329956=CSERVER34=1
+50=QUOTE57=QUOTE52=20250226-04:41:02.868
+98=0108=60141=Y553=3193299554=2025Florian10=219
+
+
+8=FIX.4.49=14335=A34=149=demo.tradeviewmarkets.319329956=CSERVER
+50=QUOTE57=QUOTE52=20250226-04:41:02.868
+98=0108=60141=Y553=3193299554=2025Florian10=219
+
+8=FIX.4.19=6135=A34=149=EXEC52=20121105-23:24:0656=BANZAI98=0108=3010=003
+
+SPEC
+8=FIX.4.4|9=126|35=A|49=live.theBroker.12345|56=CSERVER|34=1|
+52=20170117-08:03:04|57=TRADE|50=any_string|
+98=0|108=30|141=Y|553=12345|554=passw0rd!|10=131|
+
+OLD
+[:sender-comp-id sender  :target-comp-id target
+     :sender-sub-id sender-sub
+     :target-sub-id target-sub
+     :msg-seq-num (swap! (:out-seq-num session) inc)
+     :sending-time (timestamp)]
+
+[:heartbeat-interval heartbeat-interval
+                                :reset-seq-num reset-seq-num
+                                :encrypt-method :none
+                                :username (:username session)
+                                :password (:password session)]
+
+
+
+IN: 8=FIX.4.49=11735=534=1
+
+49=CSERVER50=QUOTE52=20250226-04:41:03.047
+56=demo.tradeviewmarkets.319329957=QUOTE
+58=RET_INVALID_DATA10=051
+OUT: 8=FIX.4.49=15335=V49=demo.tradeviewmarkets.319329956=CSERVER34=250=QUOTE57=QUOTE52=20250226-04:41:05.048262=1455263=1264=1265=1267=2269=0269=1146=155=410=191
+CONNECTING
+OUT: 8=FIX.4.49=15335=V49=demo.tradeviewmarkets.319329956=CSERVER34=350=QUOTE57=QUOTE52=20250226-04:41:32.327262=1455263=1264=1265=1267=2269=0269=1146=155=410=192
+OUT: 8=FIX.4.49=14335=A49=demo.tradeviewmarkets.319329956=CSERVER34=450=QUOTE57=QUOTE52=20250226-04:41:54.10998=0108=60141=Y553=3193299554=2025Florian10=217
+
+
+
+Response (Success)
+
+8=FIX.4.4|9=106|35=A|34=1|49=CSERVER|50=TRADE|
+52=20170117-08:03:04.509|56=live.theBroker.12345|57=any_string|98=0|108=30|141=Y|10=066|
+
+Response (Failed)
+
+8=FIX.4.4|9=109|35=5|34=1|49=CSERVER|50=TRADE|
+52=20170117-08:03:04.509|56=live.theBroker.12345|58=InternalError: RET_INVALID_DATA|10=033|

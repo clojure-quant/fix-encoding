@@ -110,14 +110,16 @@
       (= name :msg-type)
       value
       ; enums
-      ;(seq values)
-      ;(some #(when (= (:enum %) value)
-      ;         (:description %)) values)
+      (seq values)
+      (some #(when (= (:description %) value)
+               (:enum %)) values)
       ; parse
       :else
       (if-let [encode-fn (get parser type)]
         (encode-fn value)
         value))))
+
+ 
 
 (defn encode-field [decoder {:keys [name value] :as fix-field}]
   (let [{:keys [tag _values type] :as field} (get-field-by-name decoder name)]
