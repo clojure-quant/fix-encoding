@@ -1,6 +1,5 @@
 (ns fix-translator.field
   (:require
-   [clojure.set :refer [rename-keys]]
    [tick.core :as t]
    [cljc.java-time.local-date-time :as ldt]
    [fix-translator.schema :refer [get-field get-field-by-name]]
@@ -38,16 +37,13 @@
 (defn format-utc-timestamp
   "Returns a UTC timestamp in a specified format."
   [inst]
-  (let [format "yyyyMMdd-HH:mm:ss"]
+  (let [format "yyyyMMdd-HH:mm:ss.SSS"]
     ; instant cannot be formatted
     (t/format (t/formatter format) (t/date-time inst))  
     )
   )
 
-; (format-utc-timestamp (t/instant))
-
-
-(t/format (t/formatter "yyyyMMdd-HH:mm:ss") (t/instant))
+ ;(format-utc-timestamp (t/instant))
 
 (defn decode-value [{:keys [name type values] :as _field} value]
   ;(println "converting tag: " name  "type: " type " value: " value "values: " values)

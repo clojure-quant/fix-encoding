@@ -179,14 +179,41 @@
         payload (pop-items writer)
         ; fix-str
         sw (StringWriter.)
-        _ (write-fields sw header)
+        [field-begin field-body-len & header-body] header
+        _ (write-fields sw header-body)
         _ (write-fields sw payload)
-        wire (.toString sw)]
-    {:header header
-     :msg-type msg-type
+        ; body length
+        body-length (.length (.getBuffer sw))
+        wire-body (.toString sw)
+        _ (println "sw count: " body-length)
+        _ (println "body-len" field-body-len)
+        field-body-len (assoc field-body-len 
+                              :value body-length
+                              :value-str (str body-length))
+        sw (StringWriter.)
+        _ (write-fields sw [field-begin field-body-len])
+        wire-type-length (.toString sw)
+        wire (str wire-type-length wire-body)
+        ; checksum
+        checksum (checksum wire)
+        trailer-section {:check-sum checksum}
+         _ (linearize-map decoder {:name :trailer :content trailer} trailer-section writer)
+        trailer-payload (pop-items writer)
+        sw (StringWriter.)
+         _ (write-fields sw trailer-payload)
+         wire-trailer (.toString sw)
+         wire-full (str wire wire-trailer)
+        ]
+    {:header (concat [field-begin field-body-len] header-body) 
      :payload payload
-     :wire wire}))
+     :trailer trailer-payload
+     :msg-type msg-type
+     :wire wire-full
+     :body-length body-length
+     :checksum checksum
+     }))
 
+ ;{}}
 
  
 

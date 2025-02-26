@@ -16,7 +16,7 @@
           :main-opts  ["-m" "nrepl.cmdline"]}
 
   :demo {:extra-paths ["src-demo"]
-         :exec-fn  demo.https/run-webserver}
+         }
 
 
 

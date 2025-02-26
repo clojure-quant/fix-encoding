@@ -16,6 +16,15 @@
 
 (println tag-delimiter)
 
+(= "\u0001" "")
+ 
+(println "\u0001")
+
+
+
+
+
+
 (defn invert-map
   "Switches the role of keys and values in a map."
   [m]

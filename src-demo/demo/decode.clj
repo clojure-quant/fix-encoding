@@ -7,11 +7,8 @@
    [fix-translator.message :refer [decode-fix-msg
                                    encode-fix-msg
                                    ]]
-   [demo.messages :as m]
-   [lambdaisland.deep-diff2 :as ddiff]))
+   [demo.messages :as m]))
 
-
-;(def ctrader (create-decoder "resources/fix-specs/ctrader.edn"))
 
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
 
@@ -53,6 +50,7 @@ ctrader
 
 ; login
 (decode-fix-msg ctrader m/login-msg)
+
 (decode-fix-msg ctrader m/logout-msg)
 
 ; quote
@@ -79,11 +77,7 @@ ctrader
  :payload {:text "RET_NO_SUCH_LOGIN"}
  })
 
-
-
-
 (encode-fix-msg ctrader out-logout-msg)
-
 
 (def out-quote-subscribe-msg
 {:header
@@ -105,3 +99,14 @@ ctrader
   :no-related-sym [{:symbol "4"}]}})
   
 (encode-fix-msg ctrader out-quote-subscribe-msg)
+
+
+(->> m/logout-msg
+     (decode-fix-msg ctrader)
+     (encode-fix-msg ctrader)
+    )
+
+; "8=FIX.4.49=11435=549=CSERVER56=demo.tradeviewmarkets.315219534=150=QUOTE57=QUOTE52=20250224-21:13:0158=RET_NO_SUCH_LOGIN",
+; "8=FIX.4.49=11835=549=CSERVER56=demo.tradeviewmarkets.315219534=150=QUOTE57=QUOTE52=20250224-21:13:01.52558=RET_NO_SUCH_LOGIN10=172")
+;:checksum "172",
+;:body-length 118
