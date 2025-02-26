@@ -7,12 +7,7 @@
    [manifold.stream :as s]
    [clj-commons.byte-streams :as bs]))
 
-(def s (-> (load-accounts "fix-accounts.edn")
-           (create-session :ctrader-tradeviewmarkets-quote)))
-
-s
-
-(defn handle-incoming [stream]
+(defn handle-incoming [s stream]
   (s/consume
    (fn [raw-data]
      (let [text (bs/to-string raw-data "US-ASCII") ;; Convert bytes to string
@@ -20,8 +15,7 @@ s
            ]
        (println "IN:" text)
        (spit "msg.log" (str "\nIN: " text) :append true)
-       (println "IN-EDN: " (decode-msg s text))
-       ))
+       (println "IN-EDN: " (decode-msg s text))))
    stream))
 
 (defn create-client
@@ -31,32 +25,15 @@ s
     (spit "msg.log" "\nCONNECTING" :append true)
     @(tcp/client tcp-config)))
 
-
-
-
-(def c (create-client))
-
-
-(handle-incoming c)
-
-
-(defn create-fix-msg [{:keys [fix-type fix-payload]}]
-  (let [out-msg (->> (encode-msg s fix-type fix-payload)
-                     :wire)
-        ]
-    (println "OUT: " out-msg)
-    (spit "msg.log" (str "\nOUT: " out-msg) :append true)
-    (.getBytes out-msg "US-ASCII")
-    ))
-
-(def login-payload
+(defn login-payload [s]
   {:fix-type "A"
    :fix-payload {:encrypt-method :none-other,
                  :heart-bt-int 60,
                  :reset-seq-num-flag "Y",
-                 :username "3193299",
-                 :password "2025Florian"}
-   })
+                 :username (str (get-in s [:config :username])) ; "31932990",
+                 :password (str (get-in s [:config :password])) ;"2025Florian"
+                 }})
+
 
 
 (def subscribe-payload
@@ -68,12 +45,42 @@ s
                  :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
                  :no-related-sym [{:symbol "4"}]}})
 
-@(s/put! c (create-fix-msg login-payload))
+(defn create-fix-msg [s {:keys [fix-type fix-payload]}]
+  (let [out-msg (->> (encode-msg s fix-type fix-payload)
+                     :wire)]
+    (println "OUT: " out-msg)
+    (spit "msg.log" (str "\nOUT: " out-msg) :append true)
+    (.getBytes out-msg "US-ASCII")))
 
-@(s/put! c (create-fix-msg subscribe-payload))
+
+
+(defn start []
+  (let [s (-> (load-accounts "fix-accounts.edn")
+              (create-session :ctrader-tradeviewmarkets-quote))
+        c (create-client)
+        ]
+    (handle-incoming s c)
+    @(s/put! c (create-fix-msg s (login-payload s)))
+    ;@(s/put! c (create-fix-msg s subscribe-payload))
+    ))
+
+(->>(-> (load-accounts "fix-accounts.edn")
+        (create-session :ctrader-tradeviewmarkets-quote))
+ :config
+ )
+ 
+
+(start)
 
 
 
-@(s/take! c)
 
-c
+
+
+
+
+
+
+
+;@(s/take! c)
+

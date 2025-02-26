@@ -37,7 +37,9 @@
 (defn format-utc-timestamp
   "Returns a UTC timestamp in a specified format."
   [inst]
-  (let [format "yyyyMMdd-HH:mm:ss.SSS"]
+  (let [;format "yyyyMMdd-HH:mm:ss.SSS"
+        format "yyyyMMdd-HH:mm:ss"
+        ]
     ; instant cannot be formatted
     (t/format (t/formatter format) (t/date-time inst))  
     )
