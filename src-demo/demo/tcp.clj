@@ -19,7 +19,7 @@
    stream))
 
 (defn create-client
-  []
+  [s]
   (let [tcp-config (select-keys (:config s) [:host :port])]
     (println "connecting fix to: " tcp-config)
     (spit "msg.log" "\nCONNECTING" :append true)
@@ -30,11 +30,9 @@
    :fix-payload {:encrypt-method :none-other,
                  :heart-bt-int 60,
                  :reset-seq-num-flag "Y",
-                 :username (str (get-in s [:config :username])) ; "31932990",
-                 :password (str (get-in s [:config :password])) ;"2025Florian"
+                 :username (str (get-in s [:config :username]))
+                 :password (str (get-in s [:config :password]))
                  }})
-
-
 
 (def subscribe-payload
   {:fix-type "V"
@@ -56,21 +54,23 @@
 
 (defn start []
   (let [s (-> (load-accounts "fix-accounts.edn")
-              (create-session :ctrader-tradeviewmarkets-quote))
-        c (create-client)
-        ]
+              (create-session :ctrader-tradeviewmarkets2-quote))
+        c (create-client s)]
     (handle-incoming s c)
     @(s/put! c (create-fix-msg s (login-payload s)))
-    ;@(s/put! c (create-fix-msg s subscribe-payload))
+    @(s/put! c (create-fix-msg s subscribe-payload))
     ))
 
+
+(start)
+
 (->>(-> (load-accounts "fix-accounts.edn")
-        (create-session :ctrader-tradeviewmarkets-quote))
+        (create-session :ctrader-tradeviewmarkets2-quote))
  :config
  )
  
 
-(start)
+
 
 
 

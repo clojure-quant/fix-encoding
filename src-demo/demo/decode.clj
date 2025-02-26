@@ -129,6 +129,22 @@ ctrader
 
 (checksum b-header)
 
+
+(def logon-err-msg "8=FIX.4.49=11735=534=149=cServer50=QUOTE52=20250226-07:22:33.71956=demo.tradeviewmarkets.319333557=QUOTE58=RET_INVALID_DATA10=245")
+
+(def header "8=FIX.4.49=117")
+
+(def trailer "10=245")
+
+(def body "35=534=149=cServer50=QUOTE52=20250226-07:22:33.71956=demo.tradeviewmarkets.319333557=QUOTE58=RET_INVALID_DATA")
+
+(checksum (str header body))
+(count body)
+
+ (decode-fix-msg ctrader logon-err-msg)
+
+
+
 Fields that must be in a fixed order:
 
     BeginString (8) – Always the first field.

@@ -29,3 +29,6 @@ s
      :wire
      (decode-msg s )
      )
+
+; ctrader python example
+; https://github.com/spotware/cTraderFixPy/blob/main/ctrader_fix/messages.py
