@@ -13,6 +13,11 @@ s
 (encode-msg s "W" {:symbol "MSFT" :qty 3})
 
 
+
+(->> (encode-msg s "5" {:text "RET_NO_SUCH_LOGIN"})
+     :wire
+     (decode-msg s))
+
 ; logout msg
 
 (->> (encode-msg s "5" {:text "RET_NO_SUCH_LOGIN"})

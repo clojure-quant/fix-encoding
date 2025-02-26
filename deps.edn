@@ -4,7 +4,6 @@
         tick/tick {:mvn/version "0.6.2"} ; time encoding
         org.clojure/data.xml {:mvn/version "0.2.0-alpha9"}
         fipp/fipp {:mvn/version "0.6.26"} ; edn pretty printing
-        lambdaisland/deep-diff2 {:mvn/version "2.12.219"}
         }
 
  :aliases
@@ -16,7 +15,12 @@
           :main-opts  ["-m" "nrepl.cmdline"]}
 
   :demo {:extra-paths ["src-demo"]
+         :extra-deps {aleph/aleph {:mvn/version "0.7.0"}
+                      org.clj-commons/byte-streams {:mvn/version "0.3.4"}
+                      
          }
+
+                      }
 
 
 

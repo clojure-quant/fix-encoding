@@ -51,6 +51,7 @@ ctrader
 ; login
 (decode-fix-msg ctrader m/login-msg)
 
+
 (decode-fix-msg ctrader m/logout-msg)
 
 ; quote
