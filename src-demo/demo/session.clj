@@ -30,5 +30,14 @@ s
      (decode-msg s )
      )
 
+; security list
+
+(encode-msg s "x"
+            {:security-req-id "125"
+             :security-list-request-type :symbol})
+
+
+
+
 ; ctrader python example
 ; https://github.com/spotware/cTraderFixPy/blob/main/ctrader_fix/messages.py

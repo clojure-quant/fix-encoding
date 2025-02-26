@@ -43,6 +43,12 @@
                  :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
                  :no-related-sym [{:symbol "4"}]}})
 
+(def security-list-request 
+  {:fix-type "x"
+   :fix-payload {:security-req-id "125" ; req id
+                 :security-list-request-type :symbol}})
+
+
 (defn create-fix-msg [s {:keys [fix-type fix-payload]}]
   (let [out-msg (->> (encode-msg s fix-type fix-payload)
                      :wire)]
@@ -58,7 +64,8 @@
         c (create-client s)]
     (handle-incoming s c)
     @(s/put! c (create-fix-msg s (login-payload s)))
-    @(s/put! c (create-fix-msg s subscribe-payload))
+    @(s/put! c (create-fix-msg s security-list-request))
+    ;@(s/put! c (create-fix-msg s subscribe-payload))
     ))
 
 
