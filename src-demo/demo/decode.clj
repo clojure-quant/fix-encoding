@@ -37,21 +37,32 @@ ctrader
 (get-msg-type ctrader "D")
 (get-msg-type ctrader "V")
 
+;; DECODE FIELDS
 
+; login
+(decode-fields ctrader m/login-msg)
+(decode-fields ctrader m/logout-msg)
+
+; quote
+(decode-fields ctrader m/security-list-req)
+(decode-fields ctrader m/quote-subscribe-msg)
 (decode-fields ctrader m/new-order-msg)
 
 
+;; DECODING OF MESSAGE
 
-(decode-fields ctrader m/quote-subscribe-msg)
+; login
+(decode-fix-msg ctrader m/login-msg)
+(decode-fix-msg ctrader m/logout-msg)
 
-(decode-fields ctrader m/logout-msg)
-
-
+; quote
+(decode-fix-msg ctrader m/security-list-req)
+(decode-fix-msg ctrader m/quote-subscribe-msg)
 (decode-fix-msg ctrader m/new-order-msg)
 
-(decode-fix-msg ctrader m/quote-subscribe-msg)
 
-(decode-fix-msg ctrader m/logout-msg)
+
+
 
 
 (def out-logout-msg 
