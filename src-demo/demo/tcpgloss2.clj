@@ -2,18 +2,13 @@
   (:require
    [fix-translator.session :refer [load-accounts create-session
                                    encode-msg2 decode-msg]]
+   [fix-translator.gloss :refer [fix-protocol xf-fix-message without-header]]
    [aleph.tcp :as tcp]
    [gloss.core :as gloss]
    [gloss.io :as io]
    [manifold.deferred :as d]
    [manifold.stream :as s]
-   [nano-id.core :refer [nano-id]]
-   [demo.gloss :refer [xf-fix-message without-header]]))
-
-(def fix-protocol
-  (gloss/compile-frame
-   [(gloss/string :ascii :delimiters ["="])
-    (gloss/string :ascii :delimiters [""])]))
+   [nano-id.core :refer [nano-id]]))
 
 (defn wrap-duplex-stream
   [s]
