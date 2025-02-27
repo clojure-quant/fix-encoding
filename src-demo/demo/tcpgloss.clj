@@ -8,8 +8,7 @@
    [manifold.deferred :as d]
    [manifold.stream :as s]
    [nano-id.core :refer [nano-id]]
-   [demo.gloss :refer [xf-fix-message]]
-   ))
+   [demo.gloss :refer [xf-fix-message without-header]]))
 
 
 
@@ -35,18 +34,14 @@
 (defn transform-message [s]
   (let [msg-s (s/transform xf-fix-message s)]
     (s/consume
-       (fn [raw-data]
-         (println "IN:" raw-data)
-         (spit "msg.log" (str "\nIN: " raw-data) :append true)
+     (fn [raw-data]
+       (let [data (without-header raw-data)]
+         (println "IN:" data)
+         (spit "msg.log" (str "\nIN: " data) :append true)
          ;(println "IN-EDN: " (decode-msg s text))
-     ) msg-s)
-  (println "Connection closed 3")  
-    
-    
-    )
-  
-  
-  )
+         )) msg-s)
+    ; this will not trigger, as consume is async
+    (println "Connection closed 3")))
 
 
 (defn create-client
@@ -62,17 +57,16 @@
 
 
 (defn handle-incoming [s stream]
-   (future
-     (s/consume
-      (fn [raw-data]
+  (future
+    (s/consume
+     (fn [raw-data]
         ;(println "IN:" raw-data)
         ;(spit "msg.log" (str "\nIN: " raw-data) :append true)
      ;(println "IN-EDN: " (decode-msg s text))
-        )
-      stream)
-     (println "Connection closed")
-     (spit "msg.log" "\nCLOSED " :append true)
-     ))
+       )
+     stream)
+    (println "Connection closed")
+    (spit "msg.log" "\nCLOSED " :append true)))
 
 (defn login-payload [s]
   {:fix-type "A"
@@ -80,8 +74,7 @@
                  :heart-bt-int 60,
                  :reset-seq-num-flag "Y",
                  :username (str (get-in s [:config :username]))
-                 :password (str (get-in s [:config :password]))
-                 }})
+                 :password (str (get-in s [:config :password]))}})
 
 
 (defn heartbeat-payload []
@@ -112,16 +105,14 @@
     (println "OUT: " out-msg)
     (spit "msg.log" (str "\nOUT: " out-msg) :append true)
     ;(.getBytes out-msg "US-ASCII")
-    out-msg
-    ))
+    out-msg))
 
 
 (defn handle-disconnect [conn]
-  (s/on-closed conn 
+  (s/on-closed conn
                (fn [& _]
                  (println "Connection closed2")
-                 (spit "msg.log" "\nCLOSED2 " :append true)
-                 )))
+                 (spit "msg.log" "\nCLOSED2 " :append true))))
 
 (defn start []
   (let [s (-> (load-accounts "fix-accounts.edn")
@@ -133,31 +124,32 @@
     @(s/put! c (create-fix-msg s (login-payload s)))
     ;@(s/put! c (create-fix-msg s (security-list-request)))
     @(s/put! c (create-fix-msg s (subscribe-payload)))
-    {:c c :s s}
-    ))
+    {:c c :s s}))
 
-(comment 
-  
-  
-(def cs (start))
+(comment
 
-@(s/put! (:c cs) (create-fix-msg (:s cs) (security-list-request)))
 
-@(s/put! (:c cs) (create-fix-msg (:s cs) (heartbeat-payload)))
-  
+  (def cs (start))
 
-@(s/put! (:c cs) (create-fix-msg (:s cs) (subscribe-payload)))  
+  @(s/put! (:c cs) (create-fix-msg (:s cs) (security-list-request)))
 
-(s/close! (:c cs))
+  @(s/put! (:c cs) (create-fix-msg (:s cs) (heartbeat-payload)))
 
-(:c cs)
-(->>(-> (load-accounts "fix-accounts.edn")
-        (create-session :ctrader-tradeviewmarkets2-quote))
- :config
- )
-  
+
+  @(s/put! (:c cs) (create-fix-msg (:s cs) (subscribe-payload)))
+
+  (s/close! (:c cs))
+
+  (:c cs)
+
+  (s/closed? (:c cs))
+
+  (->> (-> (load-accounts "fix-accounts.edn")
+           (create-session :ctrader-tradeviewmarkets2-quote))
+       :config)
+
  ;
-)
+  )
 
 
 
