@@ -128,7 +128,7 @@
            ; example of vec item: [{:mdentry-type :bid} {:mdentry-type :offer}]
           size (count vec-value)
           section {:name vec-name :content fields}]
-      (println "vector field: " vec-value)
+      ;(println "vector field: " vec-value)
       ; encode size
       (write item-writer (encode-field decoder {:name vec-name
                                                 :value size}))
@@ -138,15 +138,15 @@
             doall)))
 
   (defn linearize-map [decoder {:keys [name content] :as _section} m item-writer]
-    (println "linearizing " name " spec-items: " (count content))
+    ;(println "linearizing " name " spec-items: " (count content))
     ;(println "m: " m)
     ;(println "spec-items:" content)
     (doall
      (map (fn [{:keys [name required type fields] :as section-field}]
-            (println "processing field: " section-field)
+            ;(println "processing field: " section-field)
             (if-let [item (get m name)]
               (do
-                (println "=" section-field item)
+                ;(println "=" section-field item)
                 (if (= type :group)
                   ; vector field
                   (linearize-vec decoder name fields item item-writer)
@@ -154,7 +154,7 @@
                   (write item-writer (encode-field decoder {:name name
                                                             :value item}))))
               (do
-                (println "x" section-field "no item")
+                ;(println "x" section-field "no item")
                 (when required
                   (throw (ex-info "fix-encode-payload-missing" {:name name}))))))
           content)))
@@ -266,8 +266,6 @@
                      (write-fields2 payload))
           ; body length
           body-length (fix-body-length wire-body)
-          _ (println "sw count: " body-length)
-          _ (println "body-len" field-body-len)
           field-body-len (assoc field-body-len
                                 :value body-length
                                 :value-str (str body-length))

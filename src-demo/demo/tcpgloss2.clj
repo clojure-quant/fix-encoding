@@ -18,9 +18,15 @@
 (defn wrap-duplex-stream
   [s]
   (let [out (s/stream)]
+    ; 
     (s/connect
+     ;source
      (s/map #(io/encode-all fix-protocol %) out)
-     s)
+     ; sink
+     s
+     {:upstream? true 
+      :downstream? true}
+     )
     (s/splice
      out
      (io/decode-stream s fix-protocol))))
@@ -93,9 +99,10 @@
 
 (defn create-fix-msg [s {:keys [fix-type fix-payload]}]
   (let [out-msg (->> (encode-msg2 s fix-type fix-payload)
-                     :wire)]
-    (println "OUT: " out-msg)
-    (spit "msg.log" (str "\nOUT: " out-msg) :append true)
+                     :wire)
+        data (without-header out-msg)]
+    (println "OUT: " data)
+    (spit "msg.log" (str "\nOUT: " data) :append true)
     ;(.getBytes out-msg "US-ASCII")
     out-msg))
 
@@ -144,6 +151,9 @@
 
   (s/closed? (:c cs)
              )
+
+  ; source closed 
+  ; sink open
 
   (->> (-> (load-accounts "fix-accounts.edn")
            (create-session :ctrader-tradeviewmarkets2-quote))

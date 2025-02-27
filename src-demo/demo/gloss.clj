@@ -27,7 +27,7 @@
       ["52" "20250227-03:10:05"]
       ["10" "121"]]
 (io/encode-all fix-field)
-(map .toString)     
+;(map .toString)     
  )
 
 
