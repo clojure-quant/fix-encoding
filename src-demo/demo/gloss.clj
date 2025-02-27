@@ -10,11 +10,25 @@
 
 ; working
 ;(io/decode fix-field "8=4|")
-;(io/decode-all fix-field "8=5|T=abc|A=4|")
+(io/decode-all fix-field "8=5|T=abc|A=4|")
 
 ; bytes left over
 ;(io/decode fix-field "8=5|T=abc|A=4|")
 ;(io/decode-all fix-field "8=5|T=abc|A=4|f")
+
+(->> [["8" "FIX.4.4"]
+      ["9" "93"]
+      ["35" "0"]
+      ["49" "demo.tradeviewmarkets.3193335"]
+      ["56" "cServer"]
+      ["34" "2"]
+      ["50" "QUOTE"]
+      ["57" "QUOTE"]
+      ["52" "20250227-03:10:05"]
+      ["10" "121"]]
+(io/encode-all fix-field)
+(map .toString)     
+ )
 
 
 

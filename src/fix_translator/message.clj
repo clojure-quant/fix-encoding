@@ -160,6 +160,7 @@
           content)))
 
   (defn write-fields [sw fields]
+    ; depreciated, use encode-fix-msg
     (->> fields
          (map (fn [{:keys [tag value-str]}]
                 (.write sw tag)
@@ -170,6 +171,7 @@
 
 (defn encode-fix-msg [{:keys [header trailer messages] :as decoder}
                       fix-msg]
+  ; depreciated, use encode-fix-msg2
   (let [writer (create-writer)
         _ (linearize-map decoder {:name :header :content header} (:header fix-msg) writer)
         header (pop-items writer)
@@ -213,7 +215,79 @@
      :checksum checksum
      }))
 
- ;{}}
+  
+  (defn write-fields2 [fields]
+    (->> fields
+         (map (fn [{:keys [tag value-str]}]
+                [tag value-str]))
+         ))
+  
+  (defn acc-size-field [r [t v]]
+    (+ r 2 (count t) (count v)))
+
+  (defn fix-body-length [fields]
+    (reduce acc-size-field 0 fields)
+    )
+
+  ;(fix-body-length [["A" "123"] ["B" "0"]])
+
+
+(defn byte-count [s]
+  (reduce + (.getBytes s)))
+  
+(defn acc-checksum-field [r [t v]]
+  (+ r 
+     (byte-count "=") 
+       (byte-count "")
+       (byte-count t) 
+       (byte-count v)))
+
+   (defn checksum2
+     "Returns a 3-character string (left-padded with zeroes) representing the
+     checksum of msg calculated according to the FIX protocol."
+     [fields]
+     (let [bc (reduce acc-checksum-field 0 fields)
+           cs (mod bc 256)]
+       (format "%03d" cs)))
+
+  (defn encode-fix-msg2 [{:keys [header trailer messages] :as decoder}
+                        fix-msg]
+    (let [writer (create-writer)
+          _ (linearize-map decoder {:name :header :content header} (:header fix-msg) writer)
+          header (pop-items writer)
+          msg-type (get-in fix-msg [:header :msg-type])
+          message-spec (get-msg-type decoder msg-type)
+          _ (linearize-map decoder message-spec (:payload fix-msg) writer)
+          payload (pop-items writer)
+          ; fix-str
+          [field-begin field-body-len & header-body] header
+          wire-body (concat 
+                     (write-fields2 header-body) 
+                     (write-fields2 payload))
+          ; body length
+          body-length (fix-body-length wire-body)
+          _ (println "sw count: " body-length)
+          _ (println "body-len" field-body-len)
+          field-body-len (assoc field-body-len
+                                :value body-length
+                                :value-str (str body-length))
+          wire-type-length (write-fields2 [field-begin field-body-len])
+          wire (concat wire-type-length wire-body)
+          ; checksum
+          checksum (checksum2 wire)
+          trailer-section {:check-sum checksum}
+          _ (linearize-map decoder {:name :trailer :content trailer} trailer-section writer)
+          trailer-payload (pop-items writer)
+          wire-trailer (write-fields2 trailer-payload)
+          wire-full (into [] (concat wire wire-trailer))]
+      {:header (concat [field-begin field-body-len] header-body)
+       :payload payload
+       :trailer trailer-payload
+       :msg-type msg-type
+       :wire wire-full
+       :body-length body-length
+       :checksum checksum}))
+
 
  
 

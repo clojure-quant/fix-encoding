@@ -6,6 +6,7 @@
    [fix-translator.field :refer [decode-fields]]
    [fix-translator.message :refer [decode-fix-msg
                                    encode-fix-msg
+                                   encode-fix-msg2
                                    checksum
                                    ]]
    [demo.messages :as m]))
@@ -60,8 +61,6 @@ ctrader
 (decode-fix-msg ctrader m/quote-subscribe-msg)
 (decode-fix-msg ctrader m/new-order-msg)
 
-(-)
-
 (decode-fix-msg ctrader m/test-msg)
 
 
@@ -82,6 +81,7 @@ ctrader
  })
 
 (encode-fix-msg ctrader out-logout-msg)
+(encode-fix-msg2 ctrader out-logout-msg)
 
 (def out-quote-subscribe-msg
 {:header
@@ -146,8 +146,7 @@ ctrader
 
 
 Fields that must be in a fixed order:
-
-    BeginString (8) – Always the first field.
-    BodyLength (9) – Always second, since it defines the length of the message.
-    MsgType (35) – Must appear immediately after BodyLength.
-    CheckSum (10) – Always the last field.
+BeginString (8) – Always the first field.
+BodyLength (9) – Always second, since it defines the length of the message.
+MsgType (35) – Must appear immediately after BodyLength.
+ CheckSum (10) – Always the last field.

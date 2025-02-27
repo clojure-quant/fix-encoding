@@ -1,7 +1,7 @@
-(ns demo.tcpgloss
+(ns demo.tcpgloss2
   (:require
    [fix-translator.session :refer [load-accounts create-session
-                                   encode-msg decode-msg]]
+                                   encode-msg2 decode-msg]]
    [aleph.tcp :as tcp]
    [gloss.core :as gloss]
    [gloss.io :as io]
@@ -10,25 +10,20 @@
    [nano-id.core :refer [nano-id]]
    [demo.gloss :refer [xf-fix-message without-header]]))
 
-
-
-(def fix-protocol-in
+(def fix-protocol
   (gloss/compile-frame
    [(gloss/string :ascii :delimiters ["="])
     (gloss/string :ascii :delimiters [""])]))
-
-(def fix-protocol-out
-  (gloss/string :ascii)) ; :utf-8
 
 (defn wrap-duplex-stream
   [s]
   (let [out (s/stream)]
     (s/connect
-     (s/map #(io/encode fix-protocol-out %) out)
+     (s/map #(io/encode-all fix-protocol %) out)
      s)
     (s/splice
      out
-     (io/decode-stream s fix-protocol-in))))
+     (io/decode-stream s fix-protocol))))
 
 
 (defn transform-message [s]
@@ -97,7 +92,7 @@
 
 
 (defn create-fix-msg [s {:keys [fix-type fix-payload]}]
-  (let [out-msg (->> (encode-msg s fix-type fix-payload)
+  (let [out-msg (->> (encode-msg2 s fix-type fix-payload)
                      :wire)]
     (println "OUT: " out-msg)
     (spit "msg.log" (str "\nOUT: " out-msg) :append true)
@@ -111,9 +106,13 @@
                  (println "Connection closed2")
                  (spit "msg.log" "\nCLOSED2 " :append true))))
 
+(defn create-decoder []
+  (-> (load-accounts "fix-accounts.edn")
+      (create-session :ctrader-tradeviewmarkets2-quote))
+  )
+
 (defn start []
-  (let [s (-> (load-accounts "fix-accounts.edn")
-              (create-session :ctrader-tradeviewmarkets2-quote))
+  (let [s (create-decoder)
         c (create-client s)]
     (handle-disconnect c)
     (handle-incoming s c)
@@ -124,6 +123,10 @@
     {:c c :s s}))
 
 (comment
+
+  (def s (create-decoder))
+  
+  (create-fix-msg s (heartbeat-payload))
 
 
   (def cs (start))
