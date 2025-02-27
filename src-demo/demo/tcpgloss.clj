@@ -8,6 +8,7 @@
    [manifold.deferred :as d]
    [manifold.stream :as s]
    [nano-id.core :refer [nano-id]]
+   [demo.gloss :refer [xf-fix-message]]
    ))
 
 
@@ -30,6 +31,24 @@
      out
      (io/decode-stream s fix-protocol-in))))
 
+
+(defn transform-message [s]
+  (let [msg-s (s/transform xf-fix-message s)]
+    (s/consume
+       (fn [raw-data]
+         (println "IN:" raw-data)
+         (spit "msg.log" (str "\nIN: " raw-data) :append true)
+         ;(println "IN-EDN: " (decode-msg s text))
+     ) msg-s)
+  (println "Connection closed 3")  
+    
+    
+    )
+  
+  
+  )
+
+
 (defn create-client
   [s]
   (let [tcp-config (select-keys (:config s) [:host :port])
@@ -40,14 +59,20 @@
     @r))
 
 
+
+
 (defn handle-incoming [s stream]
-  (s/consume
-   (fn [raw-data]
-     (println "IN:" raw-data)
-     (spit "msg.log" (str "\nIN: " raw-data) :append true)
+   (future
+     (s/consume
+      (fn [raw-data]
+        ;(println "IN:" raw-data)
+        ;(spit "msg.log" (str "\nIN: " raw-data) :append true)
      ;(println "IN-EDN: " (decode-msg s text))
-     )
-   stream))
+        )
+      stream)
+     (println "Connection closed")
+     (spit "msg.log" "\nCLOSED " :append true)
+     ))
 
 (defn login-payload [s]
   {:fix-type "A"
@@ -64,9 +89,9 @@
    :fix-payload {:test-request-id  (nano-id 5)}})
 
 
-(def subscribe-payload
+(defn subscribe-payload []
   {:fix-type "V"
-   :fix-payload {:mdreq-id "1455",
+   :fix-payload {:mdreq-id  (nano-id 5)
                  :subscription-request-type :snapshot-plus-updates,
                  :market-depth 1,
                  :mdupdate-type :incremental-refresh,
@@ -75,9 +100,9 @@
                                   {:symbol "1"} ; eurusd
                                   ]}})
 
-(def security-list-request 
+(defn security-list-request []
   {:fix-type "x"
-   :fix-payload {:security-req-id "125" ; req id
+   :fix-payload {:security-req-id (nano-id 5) ; req id
                  :security-list-request-type :symbol}})
 
 
@@ -91,15 +116,23 @@
     ))
 
 
+(defn handle-disconnect [conn]
+  (s/on-closed conn 
+               (fn [& _]
+                 (println "Connection closed2")
+                 (spit "msg.log" "\nCLOSED2 " :append true)
+                 )))
 
 (defn start []
   (let [s (-> (load-accounts "fix-accounts.edn")
               (create-session :ctrader-tradeviewmarkets2-quote))
         c (create-client s)]
+    (handle-disconnect c)
     (handle-incoming s c)
+    (transform-message c)
     @(s/put! c (create-fix-msg s (login-payload s)))
-    ;@(s/put! c (create-fix-msg s security-list-request))
-    @(s/put! c (create-fix-msg s subscribe-payload))
+    ;@(s/put! c (create-fix-msg s (security-list-request)))
+    @(s/put! c (create-fix-msg s (subscribe-payload)))
     {:c c :s s}
     ))
 
@@ -108,12 +141,14 @@
   
 (def cs (start))
 
-@(s/put! (:c cs) (create-fix-msg (:s cs) security-list-request))
+@(s/put! (:c cs) (create-fix-msg (:s cs) (security-list-request)))
 
 @(s/put! (:c cs) (create-fix-msg (:s cs) (heartbeat-payload)))
   
 
-@(s/put! (:c cs) (create-fix-msg (:s cs) subscribe-payload))  
+@(s/put! (:c cs) (create-fix-msg (:s cs) (subscribe-payload)))  
+
+(s/close! (:c cs))
 
 (:c cs)
 (->>(-> (load-accounts "fix-accounts.edn")
