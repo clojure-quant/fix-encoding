@@ -156,7 +156,10 @@
               (do
                 ;(println "x" section-field "no item")
                 (when required
-                  (throw (ex-info "fix-encode-payload-missing" {:name name}))))))
+                  (throw (ex-info "fix-encode-payload-missing" {:msg-type name
+                                                                :missing-field section-field
+                                                                :payload-map m
+                                                                }))))))
           content)))
 
   (defn write-fields [sw fields]
