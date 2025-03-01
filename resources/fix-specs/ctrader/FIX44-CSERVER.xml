@@ -3,16 +3,18 @@
         <field name="BeginString" required="Y"/>
         <field name="BodyLength" required="Y"/>
         <field name="MsgType" required="Y"/>
+        <field name="MsgSeqNum" required="Y"/>
         <field name="SenderCompID" required="Y"/>
+        <field name="SenderSubID" required="N"/>
+        <field name="SendingTime" required="Y"/>
         <field name="TargetCompID" required="Y"/>
+        <field name="TargetSubID" required="N"/>
         <field name="OnBehalfOfCompID" required="N"/>
         <field name="DeliverToCompID" required="N"/>
         <field name="SecureDataLen" required="N"/>
         <field name="SecureData" required="N"/>
-        <field name="MsgSeqNum" required="Y"/>
-        <field name="SenderSubID" required="N"/>
+
         <field name="SenderLocationID" required="N"/>
-        <field name="TargetSubID" required="N"/>
         <field name="TargetLocationID" required="N"/>
         <field name="OnBehalfOfSubID" required="N"/>
         <field name="OnBehalfOfLocationID" required="N"/>
@@ -20,7 +22,6 @@
         <field name="DeliverToLocationID" required="N"/>
         <field name="PossDupFlag" required="N"/>
         <field name="PossResend" required="N"/>
-        <field name="SendingTime" required="Y"/>
         <field name="OrigSendingTime" required="N"/>
         <field name="MessageEncoding" required="N"/>
         <field name="LastMsgSeqNumProcessed" required="N"/>
@@ -214,7 +215,11 @@
             <field name="TotalNumPosReports" required="Y"/>
             <field name="PosReqResult" required="Y"/>
             <field name="Symbol" required="N"/>
-            <component name="PositionQty" required="N"/>
+            <!-- <component name="PositionQty" required="N"/> -->
+            <group name="NoPositions" required="N">
+                <field name="LongQty" required="N"/>
+                <field name="ShortQty" required="N"/>
+            </group>
             <field name="SettlPrice" required="N"/>
             <field name="AbsoluteTP" required="N"/>
             <field name="AbsoluteSL" required="N"/>
@@ -225,7 +230,11 @@
         <message name="SecurityListRequest" msgtype="x" msgcat="app">
             <field name="SecurityReqID" required="Y"/>
             <field name="SecurityListRequestType" required="Y"/>
-            <component name="Instrument" required="N"/>            
+            <!-- <component name="Instrument" required="N"/> -->
+            <field name="Symbol" required="Y" />
+            <!-- CServer Specifics -->
+            <field name="SymbolName" required="N" />
+            <field name="SymbolDigits" required="N" />     
         </message>
         
         <message name="SecurityList" msgtype="y" msgcat="app">
@@ -233,7 +242,11 @@
             <field name="SecurityResponseID" required="Y"/>
             <field name="SecurityRequestResult" required="Y"/>
             <group name="NoRelatedSym" required="N">
-                <component name="Instrument" required="N"/>
+                <!-- <component name="Instrument" required="N"/> -->
+                <field name="Symbol" required="Y" />
+                <!-- CServer Specifics -->
+                <field name="SymbolName" required="N" />
+                <field name="SymbolDigits" required="N" />
             </group>
         </message>
     </messages>

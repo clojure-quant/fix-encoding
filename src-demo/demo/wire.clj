@@ -1,6 +1,8 @@
 (ns demo.wire
   (:require 
-   [fix-translator.message-wire :refer [vec->wire wire->vec ]]))
+   [fix-translator.message-wire :refer [vec->wire wire->vec ]]
+   [fix-translator.gloss :refer [xf-fix-message]]
+   ))
 
 (wire->vec "8=5T=abcA=4")
 
@@ -16,12 +18,19 @@
 
 
 ;; Example usage
-;(transduce xf-fix-message 
-;           conj [] 
-;           [["B" 2] ["C" 3] ["10" 1] ["D" 4] ["10" 2] ["E" 5] ["F" 5]])
+(transduce xf-fix-message 
+           conj [] 
+           [["B" 2] ["C" 3] ["10" 1] ["D" 4] ["10" 2] ["E" 5] ["F" 5]])
 
-; [[["B" 2] ["C" 3] ["10" 1]] [["D" 4] ["10" 2]] [["E" 5] ["F" 5]]]
 
+ [[["B" 2] ["C" 3] ["10" 1]] [["D" 4] ["10" 2]] [["E" 5] ["F" 5]]]
+
+
+(transduce xf-fix-message
+           conj []
+           [["B" 2] nil ["C" 3] ["10" 1] ["D" 4] ["10" 2] nil ["E" 5] ["F" 5]])
+[[["B" 2] ["C" 3] ["10" 1]] 
+ [["D" 4] ["10" 2]] [["E" 5] ["F" 5]]]
 
 ;(without-header 
 ;  [["8" "FIX.4.4"] ["146" "x"] ["35" "W"] ["34" "153"] ["49" "cServer"] ["50" "QUOTE"] ["52" "20250227-01:23:39.107"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"] ["55" "4"] ["268" "2"] ["269" "0"] ["270" "149.161"] ["269" "1"] ["270" "149.169"] ["10" "142"]]

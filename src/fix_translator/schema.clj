@@ -3,10 +3,6 @@
    [clojure.java.io :as io]
    [clojure.edn :as edn]))
 
-#_(defn load-schema [filepath]
-    (with-open [rdr (io/reader filepath)]
-      (edn/read (java.io.PushbackReader. rdr))))
-
 (defn load-schema [resource-path]
   (with-open [rdr (io/reader (io/resource resource-path))]
     (edn/read (java.io.PushbackReader. rdr))))
@@ -38,17 +34,17 @@
 (defn get-field [{:keys [tag->field] :as _decoder} tag]
   (if-let [field (get tag->field tag)]
     field
-    (throw (ex-info "fix-encoding - unknown field-tag" {:tag tag}))))
+    (throw (ex-info "unknown field-tag" {:tag tag}))))
 
 (defn get-field-by-name [{:keys [name->field] :as _decoder} field-name]
   (if-let [field (get name->field field-name)]
     field
-    (throw (ex-info "fix-encoding - unknown field-name" {:field-name field-name}))))
+    (throw (ex-info "unknown field-name" {:field-name field-name}))))
 
 (defn get-msg-type [{:keys [messages] :as _decoder} msg-type]
   (if-let [msg (get messages msg-type)]
     msg
-    (throw (ex-info "fix-encoding - unknown message-type" {:msg-type msg-type}))))
+    (throw (ex-info "unknown message-type" {:msg-type msg-type}))))
 
 (defn types-in-spec [decoder]
   (->> decoder

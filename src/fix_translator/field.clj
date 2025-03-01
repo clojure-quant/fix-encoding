@@ -4,16 +4,6 @@
    [cljc.java-time.local-date-time :as ldt]
    [fix-translator.schema :refer [get-field get-field-by-name]]))
 
-;; tag=value pairs separated by \u0001 (SOH),  tag can be 1-2 alphanumeric characters
-(def tag-value-regex #"([A-Za-z0-9]{1,4})=([^\u0001]+)")
-
-;; Parse FIX message into list of tag-value maps
-(defn ->tag-value-pairs [msg]
-  (map (fn [[_ tag value]]
-         {:tag tag
-          :value value})
-       (re-seq tag-value-regex msg)))
-
 (defn parse-utc-timestamp [s]
   (let [;cleaned (str/replace s #"\.(\d{1,3})$" (fn [[_ ms]] (format ".%03d" (Integer/parseInt ms)))) ;; Normalize milliseconds
         cleaned s
@@ -72,17 +62,17 @@
         (parse-fn value)
         value))))
 
-(defn decode-fields [decoder fix-msg-str]
-  (->> fix-msg-str
-       (->tag-value-pairs)
-       (map (fn [{:keys [tag value] :as entry}]
+(defn decode-fields [decoder fix-msg-vec]
+  (->> fix-msg-vec
+       (map (fn [[tag value]]
+              ;(println "decoding tag: " tag  "value:" value)
               (let [{:keys [name _values type] :as field} (get-field decoder tag)]
-           ;(println "field: " field)
-                (assoc entry
-                       :name name
-                       :type type
-                       :value-str value
-                       :value (decode-value field value)))))))
+                {:tag tag
+                 :value-str value
+                 :name name
+                 :type type
+                 :value (decode-value field value)})))))
+
 
 ; encode
 

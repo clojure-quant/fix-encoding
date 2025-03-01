@@ -7,7 +7,7 @@
 
 (defn pprint-str [data]
   (let [sw (StringWriter.)]
-    (fipp.clojure/pprint data {:width 60 :writer sw :print-meta true})
+    (fipp.clojure/pprint data {:width 120 :writer sw :print-meta true})
     (str sw)))
 
 (defn spit-edn [file-name data]

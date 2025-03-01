@@ -1,76 +1,51 @@
+(ns demo.ctrader 
+  (:require
+   [fix-translator.schema :refer [create-decoder]]
+   [fix-translator.field :refer [decode-fields]]
+   [fix-translator.message :refer [decode-message
+                                   decode-payload
+                                   decode-header
+                                   decode-trailer
+                                   create-reader
+                                   fix->payload
+                                   ]]
+   [demo.data-payload :as payload]
+   [demo.data-message :as msg]
+   ))
+  
+(def ctrader (create-decoder "fix-specs/ctrader.edn"))
+
+; field parser
+(decode-fields ctrader (second payload/login-response))
+(decode-fields ctrader msg/login-response)
+
+; payload parser
+(decode-payload ctrader payload/login-response)
+(decode-payload ctrader payload/heartbeat)
+(decode-payload ctrader payload/Test)
+(decode-payload ctrader payload/seclist-response)
+
+; header/trailer parser
+
+(decode-header ctrader 
+               (->> (decode-fields ctrader [["8" "FIX.4.4"] ["9" "97"] ["35" "0"] ["34" "3"] ["49" "cServer"] ["50" "QUOTE"]
+                                            ["52" "20250228-21:10:20.425"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]])
+                    create-reader)
+               )
+
+(decode-trailer ctrader
+                (->> (decode-fields ctrader [["10" "069"]])
+                     create-reader))
+
+; message parser
+(decode-message ctrader msg/login-response)
+(decode-message ctrader msg/heartbeat)
+(decode-message ctrader msg/Test)
+(decode-message ctrader msg/seclist-response)
 
 
-(def msg-login-response 
-  [["8" "FIX.4.4"] ["9" "115"] ["35" "A"] ["34" "1"] ["49" "cServer"] ["50" "QUOTE"]
-   ["52" "20250228-21:09:20.287"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]
-   ;
-   ["98" "0"] ["108" "60"] ["141" "Y"]
-   ["10" "210"]])
-
-<field name= "SecurityReqID" required= "Y" />
-<field name= "SecurityResponseID" required= "Y" />
-<field name= "SecurityRequestResult" required= "Y" />
-<group name= "NoRelatedSym" required= "N" >
-<component name= "Instrument" required= "N" />
-</group>
-
- 
-(def msg-seclist-response 
-[["8" "FIX.4.4"] ["9" "2936"] ["35" "y"] ["34" "2"] ["49" "cServer"] ["50" "QUOTE"]
- ["52" "20250228-21:09:20.287"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]
- ;
- ["320" "cuSlq"]  ;  req id
- ["322" "responce:cuSlq"] ;res id
- ["560" "0"] ; result type
- ["146" "107"] ; no-related-sym
- ["55" "1"] ["1007" "EURUSD"] ["1008" "5"]  ; id symbol digits
- ["55" "2"] ["1007" "GBPUSD"] ["1008" "5"]
- ["55" "3"] ["1007" "EURJPY"] ["1008" "3"] 
- ["55" "4"] ["1007" "USDJPY"] ["1008" "3"]
- ["55" "5"] ["1007" "AUDUSD"] ["1008" "5"] ["55" "6"] ["1007" "USDCHF"] ["1008" "5"]
- ["55" "7"] ["1007" "GBPJPY"] ["1008" "3"] ["55" "8"] ["1007" "USDCAD"] ["1008" "5"]
- ["55" "9"] ["1007" "EURGBP"] ["1008" "5"] ["55" "10"] ["1007" "EURCHF"] ["1008" "5"]
- ["55" "11"] ["1007" "AUDJPY"] ["1008" "3"] ["55" "12"] ["1007" "NZDUSD"] ["1008" "5"]
- ["55" "13"] ["1007" "CHFJPY"] ["1008" "3"] ["55" "14"] ["1007" "EURAUD"] ["1008" "5"]
- ["55" "15"] ["1007" "CADJPY"] ["1008" "3"] ["55" "16"] ["1007" "GBPAUD"] ["1008" "5"]
- ["55" "17"] ["1007" "EURCAD"] ["1008" "5"] ["55" "18"] ["1007" "AUDCAD"] ["1008" "5"]
- ["55" "19"] ["1007" "GBPCAD"] ["1008" "5"] ["55" "20"] ["1007" "AUDNZD"] ["1008" "5"]
- ["55" "21"] ["1007" "NZDJPY"] ["1008" "3"] ["55" "22"] ["1007" "USDNOK"] ["1008" "4"]
- ["55" "23"] ["1007" "AUDCHF"] ["1008" "5"] ["55" "24"] ["1007" "USDMXN"] ["1008" "4"]
- ["55" "25"] ["1007" "GBPNZD"] ["1008" "5"] ["55" "26"] ["1007" "EURNZD"] ["1008" "5"]
- ["55" "27"] ["1007" "CADCHF"] ["1008" "5"] ["55" "28"] ["1007" "USDSGD"] ["1008" "5"]
- ["55" "29"] ["1007" "USDSEK"] ["1008" "4"] ["55" "30"] ["1007" "NZDCAD"] ["1008" "5"]
- ["55" "31"] ["1007" "EURSEK"] ["1008" "4"] ["55" "32"] ["1007" "GBPSGD"] ["1008" "4"]
- ["55" "33"] ["1007" "EURNOK"] ["1008" "4"] ["55" "34"] ["1007" "EURHUF"] ["1008" "2"]
- ["55" "35"] ["1007" "USDPLN"] ["1008" "4"] ["55" "36"] ["1007" "USDDKK"] ["1008" "4"]
- ["55" "37"] ["1007" "GBPNOK"] ["1008" "4"] ["55" "38"] ["1007" "AUDDKK"] ["1008" "4"]
- ["55" "39"] ["1007" "NZDCHF"] ["1008" "5"] ["55" "40"] ["1007" "GBPCHF"] ["1008" "5"]
- ["55" "41"] ["1007" "XAUUSD"] ["1008" "2"] ["55" "42"] ["1007" "XAGUSD"] ["1008" "3"]
- ["55" "43"] ["1007" "USDTRY"] ["1008" "5"] ["55" "44"] ["1007" "NGAS"] ["1008" "3"]
- ["55" "45"] ["1007" "USDZAR"] ["1008" "5"] 
- ["55" "46"] ["1007" "BTC/USD"] ["1008" "2"]
- ["55" "47"] ["1007" "ETH/USD"] ["1008" "2"] 
- ["55" "48"] ["1007" "LTC/USD"] ["1008" "2"]
- ["55" "49"] ["1007" "XBN/USD"] ["1008" "2"] 
- ["55" "50"] ["1007" "XRP/USD"] ["1008" "5"]
- ["10" "226"]])
-
-
-(def heartbeat-msg 
-[["8" "FIX.4.4"] ["9" "97"] ["35" "0"] ["34" "3"] ["49" "cServer"] ["50" "QUOTE"]
- ["52" "20250228-21:10:20.425"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]
- ;
- ;
- ["10" "069"]]  
-  )
-
-(def test-msg 
-[["8" "FIX.4.4"] ["9" "106"] ["35" "1"] ["34" "4"] ["49" "cServer"] ["50" "QUOTE"]
- ["52" "20250228-21:10:50.425"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]
- ;
- ["112" "TEST"] 
- ;
- ["10" "131"]]  
-  )
-
-
+; payload extractor
+(fix->payload ctrader msg/login-response)
+(fix->payload ctrader msg/heartbeat)
+(fix->payload ctrader msg/Test)
+(fix->payload ctrader msg/seclist-response)

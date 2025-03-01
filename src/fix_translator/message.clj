@@ -1,8 +1,7 @@
 (ns fix-translator.message
   (:require
    [fix-translator.field :refer [decode-fields encode-field]]
-   [fix-translator.schema :refer [get-msg-type]])
-  (:import [java.io StringWriter]))
+   [fix-translator.schema :refer [get-msg-type]]))
 
 (defn checksum
   "Returns a 3-character string (left-padded with zeroes) representing the
@@ -66,41 +65,39 @@
     ))
 ;{:keys [message items idx] :as _items}
 
-(defn decode-message [{:keys [header trailer messages] :as decoder} items]
-  (let [item-reader (create-reader items)
-        header (read-map {:name :header :content header} item-reader)
-        ;msg-type (get header "MsgType")
+
+(defn decode-payload-type [{:keys [header trailer messages] :as decoder} msg-type item-reader]
+  (let [payload-section (get-msg-type decoder msg-type)
+        payload (read-map payload-section item-reader)]
+    payload))
+
+(defn decode-payload [decoder [msg-type fix-vec]]
+  (let [items (decode-fields decoder fix-vec)
+        item-reader (create-reader items)]
+    (decode-payload-type decoder msg-type item-reader)))
+
+(defn decode-header [{:keys [header] :as decoder} item-reader]
+  (read-map {:name :header :content header} item-reader))
+
+(defn decode-trailer [{:keys [trailer] :as decoder} item-reader]
+  (read-map {:name :trailer :content trailer} item-reader))
+
+(defn decode-message [decoder fix-vec]
+  (let [items (decode-fields decoder fix-vec)
+        item-reader (create-reader items)
+        header (decode-header decoder item-reader)
         msg-type (:msg-type header)
-        payload-section (get-msg-type decoder msg-type)
-        payload (read-map payload-section item-reader)
-        trailer (read-map {:name :trailer :content trailer} item-reader)]
+        payload (decode-payload-type decoder msg-type item-reader)
+        _ (println "reading trailer..")
+        trailer (decode-trailer decoder item-reader)]
     ;(assoc data :type msg-type :payload payload-section)
     {:header header
      :payload payload
      :trailer trailer}))
 
-(def checksum-count (count "10=080"))
-(def begin-string-count (count "8=FIX.4.4"))
-(def body-length-count (count "9=146"))
-
-(def body-length-exclude (+ checksum-count begin-string-count body-length-count))
-
-; body-length-exclude
-
-(defn decode-fix-msg [decoder fix-msg-str]
-  (let [fields (decode-fields decoder fix-msg-str)
-        msg (decode-message decoder fields)
-        ;BodyLength after the BodyLength field  and before the CheckSum field.
-        ; exclude BeginString + bodylength + checksum
-        fix-count (count fix-msg-str)
-        checksum-length (- fix-count checksum-count)
-        fix-msg-no-checksum (subs fix-msg-str 0 checksum-length)
-        body-length (- fix-count body-length-exclude)]
-    (assoc msg
-           :wire fix-msg-str
-           ;:wire-no-c fix-msg-no-checksum
-           :checksum (checksum fix-msg-no-checksum)
-           :body-length body-length)))
+(defn fix->payload [decoder fix-vec]
+  (let [{:keys [header payload]} (decode-message decoder fix-vec)]
+    [(:msg-type header) payload]))
 
 ;; encode
 
@@ -226,7 +223,7 @@
         fix-vec (insert-begin-size fix-version header-vec body-vec)]
     (add-checksum fix-vec)))
 
-(defn encode-fix-msg2 [{:keys [header trailer messages] :as decoder}
+#_(defn encode-fix-msg2 [{:keys [header trailer messages] :as decoder}
                        fix-msg]
   (let [msg-type (get-in fix-msg [:header :msg-type])
 

@@ -1,16 +1,17 @@
 {:header ({:name :begin-string, :required true}
           {:name :body-length, :required true}
           {:name :msg-type, :required true}
+          {:name :msg-seq-num, :required true}
           {:name :sender-comp-id, :required true}
+          {:name :sender-sub-id, :required false}
+          {:name :sending-time, :required true}
           {:name :target-comp-id, :required true}
+          {:name :target-sub-id, :required false}
           {:name :on-behalf-of-comp-id, :required false}
           {:name :deliver-to-comp-id, :required false}
           {:name :secure-data-len, :required false}
           {:name :secure-data, :required false}
-          {:name :msg-seq-num, :required true}
-          {:name :sender-sub-id, :required false}
           {:name :sender-location-id, :required false}
-          {:name :target-sub-id, :required false}
           {:name :target-location-id, :required false}
           {:name :on-behalf-of-sub-id, :required false}
           {:name :on-behalf-of-location-id, :required false}
@@ -18,627 +19,296 @@
           {:name :deliver-to-location-id, :required false}
           {:name :poss-dup-flag, :required false}
           {:name :poss-resend, :required false}
-          {:name :sending-time, :required true}
           {:name :orig-sending-time, :required false}
           {:name :message-encoding, :required false}
-          {:name :last-msg-seq-num-processed,
-           :required false}),
+          {:name :last-msg-seq-num-processed, :required false}),
  :trailer ({:name :signature-length, :required false}
            {:name :signature, :required false}
            {:name :check-sum, :required true}),
  :messages ({:name :heartbeat,
              :msgtype "0",
              :category "admin",
-             :content ({:type :field,
-                        :name :test-req-id,
-                        :required false})}
+             :content ({:type :field, :name :test-req-id, :required false})}
             {:name :logon,
              :msgtype "A",
              :category "admin",
-             :content ({:type :field,
-                        :name :encrypt-method,
-                        :required true}
-                       {:type :field,
-                        :name :heart-bt-int,
-                        :required true}
-                       {:type :field,
-                        :name :raw-data-length,
-                        :required false}
-                       {:type :field,
-                        :name :raw-data,
-                        :required false}
-                       {:type :field,
-                        :name :reset-seq-num-flag,
-                        :required false}
-                       {:type :field,
-                        :name :next-expected-msg-seq-num,
-                        :required false}
-                       {:type :field,
-                        :name :max-message-size,
-                        :required false}
+             :content ({:type :field, :name :encrypt-method, :required true}
+                       {:type :field, :name :heart-bt-int, :required true}
+                       {:type :field, :name :raw-data-length, :required false}
+                       {:type :field, :name :raw-data, :required false}
+                       {:type :field, :name :reset-seq-num-flag, :required false}
+                       {:type :field, :name :next-expected-msg-seq-num, :required false}
+                       {:type :field, :name :max-message-size, :required false}
                        {:type :group,
                         :name :no-msg-types,
                         :required false,
-                        :fields [{:name :ref-msg-type,
-                                  :required false}
-                                 {:name :msg-direction,
-                                  :required false}]}
-                       {:type :field,
-                        :name :test-message-indicator,
-                        :required false}
-                       {:type :field,
-                        :name :username,
-                        :required false}
-                       {:type :field,
-                        :name :password,
-                        :required false})}
+                        :fields [{:name :ref-msg-type, :required false} {:name :msg-direction, :required false}]}
+                       {:type :field, :name :test-message-indicator, :required false}
+                       {:type :field, :name :username, :required false}
+                       {:type :field, :name :password, :required false})}
             {:name :test-request,
              :msgtype "1",
              :category "admin",
-             :content ({:type :field,
-                        :name :test-req-id,
-                        :required true})}
+             :content ({:type :field, :name :test-req-id, :required true})}
             {:name :resend-request,
              :msgtype "2",
              :category "admin",
-             :content ({:type :field,
-                        :name :begin-seq-no,
-                        :required true}
-                       {:type :field,
-                        :name :end-seq-no,
-                        :required true})}
+             :content ({:type :field, :name :begin-seq-no, :required true}
+                       {:type :field, :name :end-seq-no, :required true})}
             {:name :reject,
              :msgtype "3",
              :category "admin",
-             :content ({:type :field,
-                        :name :ref-seq-num,
-                        :required true}
-                       {:type :field,
-                        :name :ref-tag-id,
-                        :required false}
-                       {:type :field,
-                        :name :ref-msg-type,
-                        :required false}
-                       {:type :field,
-                        :name :session-reject-reason,
-                        :required false}
-                       {:type :field,
-                        :name :text,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text-len,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text,
-                        :required false})}
+             :content ({:type :field, :name :ref-seq-num, :required true}
+                       {:type :field, :name :ref-tag-id, :required false}
+                       {:type :field, :name :ref-msg-type, :required false}
+                       {:type :field, :name :session-reject-reason, :required false}
+                       {:type :field, :name :text, :required false}
+                       {:type :field, :name :encoded-text-len, :required false}
+                       {:type :field, :name :encoded-text, :required false})}
             {:name :sequence-reset,
              :msgtype "4",
              :category "admin",
-             :content ({:type :field,
-                        :name :gap-fill-flag,
-                        :required false}
-                       {:type :field,
-                        :name :new-seq-no,
-                        :required true})}
+             :content ({:type :field, :name :gap-fill-flag, :required false}
+                       {:type :field, :name :new-seq-no, :required true})}
             {:name :logout,
              :msgtype "5",
              :category "admin",
-             :content ({:type :field,
-                        :name :text,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text-len,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text,
-                        :required false})}
+             :content ({:type :field, :name :text, :required false}
+                       {:type :field, :name :encoded-text-len, :required false}
+                       {:type :field, :name :encoded-text, :required false})}
             {:name :business-message-reject,
              :msgtype "j",
              :category "app",
-             :content ({:type :field,
-                        :name :ref-seq-num,
-                        :required false}
-                       {:type :field,
-                        :name :ref-msg-type,
-                        :required false}
-                       {:type :field,
-                        :name :business-reject-ref-id,
-                        :required false}
-                       {:type :field,
-                        :name :business-reject-reason,
-                        :required true}
-                       {:type :field,
-                        :name :text,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text-len,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text,
-                        :required false})}
+             :content ({:type :field, :name :ref-seq-num, :required false}
+                       {:type :field, :name :ref-msg-type, :required false}
+                       {:type :field, :name :business-reject-ref-id, :required false}
+                       {:type :field, :name :business-reject-reason, :required true}
+                       {:type :field, :name :text, :required false}
+                       {:type :field, :name :encoded-text-len, :required false}
+                       {:type :field, :name :encoded-text, :required false})}
             {:name :market-data-request,
              :msgtype "V",
              :category "app",
-             :content ({:type :field,
-                        :name :mdreq-id,
-                        :required true}
-                       {:type :field,
-                        :name :subscription-request-type,
-                        :required true}
-                       {:type :field,
-                        :name :market-depth,
-                        :required true}
-                       {:type :field,
-                        :name :mdupdate-type,
-                        :required false}
+             :content ({:type :field, :name :mdreq-id, :required true}
+                       {:type :field, :name :subscription-request-type, :required true}
+                       {:type :field, :name :market-depth, :required true}
+                       {:type :field, :name :mdupdate-type, :required false}
                        {:type :group,
                         :name :no-mdentry-types,
                         :required true,
-                        :fields [{:name :mdentry-type,
-                                  :required true}]}
-                       {:type :group,
-                        :name :no-related-sym,
-                        :required true,
-                        :fields [{:name :symbol,
-                                  :required true}]})}
+                        :fields [{:name :mdentry-type, :required true}]}
+                       {:type :group, :name :no-related-sym, :required true, :fields [{:name :symbol, :required true}]})}
             {:name :market-data-incremental-refresh,
              :msgtype "X",
              :category "app",
-             :content ({:type :field,
-                        :name :mdreq-id,
-                        :required false}
+             :content ({:type :field, :name :mdreq-id, :required false}
                        {:type :group,
                         :name :no-mdentries,
                         :required true,
-                        :fields [{:name :mdupdate-action,
-                                  :required true}
-                                 {:name :mdentry-type,
-                                  :required false}
-                                 {:name :mdentry-id,
-                                  :required true}
-                                 {:name :symbol,
-                                  :required true}
-                                 {:name :mdentry-px,
-                                  :required false}
-                                 {:name :mdentry-size,
-                                  :required false}]})}
+                        :fields [{:name :mdupdate-action, :required true}
+                                 {:name :mdentry-type, :required false}
+                                 {:name :mdentry-id, :required true}
+                                 {:name :symbol, :required true}
+                                 {:name :mdentry-px, :required false}
+                                 {:name :mdentry-size, :required false}]})}
             {:name :market-data-request-reject,
              :msgtype "Y",
              :category "app",
-             :content ({:type :field,
-                        :name :mdreq-id,
-                        :required true}
-                       {:type :field,
-                        :name :mdreq-rej-reason,
-                        :required false}
-                       {:type :field,
-                        :name :text,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text-len,
-                        :required false}
-                       {:type :field,
-                        :name :encoded-text,
-                        :required false})}
+             :content ({:type :field, :name :mdreq-id, :required true}
+                       {:type :field, :name :mdreq-rej-reason, :required false}
+                       {:type :field, :name :text, :required false}
+                       {:type :field, :name :encoded-text-len, :required false}
+                       {:type :field, :name :encoded-text, :required false})}
             {:name :market-data-snapshot-full-refresh,
              :msgtype "W",
              :category "app",
-             :content ({:type :field,
-                        :name :mdreq-id,
-                        :required false}
-                       {:type :field,
-                        :name :symbol,
-                        :required true}
+             :content ({:type :field, :name :mdreq-id, :required false}
+                       {:type :field, :name :symbol, :required true}
                        {:type :group,
                         :name :no-mdentries,
                         :required true,
-                        :fields [{:name :mdentry-type,
-                                  :required true}
-                                 {:name :quote-entry-id,
-                                  :required false}
-                                 {:name :mdentry-px,
-                                  :required true}
-                                 {:name :mdentry-size,
-                                  :required false}
-                                 {:name :mdentry-id,
-                                  :required false}]})}
+                        :fields [{:name :mdentry-type, :required true}
+                                 {:name :quote-entry-id, :required false}
+                                 {:name :mdentry-px, :required true}
+                                 {:name :mdentry-size, :required false}
+                                 {:name :mdentry-id, :required false}]})}
             {:name :order-mass-status-request,
              :msgtype "AF",
              :category "app",
-             :content ({:type :field,
-                        :name :mass-status-req-id,
-                        :required true}
-                       {:type :field,
-                        :name :mass-status-req-type,
-                        :required true}
-                       {:type :field,
-                        :name :issue-date,
-                        :required false})}
+             :content ({:type :field, :name :mass-status-req-id, :required true}
+                       {:type :field, :name :mass-status-req-type, :required true}
+                       {:type :field, :name :issue-date, :required false})}
             {:name :execution-report,
              :msgtype "8",
              :category "app",
-             :content ({:type :field,
-                        :name :order-id,
-                        :required true}
-                       {:type :field,
-                        :name :cl-ord-id,
-                        :required false}
-                       {:type :field,
-                        :name :orig-cl-ord-id,
-                        :required false}
-                       {:type :field,
-                        :name :tot-num-reports,
-                        :required false}
-                       {:type :field,
-                        :name :exec-type,
-                        :required true}
-                       {:type :field,
-                        :name :ord-status,
-                        :required true}
-                       {:type :field,
-                        :name :symbol,
-                        :required false}
-                       {:type :field,
-                        :name :side,
-                        :required false}
-                       {:type :field,
-                        :name :order-qty,
-                        :required false}
-                       {:type :field,
-                        :name :ord-type,
-                        :required false}
-                       {:type :field,
-                        :name :price,
-                        :required false}
-                       {:type :field,
-                        :name :stop-px,
-                        :required false}
-                       {:type :field,
-                        :name :time-in-force,
-                        :required false}
-                       {:type :field,
-                        :name :expire-time,
-                        :required false}
-                       {:type :field,
-                        :name :last-qty,
-                        :required false}
-                       {:type :field,
-                        :name :last-px,
-                        :required false}
-                       {:type :field,
-                        :name :leaves-qty,
-                        :required false}
-                       {:type :field,
-                        :name :cum-qty,
-                        :required false}
-                       {:type :field,
-                        :name :avg-px,
-                        :required false}
-                       {:type :field,
-                        :name :transact-time,
-                        :required false}
-                       {:type :field,
-                        :name :text,
-                        :required false}
-                       {:type :field,
-                        :name :ord-rej-reason,
-                        :required false}
-                       {:type :field,
-                        :name :pos-maint-rpt-id,
-                        :required false}
-                       {:type :field,
-                        :name :designation,
-                        :required false}
-                       {:type :field,
-                        :name :mass-status-req-id,
-                        :required false}
-                       {:type :field,
-                        :name :absolute-tp,
-                        :required false}
-                       {:type :field,
-                        :name :relative-tp,
-                        :required false}
-                       {:type :field,
-                        :name :absolute-sl,
-                        :required false}
-                       {:type :field,
-                        :name :relative-sl,
-                        :required false}
-                       {:type :field,
-                        :name :trailing-sl,
-                        :required false}
-                       {:type :field,
-                        :name :trigger-method-sl,
-                        :required false}
-                       {:type :field,
-                        :name :guaranteed-sl,
-                        :required false})}
+             :content ({:type :field, :name :order-id, :required true}
+                       {:type :field, :name :cl-ord-id, :required false}
+                       {:type :field, :name :orig-cl-ord-id, :required false}
+                       {:type :field, :name :tot-num-reports, :required false}
+                       {:type :field, :name :exec-type, :required true}
+                       {:type :field, :name :ord-status, :required true}
+                       {:type :field, :name :symbol, :required false}
+                       {:type :field, :name :side, :required false}
+                       {:type :field, :name :order-qty, :required false}
+                       {:type :field, :name :ord-type, :required false}
+                       {:type :field, :name :price, :required false}
+                       {:type :field, :name :stop-px, :required false}
+                       {:type :field, :name :time-in-force, :required false}
+                       {:type :field, :name :expire-time, :required false}
+                       {:type :field, :name :last-qty, :required false}
+                       {:type :field, :name :last-px, :required false}
+                       {:type :field, :name :leaves-qty, :required false}
+                       {:type :field, :name :cum-qty, :required false}
+                       {:type :field, :name :avg-px, :required false}
+                       {:type :field, :name :transact-time, :required false}
+                       {:type :field, :name :text, :required false}
+                       {:type :field, :name :ord-rej-reason, :required false}
+                       {:type :field, :name :pos-maint-rpt-id, :required false}
+                       {:type :field, :name :designation, :required false}
+                       {:type :field, :name :mass-status-req-id, :required false}
+                       {:type :field, :name :absolute-tp, :required false}
+                       {:type :field, :name :relative-tp, :required false}
+                       {:type :field, :name :absolute-sl, :required false}
+                       {:type :field, :name :relative-sl, :required false}
+                       {:type :field, :name :trailing-sl, :required false}
+                       {:type :field, :name :trigger-method-sl, :required false}
+                       {:type :field, :name :guaranteed-sl, :required false})}
             {:name :new-order-single,
              :msgtype "D",
              :category "app",
-             :content ({:type :field,
-                        :name :cl-ord-id,
-                        :required true}
-                       {:type :field,
-                        :name :symbol,
-                        :required true}
-                       {:type :field,
-                        :name :side,
-                        :required true}
-                       {:type :field,
-                        :name :transact-time,
-                        :required true}
-                       {:type :field,
-                        :name :order-qty,
-                        :required true}
-                       {:type :field,
-                        :name :ord-type,
-                        :required true}
-                       {:type :field,
-                        :name :price,
-                        :required false}
-                       {:type :field,
-                        :name :stop-px,
-                        :required false}
-                       {:type :field,
-                        :name :time-in-force,
-                        :required false}
-                       {:type :field,
-                        :name :expire-time,
-                        :required false}
-                       {:type :field,
-                        :name :pos-maint-rpt-id,
-                        :required false}
-                       {:type :field,
-                        :name :designation,
-                        :required false})}
+             :content ({:type :field, :name :cl-ord-id, :required true}
+                       {:type :field, :name :symbol, :required true}
+                       {:type :field, :name :side, :required true}
+                       {:type :field, :name :transact-time, :required true}
+                       {:type :field, :name :order-qty, :required true}
+                       {:type :field, :name :ord-type, :required true}
+                       {:type :field, :name :price, :required false}
+                       {:type :field, :name :stop-px, :required false}
+                       {:type :field, :name :time-in-force, :required false}
+                       {:type :field, :name :expire-time, :required false}
+                       {:type :field, :name :pos-maint-rpt-id, :required false}
+                       {:type :field, :name :designation, :required false})}
             {:name :order-status-request,
              :msgtype "H",
              :category "app",
-             :content ({:type :field,
-                        :name :cl-ord-id,
-                        :required true}
-                       {:type :field,
-                        :name :side,
-                        :required false})}
+             :content ({:type :field, :name :cl-ord-id, :required true} {:type :field, :name :side, :required false})}
             {:name :order-cancel-request,
              :msgtype "F",
              :category "app",
-             :content ({:type :field,
-                        :name :orig-cl-ord-id,
-                        :required true}
-                       {:type :field,
-                        :name :order-id,
-                        :required false}
-                       {:type :field,
-                        :name :cl-ord-id,
-                        :required true})}
+             :content ({:type :field, :name :orig-cl-ord-id, :required true}
+                       {:type :field, :name :order-id, :required false}
+                       {:type :field, :name :cl-ord-id, :required true})}
             {:name :order-cancel-replace-request,
              :msgtype "G",
              :category "app",
-             :content ({:type :field,
-                        :name :order-id,
-                        :required false}
-                       {:type :field,
-                        :name :orig-cl-ord-id,
-                        :required true}
-                       {:type :field,
-                        :name :cl-ord-id,
-                        :required true}
-                       {:type :field,
-                        :name :order-qty,
-                        :required true}
-                       {:type :field,
-                        :name :price,
-                        :required false}
-                       {:type :field,
-                        :name :stop-px,
-                        :required false}
-                       {:type :field,
-                        :name :expire-time,
-                        :required false})}
+             :content ({:type :field, :name :order-id, :required false}
+                       {:type :field, :name :orig-cl-ord-id, :required true}
+                       {:type :field, :name :cl-ord-id, :required true}
+                       {:type :field, :name :order-qty, :required true}
+                       {:type :field, :name :price, :required false}
+                       {:type :field, :name :stop-px, :required false}
+                       {:type :field, :name :expire-time, :required false})}
             {:name :order-cancel-reject,
              :msgtype "9",
              :category "app",
-             :content ({:type :field,
-                        :name :order-id,
-                        :required true}
-                       {:type :field,
-                        :name :cl-ord-id,
-                        :required true}
-                       {:type :field,
-                        :name :orig-cl-ord-id,
-                        :required false}
-                       {:type :field,
-                        :name :ord-status,
-                        :required true}
-                       {:type :field,
-                        :name :cxl-rej-response-to,
-                        :required true}
-                       {:type :field,
-                        :name :text,
-                        :required false})}
+             :content ({:type :field, :name :order-id, :required true}
+                       {:type :field, :name :cl-ord-id, :required true}
+                       {:type :field, :name :orig-cl-ord-id, :required false}
+                       {:type :field, :name :ord-status, :required true}
+                       {:type :field, :name :cxl-rej-response-to, :required true}
+                       {:type :field, :name :text, :required false})}
             {:name :request-for-positions,
              :msgtype "AN",
              :category "app",
-             :content ({:type :field,
-                        :name :pos-req-id,
-                        :required true}
-                       {:type :field,
-                        :name :pos-maint-rpt-id,
-                        :required false})}
+             :content ({:type :field, :name :pos-req-id, :required true}
+                       {:type :field, :name :pos-maint-rpt-id, :required false})}
             {:name :position-report,
              :msgtype "AP",
              :category "app",
-             :content ({:type :field,
-                        :name :pos-req-id,
-                        :required true}
-                       {:type :field,
-                        :name :pos-maint-rpt-id,
-                        :required false}
-                       {:type :field,
-                        :name :total-num-pos-reports,
-                        :required true}
-                       {:type :field,
-                        :name :pos-req-result,
-                        :required true}
-                       {:type :field,
-                        :name :symbol,
-                        :required false}
-                       {:type :field,
-                        :name :settl-price,
-                        :required false}
-                       {:type :field,
-                        :name :absolute-tp,
-                        :required false}
-                       {:type :field,
-                        :name :absolute-sl,
-                        :required false}
-                       {:type :field,
-                        :name :trailing-sl,
-                        :required false}
-                       {:type :field,
-                        :name :trigger-method-sl,
-                        :required false}
-                       {:type :field,
-                        :name :guaranteed-sl,
-                        :required false})}
+             :content ({:type :field, :name :pos-req-id, :required true}
+                       {:type :field, :name :pos-maint-rpt-id, :required false}
+                       {:type :field, :name :total-num-pos-reports, :required true}
+                       {:type :field, :name :pos-req-result, :required true}
+                       {:type :field, :name :symbol, :required false}
+                       {:type :group,
+                        :name :no-positions,
+                        :required false,
+                        :fields [{:name :long-qty, :required false} {:name :short-qty, :required false}]}
+                       {:type :field, :name :settl-price, :required false}
+                       {:type :field, :name :absolute-tp, :required false}
+                       {:type :field, :name :absolute-sl, :required false}
+                       {:type :field, :name :trailing-sl, :required false}
+                       {:type :field, :name :trigger-method-sl, :required false}
+                       {:type :field, :name :guaranteed-sl, :required false})}
             {:name :security-list-request,
              :msgtype "x",
              :category "app",
-             :content ({:type :field,
-                        :name :security-req-id,
-                        :required true}
-                       {:type :field,
-                        :name :security-list-request-type,
-                        :required true})}
+             :content ({:type :field, :name :security-req-id, :required true}
+                       {:type :field, :name :security-list-request-type, :required true}
+                       {:type :field, :name :symbol, :required true}
+                       {:type :field, :name :symbol-name, :required false}
+                       {:type :field, :name :symbol-digits, :required false})}
             {:name :security-list,
              :msgtype "y",
              :category "app",
-             :content ({:type :field,
-                        :name :security-req-id,
-                        :required true}
-                       {:type :field,
-                        :name :security-response-id,
-                        :required true}
-                       {:type :field,
-                        :name :security-request-result,
-                        :required true}
+             :content ({:type :field, :name :security-req-id, :required true}
+                       {:type :field, :name :security-response-id, :required true}
+                       {:type :field, :name :security-request-result, :required true}
                        {:type :group,
                         :name :no-related-sym,
                         :required false,
-                        :fields []})}),
- :fields ({:tag "6",
-           :name :avg-px,
-           :type "PRICE",
-           :values ()}
-          {:tag "7",
-           :name :begin-seq-no,
-           :type "SEQNUM",
-           :values ()}
-          {:tag "8",
-           :name :begin-string,
-           :type "STRING",
-           :values ()}
-          {:tag "9",
-           :name :body-length,
-           :type "LENGTH",
-           :values ()}
-          {:tag "10",
-           :name :check-sum,
-           :type "STRING",
-           :values ()}
-          {:tag "11",
-           :name :cl-ord-id,
-           :type "STRING",
-           :values ()}
-          {:tag "14",
-           :name :cum-qty,
-           :type "QTY",
-           :values ()}
-          {:tag "16",
-           :name :end-seq-no,
-           :type "SEQNUM",
-           :values ()}
-          {:tag "31",
-           :name :last-px,
-           :type "PRICE",
-           :values ()}
-          {:tag "32",
-           :name :last-qty,
-           :type "QTY",
-           :values ()}
-          {:tag "34",
-           :name :msg-seq-num,
-           :type "SEQNUM",
-           :values ()}
+                        :fields [{:name :symbol, :required true}
+                                 {:name :symbol-name, :required false}
+                                 {:name :symbol-digits, :required false}]})}),
+ :fields ({:tag "6", :name :avg-px, :type "PRICE", :values ()}
+          {:tag "7", :name :begin-seq-no, :type "SEQNUM", :values ()}
+          {:tag "8", :name :begin-string, :type "STRING", :values ()}
+          {:tag "9", :name :body-length, :type "LENGTH", :values ()}
+          {:tag "10", :name :check-sum, :type "STRING", :values ()}
+          {:tag "11", :name :cl-ord-id, :type "STRING", :values ()}
+          {:tag "14", :name :cum-qty, :type "QTY", :values ()}
+          {:tag "16", :name :end-seq-no, :type "SEQNUM", :values ()}
+          {:tag "31", :name :last-px, :type "PRICE", :values ()}
+          {:tag "32", :name :last-qty, :type "QTY", :values ()}
+          {:tag "34", :name :msg-seq-num, :type "SEQNUM", :values ()}
           {:tag "35",
            :name :msg-type,
            :type "STRING",
            :values ({:enum "0", :description :heartbeat}
                     {:enum "1", :description :test-request}
-                    {:enum "2",
-                     :description :resend-request}
+                    {:enum "2", :description :resend-request}
                     {:enum "3", :description :reject}
-                    {:enum "4",
-                     :description :sequence-reset}
+                    {:enum "4", :description :sequence-reset}
                     {:enum "5", :description :logout}
-                    {:enum "8",
-                     :description :execution-report}
-                    {:enum "9",
-                     :description :order-cancel-reject}
+                    {:enum "8", :description :execution-report}
+                    {:enum "9", :description :order-cancel-reject}
                     {:enum "A", :description :logon}
                     {:enum "D", :description :order-single}
                     {:enum "E", :description :order-list}
-                    {:enum "F",
-                     :description :order-cancel-request}
-                    {:enum "G",
-                     :description :order-cancel-replace-request}
-                    {:enum "H",
-                     :description :order-status-request}
-                    {:enum "V",
-                     :description :market-data-request}
-                    {:enum "W",
-                     :description :market-data-snapshot-full-refresh}
-                    {:enum "X",
-                     :description :market-data-incremental-refresh}
-                    {:enum "Y",
-                     :description :market-data-request-reject}
-                    {:enum "j",
-                     :description :business-message-reject}
-                    {:enum "v",
-                     :description :security-type-request}
-                    {:enum "w",
-                     :description :security-types}
-                    {:enum "x",
-                     :description :security-list-request}
+                    {:enum "F", :description :order-cancel-request}
+                    {:enum "G", :description :order-cancel-replace-request}
+                    {:enum "H", :description :order-status-request}
+                    {:enum "V", :description :market-data-request}
+                    {:enum "W", :description :market-data-snapshot-full-refresh}
+                    {:enum "X", :description :market-data-incremental-refresh}
+                    {:enum "Y", :description :market-data-request-reject}
+                    {:enum "j", :description :business-message-reject}
+                    {:enum "v", :description :security-type-request}
+                    {:enum "w", :description :security-types}
+                    {:enum "x", :description :security-list-request}
                     {:enum "y", :description :security-list}
-                    {:enum "AF",
-                     :description :order-mass-status-request}
-                    {:enum "AN",
-                     :description :request-for-positions}
-                    {:enum "AO",
-                     :description :request-for-positions-ack}
-                    {:enum "AP",
-                     :description :position-report})}
-          {:tag "36",
-           :name :new-seq-no,
-           :type "SEQNUM",
-           :values ()}
-          {:tag "37",
-           :name :order-id,
-           :type "STRING",
-           :values ()}
-          {:tag "38",
-           :name :order-qty,
-           :type "QTY",
-           :values ()}
+                    {:enum "AF", :description :order-mass-status-request}
+                    {:enum "AN", :description :request-for-positions}
+                    {:enum "AO", :description :request-for-positions-ack}
+                    {:enum "AP", :description :position-report})}
+          {:tag "36", :name :new-seq-no, :type "SEQNUM", :values ()}
+          {:tag "37", :name :order-id, :type "STRING", :values ()}
+          {:tag "38", :name :order-qty, :type "QTY", :values ()}
           {:tag "39",
            :name :ord-status,
            :type "CHAR",
            :values ({:enum "0", :description :new}
-                    {:enum "1",
-                     :description :partially-filled}
+                    {:enum "1", :description :partially-filled}
                     {:enum "2", :description :filled}
                     {:enum "4", :description :canceled}
                     {:enum "5", :description :replaced}
@@ -651,65 +321,32 @@
                     {:enum "2", :description :limit}
                     {:enum "3", :description :stop}
                     {:enum "4", :description :stop-limit}
-                    {:enum "5",
-                     :description :market-on-close}
-                    {:enum "6",
-                     :description :with-or-without}
-                    {:enum "7",
-                     :description :limit-or-better}
-                    {:enum "8",
-                     :description :limit-with-or-without}
+                    {:enum "5", :description :market-on-close}
+                    {:enum "6", :description :with-or-without}
+                    {:enum "7", :description :limit-or-better}
+                    {:enum "8", :description :limit-with-or-without}
                     {:enum "9", :description :on-basis}
                     {:enum "A", :description :on-close}
-                    {:enum "B",
-                     :description :limit-on-close}
+                    {:enum "B", :description :limit-on-close}
                     {:enum "C", :description :forex-market}
-                    {:enum "D",
-                     :description :previously-quoted}
-                    {:enum "E",
-                     :description :previously-indicated}
+                    {:enum "D", :description :previously-quoted}
+                    {:enum "E", :description :previously-indicated}
                     {:enum "F", :description :forex-limit}
                     {:enum "G", :description :forex-swap}
-                    {:enum "H",
-                     :description :forex-previously-quoted}
+                    {:enum "H", :description :forex-previously-quoted}
                     {:enum "I", :description :funari}
-                    {:enum "J",
-                     :description :market-if-touched}
-                    {:enum "K",
-                     :description :market-with-leftover-as-limit}
-                    {:enum "L",
-                     :description :previous-fund-valuation-point}
-                    {:enum "M",
-                     :description :next-fund-valuation-point}
+                    {:enum "J", :description :market-if-touched}
+                    {:enum "K", :description :market-with-leftover-as-limit}
+                    {:enum "L", :description :previous-fund-valuation-point}
+                    {:enum "M", :description :next-fund-valuation-point}
                     {:enum "P", :description :pegged})}
-          {:tag "41",
-           :name :orig-cl-ord-id,
-           :type "STRING",
-           :values ()}
-          {:tag "43",
-           :name :poss-dup-flag,
-           :type "BOOLEAN",
-           :values ()}
-          {:tag "44",
-           :name :price,
-           :type "PRICE",
-           :values ()}
-          {:tag "45",
-           :name :ref-seq-num,
-           :type "SEQNUM",
-           :values ()}
-          {:tag "49",
-           :name :sender-comp-id,
-           :type "STRING",
-           :values ()}
-          {:tag "50",
-           :name :sender-sub-id,
-           :type "STRING",
-           :values ()}
-          {:tag "52",
-           :name :sending-time,
-           :type "UTCTIMESTAMP",
-           :values ()}
+          {:tag "41", :name :orig-cl-ord-id, :type "STRING", :values ()}
+          {:tag "43", :name :poss-dup-flag, :type "BOOLEAN", :values ()}
+          {:tag "44", :name :price, :type "PRICE", :values ()}
+          {:tag "45", :name :ref-seq-num, :type "SEQNUM", :values ()}
+          {:tag "49", :name :sender-comp-id, :type "STRING", :values ()}
+          {:tag "50", :name :sender-sub-id, :type "STRING", :values ()}
+          {:tag "52", :name :sending-time, :type "UTCTIMESTAMP", :values ()}
           {:tag "54",
            :name :side,
            :type "CHAR",
@@ -718,55 +355,33 @@
                     {:enum "3", :description :buy-minus}
                     {:enum "4", :description :sell-plus}
                     {:enum "5", :description :sell-short}
-                    {:enum "6",
-                     :description :sell-short-exempt}
+                    {:enum "6", :description :sell-short-exempt}
                     {:enum "7", :description :undisclosed}
                     {:enum "8", :description :cross}
                     {:enum "9", :description :cross-short}
-                    {:enum "A",
-                     :description :cross-short-exempt}
+                    {:enum "A", :description :cross-short-exempt}
                     {:enum "B", :description :as-defined}
                     {:enum "C", :description :opposite}
                     {:enum "D", :description :subscribe}
                     {:enum "E", :description :redeem}
                     {:enum "F", :description :lend}
                     {:enum "G", :description :borrow})}
-          {:tag "55",
-           :name :symbol,
-           :type "STRING",
-           :values ()}
-          {:tag "56",
-           :name :target-comp-id,
-           :type "STRING",
-           :values ()}
-          {:tag "57",
-           :name :target-sub-id,
-           :type "STRING",
-           :values ()}
-          {:tag "58",
-           :name :text,
-           :type "STRING",
-           :values ()}
+          {:tag "55", :name :symbol, :type "STRING", :values ()}
+          {:tag "56", :name :target-comp-id, :type "STRING", :values ()}
+          {:tag "57", :name :target-sub-id, :type "STRING", :values ()}
+          {:tag "58", :name :text, :type "STRING", :values ()}
           {:tag "59",
            :name :time-in-force,
            :type "CHAR",
            :values ({:enum "0", :description :day}
-                    {:enum "1",
-                     :description :good-till-cancel}
-                    {:enum "2",
-                     :description :at-the-opening}
-                    {:enum "3",
-                     :description :immediate-or-cancel}
+                    {:enum "1", :description :good-till-cancel}
+                    {:enum "2", :description :at-the-opening}
+                    {:enum "3", :description :immediate-or-cancel}
                     {:enum "4", :description :fill-or-kill}
-                    {:enum "5",
-                     :description :good-till-crossing}
-                    {:enum "6",
-                     :description :good-till-date}
+                    {:enum "5", :description :good-till-crossing}
+                    {:enum "6", :description :good-till-date}
                     {:enum "7", :description :at-the-close})}
-          {:tag "60",
-           :name :transact-time,
-           :type "UTCTIMESTAMP",
-           :values ()}
+          {:tag "60", :name :transact-time, :type "UTCTIMESTAMP", :values ()}
           {:tag "77",
            :name :position-effect,
            :type "CHAR",
@@ -774,34 +389,13 @@
                     {:enum "C", :description :close}
                     {:enum "R", :description :rolled}
                     {:enum "F", :description :fifo})}
-          {:tag "89",
-           :name :signature,
-           :type "DATA",
-           :values ()}
-          {:tag "90",
-           :name :secure-data-len,
-           :type "LENGTH",
-           :values ()}
-          {:tag "91",
-           :name :secure-data,
-           :type "DATA",
-           :values ()}
-          {:tag "93",
-           :name :signature-length,
-           :type "LENGTH",
-           :values ()}
-          {:tag "95",
-           :name :raw-data-length,
-           :type "LENGTH",
-           :values ()}
-          {:tag "96",
-           :name :raw-data,
-           :type "DATA",
-           :values ()}
-          {:tag "97",
-           :name :poss-resend,
-           :type "BOOLEAN",
-           :values ()}
+          {:tag "89", :name :signature, :type "DATA", :values ()}
+          {:tag "90", :name :secure-data-len, :type "LENGTH", :values ()}
+          {:tag "91", :name :secure-data, :type "DATA", :values ()}
+          {:tag "93", :name :signature-length, :type "LENGTH", :values ()}
+          {:tag "95", :name :raw-data-length, :type "LENGTH", :values ()}
+          {:tag "96", :name :raw-data, :type "DATA", :values ()}
+          {:tag "97", :name :poss-resend, :type "BOOLEAN", :values ()}
           {:tag "98",
            :name :encrypt-method,
            :type "INT",
@@ -812,108 +406,43 @@
                     {:enum "4", :description :pgp-des}
                     {:enum "5", :description :pgp-des-md5}
                     {:enum "6", :description :pem-des-md5})}
-          {:tag "99",
-           :name :stop-px,
-           :type "PRICE",
-           :values ()}
+          {:tag "99", :name :stop-px, :type "PRICE", :values ()}
           {:tag "103",
            :name :ord-rej-reason,
            :type "INT",
-           :values ({:enum "0",
-                     :description :broker-exchange-option}
-                    {:enum "1",
-                     :description :unknown-symbol}
-                    {:enum "2",
-                     :description :exchange-closed}
-                    {:enum "3",
-                     :description :order-exceeds-limit}
-                    {:enum "4",
-                     :description :too-late-to-enter}
+           :values ({:enum "0", :description :broker-exchange-option}
+                    {:enum "1", :description :unknown-symbol}
+                    {:enum "2", :description :exchange-closed}
+                    {:enum "3", :description :order-exceeds-limit}
+                    {:enum "4", :description :too-late-to-enter}
                     {:enum "5", :description :unknown-order}
-                    {:enum "6",
-                     :description :duplicate-order}
-                    {:enum "7",
-                     :description :duplicate-of-a-verbally-communicated-order}
+                    {:enum "6", :description :duplicate-order}
+                    {:enum "7", :description :duplicate-of-a-verbally-communicated-order}
                     {:enum "8", :description :stale-order}
-                    {:enum "9",
-                     :description :trade-along-required}
-                    {:enum "10",
-                     :description :invalid-investor-id}
-                    {:enum "11",
-                     :description :unsupported-order-characteristic}
-                    {:enum "12",
-                     :description :surveillence-option}
-                    {:enum "13",
-                     :description :incorrect-quantity}
-                    {:enum "14",
-                     :description :incorrect-allocated-quantity}
-                    {:enum "15",
-                     :description :unknown-account}
+                    {:enum "9", :description :trade-along-required}
+                    {:enum "10", :description :invalid-investor-id}
+                    {:enum "11", :description :unsupported-order-characteristic}
+                    {:enum "12", :description :surveillence-option}
+                    {:enum "13", :description :incorrect-quantity}
+                    {:enum "14", :description :incorrect-allocated-quantity}
+                    {:enum "15", :description :unknown-account}
                     {:enum "99", :description :other})}
-          {:tag "108",
-           :name :heart-bt-int,
-           :type "INT",
-           :values ()}
-          {:tag "110",
-           :name :min-qty,
-           :type "QTY",
-           :values ()}
-          {:tag "112",
-           :name :test-req-id,
-           :type "STRING",
-           :values ()}
-          {:tag "115",
-           :name :on-behalf-of-comp-id,
-           :type "STRING",
-           :values ()}
-          {:tag "116",
-           :name :on-behalf-of-sub-id,
-           :type "STRING",
-           :values ()}
-          {:tag "122",
-           :name :orig-sending-time,
-           :type "UTCTIMESTAMP",
-           :values ()}
-          {:tag "123",
-           :name :gap-fill-flag,
-           :type "BOOLEAN",
-           :values ()}
-          {:tag "126",
-           :name :expire-time,
-           :type "UTCTIMESTAMP",
-           :values ()}
-          {:tag "128",
-           :name :deliver-to-comp-id,
-           :type "STRING",
-           :values ()}
-          {:tag "129",
-           :name :deliver-to-sub-id,
-           :type "STRING",
-           :values ()}
-          {:tag "141",
-           :name :reset-seq-num-flag,
-           :type "BOOLEAN",
-           :values ()}
-          {:tag "142",
-           :name :sender-location-id,
-           :type "STRING",
-           :values ()}
-          {:tag "143",
-           :name :target-location-id,
-           :type "STRING",
-           :values ()}
-          {:tag "144",
-           :name :on-behalf-of-location-id,
-           :type "STRING",
-           :values ()}
-          {:tag "145",
-           :name :deliver-to-location-id,
-           :type "STRING",
-           :values ()}
-          {:tag "146",
-           :name :no-related-sym,
-           :type "NUMINGROUP",
-           :values ()}
+          {:tag "108", :name :heart-bt-int, :type "INT", :values ()}
+          {:tag "110", :name :min-qty, :type "QTY", :values ()}
+          {:tag "112", :name :test-req-id, :type "STRING", :values ()}
+          {:tag "115", :name :on-behalf-of-comp-id, :type "STRING", :values ()}
+          {:tag "116", :name :on-behalf-of-sub-id, :type "STRING", :values ()}
+          {:tag "122", :name :orig-sending-time, :type "UTCTIMESTAMP", :values ()}
+          {:tag "123", :name :gap-fill-flag, :type "BOOLEAN", :values ()}
+          {:tag "126", :name :expire-time, :type "UTCTIMESTAMP", :values ()}
+          {:tag "128", :name :deliver-to-comp-id, :type "STRING", :values ()}
+          {:tag "129", :name :deliver-to-sub-id, :type "STRING", :values ()}
+          {:tag "141", :name :reset-seq-num-flag, :type "BOOLEAN", :values ()}
+          {:tag "142", :name :sender-location-id, :type "STRING", :values ()}
+          {:tag "143", :name :target-location-id, :type "STRING", :values ()}
+          {:tag "144", :name :on-behalf-of-location-id, :type "STRING", :values ()}
+          {:tag "145", :name :deliver-to-location-id, :type "STRING", :values ()}
+          {:tag "146", :name :no-related-sym, :type "NUMINGROUP", :values ()}
           {:tag "150",
            :name :exec-type,
            :type "CHAR",
@@ -924,44 +453,22 @@
                     {:enum "C", :description :expired}
                     {:enum "F", :description :trade}
                     {:enum "I", :description :order-status})}
-          {:tag "151",
-           :name :leaves-qty,
-           :type "QTY",
-           :values ()}
-          {:tag "225",
-           :name :issue-date,
-           :type "LOCALMKTDATE",
-           :values ()}
-          {:tag "262",
-           :name :mdreq-id,
-           :type "STRING",
-           :values ()}
+          {:tag "151", :name :leaves-qty, :type "QTY", :values ()}
+          {:tag "225", :name :issue-date, :type "LOCALMKTDATE", :values ()}
+          {:tag "262", :name :mdreq-id, :type "STRING", :values ()}
           {:tag "263",
            :name :subscription-request-type,
            :type "CHAR",
            :values ({:enum "0", :description :snapshot}
-                    {:enum "1",
-                     :description :snapshot-plus-updates}
-                    {:enum "2",
-                     :description :disable-previous-snapshot-plus-update-request})}
-          {:tag "264",
-           :name :market-depth,
-           :type "INT",
-           :values ()}
+                    {:enum "1", :description :snapshot-plus-updates}
+                    {:enum "2", :description :disable-previous-snapshot-plus-update-request})}
+          {:tag "264", :name :market-depth, :type "INT", :values ()}
           {:tag "265",
            :name :mdupdate-type,
            :type "INT",
-           :values ({:enum "0", :description :full-refresh}
-                    {:enum "1",
-                     :description :incremental-refresh})}
-          {:tag "267",
-           :name :no-mdentry-types,
-           :type "NUMINGROUP",
-           :values ()}
-          {:tag "268",
-           :name :no-mdentries,
-           :type "NUMINGROUP",
-           :values ()}
+           :values ({:enum "0", :description :full-refresh} {:enum "1", :description :incremental-refresh})}
+          {:tag "267", :name :no-mdentry-types, :type "NUMINGROUP", :values ()}
+          {:tag "268", :name :no-mdentries, :type "NUMINGROUP", :values ()}
           {:tag "269",
            :name :mdentry-type,
            :type "CHAR",
@@ -971,334 +478,161 @@
                     {:enum "3", :description :index-value}
                     {:enum "4", :description :opening-price}
                     {:enum "5", :description :closing-price}
-                    {:enum "6",
-                     :description :settlement-price}
-                    {:enum "7",
-                     :description :trading-session-high-price}
-                    {:enum "8",
-                     :description :trading-session-low-price}
-                    {:enum "9",
-                     :description :trading-session-vwap-price}
+                    {:enum "6", :description :settlement-price}
+                    {:enum "7", :description :trading-session-high-price}
+                    {:enum "8", :description :trading-session-low-price}
+                    {:enum "9", :description :trading-session-vwap-price}
                     {:enum "A", :description :imbalance}
                     {:enum "B", :description :trade-volume}
                     {:enum "C", :description :open-interest})}
-          {:tag "270",
-           :name :mdentry-px,
-           :type "PRICE",
-           :values ()}
-          {:tag "271",
-           :name :mdentry-size,
-           :type "QTY",
-           :values ()}
-          {:tag "278",
-           :name :mdentry-id,
-           :type "STRING",
-           :values ()}
+          {:tag "270", :name :mdentry-px, :type "PRICE", :values ()}
+          {:tag "271", :name :mdentry-size, :type "QTY", :values ()}
+          {:tag "278", :name :mdentry-id, :type "STRING", :values ()}
           {:tag "279",
            :name :mdupdate-action,
            :type "CHAR",
-           :values ({:enum "0", :description :new}
-                    {:enum "1", :description :change}
-                    {:enum "2", :description :delete})}
+           :values ({:enum "0", :description :new} {:enum "1", :description :change} {:enum "2", :description :delete})}
           {:tag "281",
            :name :mdreq-rej-reason,
            :type "CHAR",
-           :values ({:enum "0",
-                     :description :unknown-symbol}
-                    {:enum "1",
-                     :description :duplicate-mdreqid}
-                    {:enum "2",
-                     :description :insufficient-bandwidth}
-                    {:enum "3",
-                     :description :insufficient-permissions}
-                    {:enum "4",
-                     :description :unsupported-subscriptionrequesttype}
-                    {:enum "5",
-                     :description :unsupported-marketdepth}
-                    {:enum "6",
-                     :description :unsupported-mdupdatetype}
-                    {:enum "7",
-                     :description :unsupported-aggregatedbook}
-                    {:enum "8",
-                     :description :unsupported-mdentrytype}
-                    {:enum "9",
-                     :description :unsupported-tradingsessionid}
-                    {:enum "A",
-                     :description :unsupported-scope}
-                    {:enum "B",
-                     :description :unsupported-openclosesettleflag}
-                    {:enum "C",
-                     :description :unsupported-mdimplicitdelete})}
-          {:tag "299",
-           :name :quote-entry-id,
-           :type "STRING",
-           :values ()}
-          {:tag "320",
-           :name :security-req-id,
-           :type "STRING",
-           :values ()}
-          {:tag "322",
-           :name :security-response-id,
-           :type "STRING",
-           :values ()}
+           :values ({:enum "0", :description :unknown-symbol}
+                    {:enum "1", :description :duplicate-mdreqid}
+                    {:enum "2", :description :insufficient-bandwidth}
+                    {:enum "3", :description :insufficient-permissions}
+                    {:enum "4", :description :unsupported-subscriptionrequesttype}
+                    {:enum "5", :description :unsupported-marketdepth}
+                    {:enum "6", :description :unsupported-mdupdatetype}
+                    {:enum "7", :description :unsupported-aggregatedbook}
+                    {:enum "8", :description :unsupported-mdentrytype}
+                    {:enum "9", :description :unsupported-tradingsessionid}
+                    {:enum "A", :description :unsupported-scope}
+                    {:enum "B", :description :unsupported-openclosesettleflag}
+                    {:enum "C", :description :unsupported-mdimplicitdelete})}
+          {:tag "299", :name :quote-entry-id, :type "STRING", :values ()}
+          {:tag "320", :name :security-req-id, :type "STRING", :values ()}
+          {:tag "322", :name :security-response-id, :type "STRING", :values ()}
           {:tag "347",
            :name :message-encoding,
            :type "STRING",
-           :values ({:enum "ISO-2022-JP",
-                     :description :iso-2022-jp}
+           :values ({:enum "ISO-2022-JP", :description :iso-2022-jp}
                     {:enum "EUC-JP", :description :euc-jp}
-                    {:enum "SHIFT_JIS",
-                     :description :shift-jis}
+                    {:enum "SHIFT_JIS", :description :shift-jis}
                     {:enum "UTF-8", :description :utf-8})}
-          {:tag "354",
-           :name :encoded-text-len,
-           :type "LENGTH",
-           :values ()}
-          {:tag "355",
-           :name :encoded-text,
-           :type "DATA",
-           :values ()}
-          {:tag "369",
-           :name :last-msg-seq-num-processed,
-           :type "SEQNUM",
-           :values ()}
-          {:tag "371",
-           :name :ref-tag-id,
-           :type "INT",
-           :values ()}
-          {:tag "372",
-           :name :ref-msg-type,
-           :type "STRING",
-           :values ()}
+          {:tag "354", :name :encoded-text-len, :type "LENGTH", :values ()}
+          {:tag "355", :name :encoded-text, :type "DATA", :values ()}
+          {:tag "369", :name :last-msg-seq-num-processed, :type "SEQNUM", :values ()}
+          {:tag "371", :name :ref-tag-id, :type "INT", :values ()}
+          {:tag "372", :name :ref-msg-type, :type "STRING", :values ()}
           {:tag "373",
            :name :session-reject-reason,
            :type "INT",
-           :values ({:enum "0",
-                     :description :invalid-tag-number}
-                    {:enum "1",
-                     :description :required-tag-missing}
-                    {:enum "2",
-                     :description :tag-not-defined-for-this-message-type}
+           :values ({:enum "0", :description :invalid-tag-number}
+                    {:enum "1", :description :required-tag-missing}
+                    {:enum "2", :description :tag-not-defined-for-this-message-type}
                     {:enum "3", :description :undefined-tag}
-                    {:enum "4",
-                     :description :tag-specified-without-a-value}
-                    {:enum "5",
-                     :description :value-is-incorrect}
-                    {:enum "6",
-                     :description :incorrect-data-format-for-value}
-                    {:enum "7",
-                     :description :decryption-problem}
-                    {:enum "8",
-                     :description :signature-problem}
-                    {:enum "9",
-                     :description :compid-problem}
-                    {:enum "10",
-                     :description :sendingtime-accuracy-problem}
-                    {:enum "11",
-                     :description :invalid-msgtype}
-                    {:enum "12",
-                     :description :xml-validation-error}
-                    {:enum "13",
-                     :description :tag-appears-more-than-once}
-                    {:enum "14",
-                     :description :tag-specified-out-of-required-order}
-                    {:enum "15",
-                     :description :repeating-group-fields-out-of-order}
-                    {:enum "16",
-                     :description :incorrect-numingroup-count-for-repeating-group}
-                    {:enum "17",
-                     :description :non-data-value-includes-field-delimiter}
+                    {:enum "4", :description :tag-specified-without-a-value}
+                    {:enum "5", :description :value-is-incorrect}
+                    {:enum "6", :description :incorrect-data-format-for-value}
+                    {:enum "7", :description :decryption-problem}
+                    {:enum "8", :description :signature-problem}
+                    {:enum "9", :description :compid-problem}
+                    {:enum "10", :description :sendingtime-accuracy-problem}
+                    {:enum "11", :description :invalid-msgtype}
+                    {:enum "12", :description :xml-validation-error}
+                    {:enum "13", :description :tag-appears-more-than-once}
+                    {:enum "14", :description :tag-specified-out-of-required-order}
+                    {:enum "15", :description :repeating-group-fields-out-of-order}
+                    {:enum "16", :description :incorrect-numingroup-count-for-repeating-group}
+                    {:enum "17", :description :non-data-value-includes-field-delimiter}
                     {:enum "99", :description :other})}
-          {:tag "379",
-           :name :business-reject-ref-id,
-           :type "STRING",
-           :values ()}
+          {:tag "379", :name :business-reject-ref-id, :type "STRING", :values ()}
           {:tag "380",
            :name :business-reject-reason,
            :type "INT",
            :values ({:enum "0", :description :other}
                     {:enum "1", :description :unkown-id}
-                    {:enum "2",
-                     :description :unknown-security}
-                    {:enum "3",
-                     :description :unsupported-message-type}
-                    {:enum "4",
-                     :description :application-not-available}
-                    {:enum "5",
-                     :description :conditionally-required-field-missing}
-                    {:enum "6",
-                     :description :not-authorized}
-                    {:enum "7",
-                     :description :deliverto-firm-not-available-at-this-time})}
-          {:tag "383",
-           :name :max-message-size,
-           :type "LENGTH",
-           :values ()}
-          {:tag "384",
-           :name :no-msg-types,
-           :type "NUMINGROUP",
-           :values ()}
+                    {:enum "2", :description :unknown-security}
+                    {:enum "3", :description :unsupported-message-type}
+                    {:enum "4", :description :application-not-available}
+                    {:enum "5", :description :conditionally-required-field-missing}
+                    {:enum "6", :description :not-authorized}
+                    {:enum "7", :description :deliverto-firm-not-available-at-this-time})}
+          {:tag "383", :name :max-message-size, :type "LENGTH", :values ()}
+          {:tag "384", :name :no-msg-types, :type "NUMINGROUP", :values ()}
           {:tag "385",
            :name :msg-direction,
            :type "CHAR",
-           :values ({:enum "S", :description :send}
-                    {:enum "R", :description :receive})}
+           :values ({:enum "S", :description :send} {:enum "R", :description :receive})}
           {:tag "434",
            :name :cxl-rej-response-to,
            :type "CHAR",
-           :values ({:enum "1",
-                     :description :order-cancel-request}
-                    {:enum "2",
-                     :description :order-cancel-replace-request})}
-          {:tag "464",
-           :name :test-message-indicator,
-           :type "BOOLEAN",
-           :values ()}
-          {:tag "494",
-           :name :designation,
-           :type "STRING",
-           :values ()}
-          {:tag "553",
-           :name :username,
-           :type "STRING",
-           :values ()}
-          {:tag "554",
-           :name :password,
-           :type "STRING",
-           :values ()}
+           :values ({:enum "1", :description :order-cancel-request}
+                    {:enum "2", :description :order-cancel-replace-request})}
+          {:tag "464", :name :test-message-indicator, :type "BOOLEAN", :values ()}
+          {:tag "494", :name :designation, :type "STRING", :values ()}
+          {:tag "553", :name :username, :type "STRING", :values ()}
+          {:tag "554", :name :password, :type "STRING", :values ()}
           {:tag "559",
            :name :security-list-request-type,
            :type "INT",
            :values ({:enum "0", :description :symbol}
-                    {:enum "1",
-                     :description :securitytype-and-or-cficode}
+                    {:enum "1", :description :securitytype-and-or-cficode}
                     {:enum "2", :description :product}
-                    {:enum "3",
-                     :description :tradingsessionid}
-                    {:enum "4",
-                     :description :all-securities})}
+                    {:enum "3", :description :tradingsessionid}
+                    {:enum "4", :description :all-securities})}
           {:tag "560",
            :name :security-request-result,
            :type "INT",
            :values ({:enum "0", :description :valid-request}
-                    {:enum "1",
-                     :description :invalid-or-unsupported-request}
-                    {:enum "2",
-                     :description :no-instruments-found-that-match-selection-criteria}
-                    {:enum "3",
-                     :description :not-authorized-to-retrieve-instrument-data}
-                    {:enum "4",
-                     :description :instrument-data-temporarily-unavailable}
-                    {:enum "5",
-                     :description :request-for-instrument-data-not-supported})}
-          {:tag "584",
-           :name :mass-status-req-id,
-           :type "STRING",
-           :values ()}
+                    {:enum "1", :description :invalid-or-unsupported-request}
+                    {:enum "2", :description :no-instruments-found-that-match-selection-criteria}
+                    {:enum "3", :description :not-authorized-to-retrieve-instrument-data}
+                    {:enum "4", :description :instrument-data-temporarily-unavailable}
+                    {:enum "5", :description :request-for-instrument-data-not-supported})}
+          {:tag "584", :name :mass-status-req-id, :type "STRING", :values ()}
           {:tag "585",
            :name :mass-status-req-type,
            :type "INT",
-           :values ({:enum "1",
-                     :description :status-for-orders-for-a-security}
-                    {:enum "2",
-                     :description :status-for-orders-for-an-underlying-security}
-                    {:enum "3",
-                     :description :status-for-orders-for-a-product}
-                    {:enum "4",
-                     :description :status-for-orders-for-a-cficode}
-                    {:enum "5",
-                     :description :status-for-orders-for-a-securitytype}
-                    {:enum "6",
-                     :description :status-for-orders-for-a-trading-session}
-                    {:enum "7",
-                     :description :status-for-all-orders}
-                    {:enum "8",
-                     :description :status-for-orders-for-a-partyid})}
-          {:tag "702",
-           :name :no-positions,
-           :type "NUMINGROUP",
-           :values ()}
-          {:tag "704",
-           :name :long-qty,
-           :type "QTY",
-           :values ()}
-          {:tag "705",
-           :name :short-qty,
-           :type "QTY",
-           :values ()}
-          {:tag "710",
-           :name :pos-req-id,
-           :type "STRING",
-           :values ()}
-          {:tag "721",
-           :name :pos-maint-rpt-id,
-           :type "STRING",
-           :values ()}
-          {:tag "727",
-           :name :total-num-pos-reports,
-           :type "INT",
-           :values ()}
+           :values ({:enum "1", :description :status-for-orders-for-a-security}
+                    {:enum "2", :description :status-for-orders-for-an-underlying-security}
+                    {:enum "3", :description :status-for-orders-for-a-product}
+                    {:enum "4", :description :status-for-orders-for-a-cficode}
+                    {:enum "5", :description :status-for-orders-for-a-securitytype}
+                    {:enum "6", :description :status-for-orders-for-a-trading-session}
+                    {:enum "7", :description :status-for-all-orders}
+                    {:enum "8", :description :status-for-orders-for-a-partyid})}
+          {:tag "702", :name :no-positions, :type "NUMINGROUP", :values ()}
+          {:tag "704", :name :long-qty, :type "QTY", :values ()}
+          {:tag "705", :name :short-qty, :type "QTY", :values ()}
+          {:tag "710", :name :pos-req-id, :type "STRING", :values ()}
+          {:tag "721", :name :pos-maint-rpt-id, :type "STRING", :values ()}
+          {:tag "727", :name :total-num-pos-reports, :type "INT", :values ()}
           {:tag "728",
            :name :pos-req-result,
            :type "INT",
            :values ({:enum "0", :description :valid-request}
-                    {:enum "1",
-                     :description :invalid-or-unsupported-request}
-                    {:enum "2",
-                     :description :no-positions-found-that-match-criteria}
-                    {:enum "3",
-                     :description :not-authorized-to-request-positions}
-                    {:enum "4",
-                     :description :request-for-position-not-supported}
+                    {:enum "1", :description :invalid-or-unsupported-request}
+                    {:enum "2", :description :no-positions-found-that-match-criteria}
+                    {:enum "3", :description :not-authorized-to-request-positions}
+                    {:enum "4", :description :request-for-position-not-supported}
                     {:enum "99", :description :other})}
-          {:tag "730",
-           :name :settl-price,
-           :type "PRICE",
-           :values ()}
-          {:tag "789",
-           :name :next-expected-msg-seq-num,
-           :type "SEQNUM",
-           :values ()}
-          {:tag "911",
-           :name :tot-num-reports,
-           :type "INT",
-           :values ()}
-          {:tag "1000",
-           :name :absolute-tp,
-           :type "PRICE",
-           :values ()}
-          {:tag "1001",
-           :name :relative-tp,
-           :type "PRICE",
-           :values ()}
-          {:tag "1002",
-           :name :absolute-sl,
-           :type "PRICE",
-           :values ()}
-          {:tag "1003",
-           :name :relative-sl,
-           :type "PRICE",
-           :values ()}
-          {:tag "1004",
-           :name :trailing-sl,
-           :type "BOOLEAN",
-           :values ()}
+          {:tag "730", :name :settl-price, :type "PRICE", :values ()}
+          {:tag "789", :name :next-expected-msg-seq-num, :type "SEQNUM", :values ()}
+          {:tag "911", :name :tot-num-reports, :type "INT", :values ()}
+          {:tag "1000", :name :absolute-tp, :type "PRICE", :values ()}
+          {:tag "1001", :name :relative-tp, :type "PRICE", :values ()}
+          {:tag "1002", :name :absolute-sl, :type "PRICE", :values ()}
+          {:tag "1003", :name :relative-sl, :type "PRICE", :values ()}
+          {:tag "1004", :name :trailing-sl, :type "BOOLEAN", :values ()}
           {:tag "1005",
            :name :trigger-method-sl,
            :type "INT",
            :values ({:enum "1", :description :trade}
                     {:enum "2", :description :opposite}
                     {:enum "3", :description :double-trade}
-                    {:enum "4",
-                     :description :double-opposite})}
-          {:tag "1006",
-           :name :guaranteed-sl,
-           :type "BOOLEAN",
-           :values ()}
-          {:tag "1007",
-           :name :symbol-name,
-           :type "STRING",
-           :values ()}
+                    {:enum "4", :description :double-opposite})}
+          {:tag "1006", :name :guaranteed-sl, :type "BOOLEAN", :values ()}
+          {:tag "1007", :name :symbol-name, :type "STRING", :values ()}
           {:tag "1008",
            :name :symbol-digits,
            :type "INT",
