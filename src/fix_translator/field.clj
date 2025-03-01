@@ -2,8 +2,7 @@
   (:require
    [tick.core :as t]
    [cljc.java-time.local-date-time :as ldt]
-   [fix-translator.schema :refer [get-field get-field-by-name]]
-   ))
+   [fix-translator.schema :refer [get-field get-field-by-name]]))
 
 ;; tag=value pairs separated by \u0001 (SOH),  tag can be 1-2 alphanumeric characters
 (def tag-value-regex #"([A-Za-z0-9]{1,4})=([^\u0001]+)")
@@ -33,19 +32,15 @@
 ;(parse-utc-timestamp "20250224-21:13:01.525") ;; => #inst "2025-02-24T21:13:01.525Z"
 ;(parse-utc-timestamp "20250224-21:13:01")     ;; => #inst "2025-02-24T21:13:01Z"
 
-
 (defn format-utc-timestamp
   "Returns a UTC timestamp in a specified format."
   [inst]
   (let [;format "yyyyMMdd-HH:mm:ss.SSS"
-        format "yyyyMMdd-HH:mm:ss"
-        ]
+        format "yyyyMMdd-HH:mm:ss"]
     ; instant cannot be formatted
-    (t/format (t/formatter format) (t/date-time inst))  
-    )
-  )
+    (t/format (t/formatter format) (t/date-time inst))))
 
- ;(format-utc-timestamp (t/instant))
+;(format-utc-timestamp (t/instant))
 
 (defn decode-value [{:keys [name type values] :as _field} value]
   ;(println "converting tag: " name  "type: " type " value: " value "values: " values)
@@ -104,8 +99,7 @@
                 "NUMINGROUP" str
                 "DATA" str ; todo
                 "BOOLEAN" str ; todo
-                "UTCTIMESTAMP" format-utc-timestamp 
-                }]
+                "UTCTIMESTAMP" format-utc-timestamp}]
     (cond
       ; do not change msgtype
       ;(= name "MsgType")
@@ -121,8 +115,6 @@
         (encode-fn value)
         value))))
 
- 
-
 (defn encode-field [decoder {:keys [name value] :as fix-field}]
   (let [{:keys [tag _values type] :as field} (get-field-by-name decoder name)]
              ;(println "field: " field)
@@ -132,5 +124,5 @@
            :value-str (encode-value field value))))
 
 #_(defn encode-fields [decoder fix-field-seq]
-  (->> fix-field-seq
-       (map #(encode-field decoder %))))
+    (->> fix-field-seq
+         (map #(encode-field decoder %))))

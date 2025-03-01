@@ -4,8 +4,8 @@
    [clojure.edn :as edn]))
 
 #_(defn load-schema [filepath]
-  (with-open [rdr (io/reader filepath)]
-    (edn/read (java.io.PushbackReader. rdr))))
+    (with-open [rdr (io/reader filepath)]
+      (edn/read (java.io.PushbackReader. rdr))))
 
 (defn load-schema [resource-path]
   (with-open [rdr (io/reader (io/resource resource-path))]
@@ -15,15 +15,14 @@
   (->> (:fields schema)
        (map (juxt :tag identity))
        (into {})))
-  
+
 (defn build-name->field [schema]
   (->> (:fields schema)
        (map (juxt :name identity))
        (into {})))
-  
 
 (defn msg-type->message [schema]
-  (->> (:messages schema )
+  (->> (:messages schema)
        (map (juxt :msgtype identity))
        ;(map (juxt :name identity))
        (into {})))
@@ -34,10 +33,9 @@
      :name->field (build-name->field schema)
      :header (:header schema)
      :trailer (:trailer schema)
-     :messages (msg-type->message schema)
-     }))
+     :messages (msg-type->message schema)}))
 
-(defn get-field [{:keys [tag->field] :as _decoder} tag] 
+(defn get-field [{:keys [tag->field] :as _decoder} tag]
   (if-let [field (get tag->field tag)]
     field
     (throw (ex-info "fix-encoding - unknown field-tag" {:tag tag}))))
@@ -47,10 +45,10 @@
     field
     (throw (ex-info "fix-encoding - unknown field-name" {:field-name field-name}))))
 
-(defn get-msg-type [{:keys [messages] :as _decoder} msg-type] 
+(defn get-msg-type [{:keys [messages] :as _decoder} msg-type]
   (if-let [msg (get messages msg-type)]
-     msg
-     (throw (ex-info "fix-encoding - unknown message-type" {:msg-type msg-type}))))
+    msg
+    (throw (ex-info "fix-encoding - unknown message-type" {:msg-type msg-type}))))
 
 (defn types-in-spec [decoder]
   (->> decoder

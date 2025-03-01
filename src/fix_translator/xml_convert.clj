@@ -19,7 +19,6 @@
 ;(to-keyword "SenderCompID")   ;; => :sender-comp-id
 ;(to-keyword "PARTIALLY_FILLED")
 
-
 ;; Parse XML file
 (defn parse-xml [file-path]
   (xml/parse (io/input-stream file-path)))
@@ -134,8 +133,7 @@
               (if fields
                 (let [;_ (println "group fields: " fields)
                       new-fields (keywordize-names fields)
-                      new-fields (into [] new-fields)
-                      ]
+                      new-fields (into [] new-fields)]
                   ;(println "converted fields: " new-fields)
                   (assoc item :fields new-fields))
                   ; dont replace
@@ -173,8 +171,6 @@
      :trailer (keywordize-names trailer)
      :messages (map sanitize-message messages)
      :fields   (map sanitize-field fields)}))
-
-
 
 (map keywordize-name
      [{:name "BeginString", :required true}

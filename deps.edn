@@ -4,10 +4,10 @@
         tick/tick {:mvn/version "0.6.2"} ; time encoding
         ; xml conversion
         org.clojure/data.xml {:mvn/version "0.2.0-alpha9"} ; fix-dict xml conversion
-        fipp/fipp {:mvn/version "0.6.26"} ; edn pretty printing, used in xml-conversion
+        fipp/fipp {:mvn/version "0.6.27"} ; edn pretty printing, used in xml-conversion
 
         ; legacy
-        cheshire/cheshire {:mvn/version "5.10.2"}  ; JSON parsings and pretty printing
+        ;cheshire/cheshire {:mvn/version "5.10.2"}  ; JSON parsings and pretty printing
         }
 
  :aliases

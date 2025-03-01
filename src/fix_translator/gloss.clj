@@ -1,8 +1,6 @@
 (ns fix-translator.gloss
-  (:require 
-   [gloss.core :as gloss]
-   ;[gloss.io :as io]
-   ))
+  (:require
+   [gloss.core :as gloss]))
 
 (def fix-protocol
   (gloss/compile-frame
@@ -27,12 +25,10 @@
 
 (def header-tags #{"8" "9" "34" "49" "50" "56" "57"
                    ;"52" send time
-                   "10"
-                   })
+                   "10"})
 
 (defn header? [[t v]]
   (contains? header-tags t))
-
 
 (defn without-header [tv]
   (->> tv

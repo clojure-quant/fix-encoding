@@ -10,7 +10,7 @@
   (let [_ (load-spec :test-market)
         transform-by-value (gen-transformations {:tag "35"
                                                  :transform-by "by-value"
-                                                 :values {:heartbeat "0" 
+                                                 :values {:heartbeat "0"
                                                           :test-request "1"}}
                                                 :test-market)]
     (is (= "0" ((:outbound transform-by-value) :heartbeat)))
@@ -19,62 +19,61 @@
     (is (= "1" ((:outbound transform-by-value) :test-request)))
     (is (= :test-request ((:inbound transform-by-value) "1")))
 
-  (let [transform-to-int (gen-transformations {:tag "38"
-                                               :transform-by "to-int"}
-                                              :test-market)]
-    (is (= "100" ((:outbound transform-to-int) 100)))
-    (is (= 100 ((:inbound transform-to-int) "100")))
-    
-    (is (= "100" ((:outbound transform-to-int) 100.0)))
-    (is (= "100" ((:outbound transform-to-int) 100.1)))
-    
-    (is (thrown? Exception ((:inbound transform-to-int) "100.0"))))
+    (let [transform-to-int (gen-transformations {:tag "38"
+                                                 :transform-by "to-int"}
+                                                :test-market)]
+      (is (= "100" ((:outbound transform-to-int) 100)))
+      (is (= 100 ((:inbound transform-to-int) "100")))
 
-  (let [transform-to-double (gen-transformations {:tag "44"
-                                                  :transform-by "to-double"}
-                                                 :test-market)]
-    (is (= "1.0" ((:outbound transform-to-double) 1.0)))
-    (is (= "1.0" ((:outbound transform-to-double) 1.00)))
-    (is (= 1.0 ((:inbound transform-to-double) "1.00")))
+      (is (= "100" ((:outbound transform-to-int) 100.0)))
+      (is (= "100" ((:outbound transform-to-int) 100.1)))
 
-    (is (= "1.01" ((:outbound transform-to-double) 1.01)))
-    (is (= 1.01 ((:inbound transform-to-double) "1.01")))
+      (is (thrown? Exception ((:inbound transform-to-int) "100.0"))))
 
-    (is (= "1.0" ((:outbound transform-to-double) 1)))
-    (is (= 1.0 ((:inbound transform-to-double) "1"))))
+    (let [transform-to-double (gen-transformations {:tag "44"
+                                                    :transform-by "to-double"}
+                                                   :test-market)]
+      (is (= "1.0" ((:outbound transform-to-double) 1.0)))
+      (is (= "1.0" ((:outbound transform-to-double) 1.00)))
+      (is (= 1.0 ((:inbound transform-to-double) "1.00")))
 
-  (let [transform-to-string (gen-transformations {:tag "55"
-                                                  :transform-by "to-string"}
-                                                 :test-market)]
-    (is (= "NESNz" ((:outbound transform-to-string) "NESNz")))
-    (is (= "NESNz" ((:inbound transform-to-string) "NESNz"))))
+      (is (= "1.01" ((:outbound transform-to-double) 1.01)))
+      (is (= 1.01 ((:inbound transform-to-double) "1.01")))
 
-  (let [invalid-transform {:tag "00" :transform-by "to-nothing"}]
-    (is (thrown? Exception (gen-transformations invalid-transform))))
+      (is (= "1.0" ((:outbound transform-to-double) 1)))
+      (is (= 1.0 ((:inbound transform-to-double) "1"))))
 
-  (let [no-transform-fn {:tag "00"}]
-    (is (thrown? Exception (gen-transformations no-transform-fn))))
+    (let [transform-to-string (gen-transformations {:tag "55"
+                                                    :transform-by "to-string"}
+                                                   :test-market)]
+      (is (= "NESNz" ((:outbound transform-to-string) "NESNz")))
+      (is (= "NESNz" ((:inbound transform-to-string) "NESNz"))))
 
-  (let [no-values {:tag "00" :transform-by "by-value"}]
-    (is (thrown? Exception (gen-transformations no-values))))))
+    (let [invalid-transform {:tag "00" :transform-by "to-nothing"}]
+      (is (thrown? Exception (gen-transformations invalid-transform))))
+
+    (let [no-transform-fn {:tag "00"}]
+      (is (thrown? Exception (gen-transformations no-transform-fn))))
+
+    (let [no-values {:tag "00" :transform-by "by-value"}]
+      (is (thrown? Exception (gen-transformations no-values))))))
 
 (deftest gen-codec-t
   (let [_ (load-spec :test-market)
         fix-tag-name :exec-inst
         tag-spec {:tag "18"
                   :transform-by "by-value"
-                  :values {
-                    :market-peg "P"
-                    :primary-peg "R"
-                    :mid-price-peg "M"}}
+                  :values {:market-peg "P"
+                           :primary-peg "R"
+                           :mid-price-peg "M"}}
         codec (gen-codec fix-tag-name tag-spec :test-market)]
     (is (= (tag-number (get-in codec [:encoder :exec-inst])) "18"))
     (is (= ((translation-fn (get-in codec [:encoder fix-tag-name])) :market-peg)
            "P"))
     (is (= ((translation-fn (get-in codec [:encoder fix-tag-name]))
-              :primary-peg) "R"))
+            :primary-peg) "R"))
     (is (= ((translation-fn (get-in codec [:encoder fix-tag-name]))
-              :mid-price-peg) "M"))
+            :mid-price-peg) "M"))
 
     (is (= (tag-name (get-in codec [:decoder "18"])) fix-tag-name))
     (is (= ((translation-fn (get-in codec [:decoder "18"])) "P")
@@ -102,11 +101,11 @@
     (is (= (translate-to-fix encoder [:msg-type :heartbeat])
            (str "35=0" tag-delimiter)))
     (is (not= (translate-to-fix encoder [:msg-type :heartbeat])
-           (str "35=0")))
+              (str "35=0")))
     (is (thrown? Exception
-        ((translate-to-fix encoder [:invalid-tag :heartbeat]))))
+                 ((translate-to-fix encoder [:invalid-tag :heartbeat]))))
     (is (thrown? Exception
-        ((translate-to-fix encoder [:msg-type :invalid-value]))))))
+                 ((translate-to-fix encoder [:msg-type :invalid-value]))))))
 
 (deftest add-msg-cap-t
   (let [_ (load-spec :test-market)
@@ -191,7 +190,7 @@
            (decode-msg :test-market :execution-report
                        "35=8\u000144=1.0\u000155=NESNz\u000139=0\u0001")))
     (is (thrown? Exception (decode-msg :test-market :execution-report
-                           "35=8\u000144=1.0\u000155=NESNz\u000139=Z\u0001")))))
+                                       "35=8\u000144=1.0\u000155=NESNz\u000139=Z\u0001")))))
 
 
 

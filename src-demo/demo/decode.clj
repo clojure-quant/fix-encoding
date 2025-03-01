@@ -5,9 +5,13 @@
                                   types-in-spec get-msg-type get-field]]
    [fix-translator.field :refer [decode-fields]]
    [fix-translator.message :refer [decode-fix-msg
-                                   encode-fix-msg
+                                   encode-fix-body
                                    encode-fix-msg2
                                    checksum
+                                   encode-header
+                                   insert-begin-size
+                                   add-checksum
+                                   encode-fix-msg
                                    ]]
    [demo.messages :as m]))
 
@@ -21,6 +25,8 @@ ctrader
 
 (:trailer ctrader)
 (:tag->field ctrader)
+
+(:header ctrader)
 
 ;(ddiff/pretty-print 
 ; (ddiff/diff (:tag->field ctrader) (:fields ctrader)))
@@ -63,9 +69,6 @@ ctrader
 
 (decode-fix-msg ctrader m/test-msg)
 
-
-
-
 (def out-logout-msg 
 {:header
  {:target-comp-id "demo.tradeviewmarkets.3152195",
@@ -81,29 +84,6 @@ ctrader
  })
 
 (encode-fix-msg ctrader out-logout-msg)
-(encode-fix-msg2 ctrader out-logout-msg)
-
-(def out-quote-subscribe-msg
-{:header
- {:target-comp-id "CSERVER",
-  :sending-time #time/instant "2025-02-24T21:13:01Z",
-  :body-length 146,
-  :sender-comp-id "demo.tradeviewmarkets.3152195",
-  :msg-seq-num 6,
-  :msg-type "V",
-  :begin-string "FIX.4.4",
-  :target-sub-id "QUOTE",
-  :sender-sub-id "QUOTE"},
- :payload
- {:mdreq-id "6",
-  :subscription-request-type :snapshot-plus-updates,
-  :market-depth 1,
-  :mdupdate-type :incremental-refresh,
-  :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
-  :no-related-sym [{:symbol "4"}]}})
-  
-(encode-fix-msg ctrader out-quote-subscribe-msg)
-
 
 (->> m/logout-msg
      (decode-fix-msg ctrader)

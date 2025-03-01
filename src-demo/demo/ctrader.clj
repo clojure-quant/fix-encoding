@@ -7,12 +7,22 @@
    ["98" "0"] ["108" "60"] ["141" "Y"]
    ["10" "210"]])
 
+<field name= "SecurityReqID" required= "Y" />
+<field name= "SecurityResponseID" required= "Y" />
+<field name= "SecurityRequestResult" required= "Y" />
+<group name= "NoRelatedSym" required= "N" >
+<component name= "Instrument" required= "N" />
+</group>
+
  
 (def msg-seclist-response 
 [["8" "FIX.4.4"] ["9" "2936"] ["35" "y"] ["34" "2"] ["49" "cServer"] ["50" "QUOTE"]
  ["52" "20250228-21:09:20.287"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]
  ;
- ["320" "cuSlq"] ["322" "responce:cuSlq"] ["560" "0"] ["146" "107"] ; no-related-sym
+ ["320" "cuSlq"]  ;  req id
+ ["322" "responce:cuSlq"] ;res id
+ ["560" "0"] ; result type
+ ["146" "107"] ; no-related-sym
  ["55" "1"] ["1007" "EURUSD"] ["1008" "5"]  ; id symbol digits
  ["55" "2"] ["1007" "GBPUSD"] ["1008" "5"]
  ["55" "3"] ["1007" "EURJPY"] ["1008" "3"] 
