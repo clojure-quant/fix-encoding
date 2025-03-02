@@ -23,14 +23,14 @@
 (declare read-vec)
 
 (defn read-map [{:keys [name content] :as _section} item-reader]
-  (println "reading " name " spec-items: " (count content))
+  ;(println "reading " name " spec-items: " (count content))
   (let [section-reader (create-reader content)]
     (loop [data {}]
       (let [section (get-current section-reader)
             item (get-current item-reader)
             match? (= (:name section) (:name item))
             group? (= (:type section) :group)]
-        (println (if match? "=" "x") section item)
+        ;(println (if match? "=" "x") section item)
         (if match?
           ; match
           (let [_ (move-next item-reader)
@@ -55,10 +55,10 @@
                 data)))))))
 
 (defn read-vec [{:keys [name _content nr] :as section} item-reader]
-  (println "read-vec: " name " nr: " nr "section: " section)
+  ;(println "read-vec: " name " nr: " nr "section: " section)
   (let [;nr (parse-long nr)
         read-idx (fn [i]
-                   (println "group idx: " i)
+                   ;(println "group idx: " i)
                    (read-map section item-reader))
         v (map read-idx (range nr))]
     (into [] v) ; this is crucial, as it gets eager
@@ -88,7 +88,7 @@
         header (decode-header decoder item-reader)
         msg-type (:msg-type header)
         payload (decode-payload-type decoder msg-type item-reader)
-        _ (println "reading trailer..")
+        ;_ (println "reading trailer..")
         trailer (decode-trailer decoder item-reader)]
     ;(assoc data :type msg-type :payload payload-section)
     {:header header
