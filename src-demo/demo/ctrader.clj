@@ -9,6 +9,7 @@
                                    create-reader
                                    fix->payload
                                    ]]
+   [fix-translator.ctrader :refer [write-assets]]
    [demo.data-payload :as payload]
    [demo.data-message :as msg]
    ))
@@ -44,8 +45,14 @@
 (decode-message ctrader msg/seclist-response)
 
 
+
+
 ; payload extractor
 (fix->payload ctrader msg/login-response)
 (fix->payload ctrader msg/heartbeat)
 (fix->payload ctrader msg/Test)
 (fix->payload ctrader msg/seclist-response)
+
+
+(-> (fix->payload ctrader msg/seclist-response)
+    (write-assets))
