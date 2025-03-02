@@ -1,13 +1,12 @@
 (ns demo.encode
   (:require
-     [fix-translator.schema :refer [create-decoder]]
+   [fix-translator.schema :refer [create-decoder]]
    [fix-translator.message :refer [encode-fix-body
                                    checksum
                                    encode-header
                                    insert-begin-size
                                    add-checksum
-                                   encode-fix-msg]]
-   ))
+                                   encode-fix-msg]]))
 
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
 
@@ -29,7 +28,7 @@
 
 (encode-header ctrader (:header out-logout-msg))
 
- (insert-begin-size "FIX.4.4"
+(insert-begin-size "FIX.4.4"
                         ; header
                    [["35" "5"]
                     ["49" "CSERVER"]

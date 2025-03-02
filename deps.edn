@@ -1,13 +1,11 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure    {:mvn/version "1.11.1"}
-        org.clj-commons/gloss {:mvn/version "0.3.6"} ; bytestream encoding
+        nano-id/nano-id {:mvn/version "1.1.0"}
         tick/tick {:mvn/version "0.6.2"} ; time encoding
+        org.clj-commons/gloss {:mvn/version "0.3.6"} ; bytestream encoding
         ; xml conversion
         org.clojure/data.xml {:mvn/version "0.2.0-alpha9"} ; fix-dict xml conversion
         fipp/fipp {:mvn/version "0.6.27"} ; edn pretty printing, used in xml-conversion
-
-        ; legacy
-        ;cheshire/cheshire {:mvn/version "5.10.2"}  ; JSON parsings and pretty printing
         }
 
  :aliases

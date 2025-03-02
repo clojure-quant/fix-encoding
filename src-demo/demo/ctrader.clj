@@ -9,7 +9,7 @@
                                    create-reader
                                    fix->payload
                                    ]]
-   [fix-translator.ctrader :refer [write-assets]]
+   [fix-translator.ctrader :refer [write-assets subscribe-payload]]
    [demo.data-payload :as payload]
    [demo.data-message :as msg]
    ))
@@ -57,3 +57,6 @@
 
 (-> (fix->payload ctrader msg/seclist-response)
     (write-assets))
+
+
+(subscribe-payload ["1" "2" "3"])

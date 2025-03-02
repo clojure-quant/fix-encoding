@@ -22,6 +22,9 @@ s
 ; logout msg
 (encode-msg s ["5" {:text "RET_NO_SUCH_LOGIN"}])
 
+; heartbeat
+(encode-msg s ["0" {}])
+
 ; security list
 (encode-msg s ["x" {:security-req-id "125"
                     :security-list-request-type :symbol}])

@@ -1,6 +1,7 @@
 (ns fix-translator.ctrader
   (:require
    [clojure.set :refer [rename-keys]]
+   [nano-id.core :refer [nano-id]]
    [fix-translator.fipp :refer [spit-edn]]
    ))
 
@@ -30,3 +31,17 @@
           (rename-keys {:offer :ask})
           (assoc :asset symbol)
           (eventually-add-last-volume)))))
+
+
+(defn subscribe-payload 
+  "returns a fix-payload to subscribe for realtime updates 
+   for a seq of asset (string)"
+  [assets]
+  ["V" {:mdreq-id  (nano-id 5)
+        :subscription-request-type :snapshot-plus-updates,
+        :market-depth 1,
+        :mdupdate-type :incremental-refresh,
+        :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
+        :no-related-sym (->> assets 
+                             (map (fn [asset] {:symbol asset}))
+                             (into []))}])
