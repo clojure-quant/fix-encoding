@@ -52,6 +52,7 @@
 (fix->payload ctrader msg/heartbeat)
 (fix->payload ctrader msg/Test)
 (fix->payload ctrader msg/seclist-response)
+(fix->payload ctrader msg/quote-response)
 
 
 (-> (fix->payload ctrader msg/seclist-response)

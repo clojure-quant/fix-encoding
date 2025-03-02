@@ -1,7 +1,8 @@
 (ns demo.session
   (:require
    [fix-translator.session :refer [load-accounts create-session
-                                   encode-msg]]))
+                                   encode-msg decode-msg]]
+   [demo.data-message :as msg]))
 
 
 
@@ -42,8 +43,8 @@ s
   )
 
 
-
-
+(decode-msg s msg/heartbeat)
+(decode-msg s msg/seclist-response)
 
 
 ; ctrader python example
