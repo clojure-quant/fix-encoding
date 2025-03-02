@@ -20,14 +20,12 @@
                   [msg-type payload]]
   (let [seq-num (swap! outbound-seq-num inc)
         header (assoc (:header config)
-                      :msg-type msg-type
-                      ; added fields
+                      :msg-type msg-type  
                       :msg-seq-num seq-num
-                      :sending-time (t/instant)
-                      ; calculated fields
-                      :body-length 0)]
-    (encode-fix-msg decoder {:header header
-                             :payload payload})))
+                      :sending-time (t/instant))
+        fix-message {:header header 
+                     :payload payload}]
+    (encode-fix-msg decoder fix-message)))
 
 (defn decode-msg [{:keys [decoder] :as session} fix-msg-vec]
   (fix->payload decoder fix-msg-vec))
