@@ -22,10 +22,8 @@ s
 (encode-msg s ["5" {:text "RET_NO_SUCH_LOGIN"}])
 
 ; security list
-(encode-msg s ["x"
-               {:security-req-id "125"
-                :security-list-request-type :symbol}])
-
+(encode-msg s ["x" {:security-req-id "125"
+                    :security-list-request-type :symbol}])
 
 ; market data subscribe
 (encode-msg s ["V" {:mdreq-id  "123"

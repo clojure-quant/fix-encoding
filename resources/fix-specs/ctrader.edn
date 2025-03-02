@@ -245,7 +245,7 @@
              :category "app",
              :content ({:type :field, :name :security-req-id, :required true}
                        {:type :field, :name :security-list-request-type, :required true}
-                       {:type :field, :name :symbol, :required true}
+                       {:type :field, :name :symbol, :required false}
                        {:type :field, :name :symbol-name, :required false}
                        {:type :field, :name :symbol-digits, :required false})}
             {:name :security-list,

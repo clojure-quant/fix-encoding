@@ -231,12 +231,12 @@
             <field name="SecurityReqID" required="Y"/>
             <field name="SecurityListRequestType" required="Y"/>
             <!-- <component name="Instrument" required="N"/> -->
-            <field name="Symbol" required="Y" />
+            <field name="Symbol" required="N" />
             <!-- CServer Specifics -->
             <field name="SymbolName" required="N" />
             <field name="SymbolDigits" required="N" />     
-        </message>
-        
+        </message>      
+
         <message name="SecurityList" msgtype="y" msgcat="app">
             <field name="SecurityReqID" required="Y"/>
             <field name="SecurityResponseID" required="Y"/>
