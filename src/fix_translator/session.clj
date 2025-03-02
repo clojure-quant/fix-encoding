@@ -3,7 +3,7 @@
    [clojure.edn :as edn]
    [tick.core :as t]
    [fix-translator.schema :refer [create-decoder]]
-   [fix-translator.message :refer [decode-fix-msg
+   [fix-translator.message :refer [fix->payload
                                    encode-fix-msg]]))
 
 (defn load-accounts [accounts-edn-file]
@@ -29,5 +29,5 @@
     (encode-fix-msg decoder {:header header
                              :payload payload})))
 
-(defn decode-msg [{:keys [config outbound-seq-num decoder] :as session} fix-msg-str]
-  (decode-fix-msg decoder fix-msg-str))
+(defn decode-msg [{:keys [decoder] :as session} fix-msg-vec]
+  (fix->payload decoder fix-msg-vec))
