@@ -14,6 +14,7 @@
                                    create-asset-converter
                                    get-asset-id
                                    get-asset-name
+                                   incoming-quote-id-convert
                                    subscribe-payload]]
    [demo.data-payload :as payload]
    [demo.data-message :as msg]
@@ -83,6 +84,13 @@ converter
 
 (-> (fix->payload ctrader msg/seclist-response)
     (write-assets))
+
+(incoming-quote-id-convert {:converter (atom converter)} {:asset "1" 
+                                                          :price 3 :x :y
+                                                          })
+
+(incoming-quote-id-convert {:converter nil} {:asset "1"
+                                                          :price 3 :x :y})
 
 
 (subscribe-payload ["1" "2" "3"])

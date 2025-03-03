@@ -53,6 +53,9 @@
           (assoc :asset symbol)
           (eventually-add-last-volume)))))
 
+(defn incoming-quote-id-convert [s quote]
+  (update quote :asset #(get-asset-name @(:converter s) %)))
+  
 
 (defn subscribe-payload 
   "returns a fix-payload to subscribe for realtime updates 

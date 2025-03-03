@@ -14,7 +14,8 @@
     {:config config
      :decoder (create-decoder (:spec config))
      :inbound-seq-num (atom 0)
-     :outbound-seq-num (atom 0)}))
+     :outbound-seq-num (atom 0)
+     :converter (atom nil)}))
 
 (defn encode-msg [{:keys [config outbound-seq-num decoder] :as session}
                   [msg-type payload]]
