@@ -16,7 +16,7 @@
 
 (defn- eventually-add-last-volume [{:keys [bid ask] :as quote}]
   (if (and bid ask)
-    (assoc quote :last (/ (+ bid ask) 2.0M)
+    (assoc quote :price (/ (+ bid ask) 2.0M)
            :volume 1.0M
            :spread (- ask bid))
     (assoc quote :volume 0.0M)))
