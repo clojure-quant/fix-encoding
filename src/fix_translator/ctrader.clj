@@ -5,14 +5,35 @@
    [fix-translator.fipp :refer [spit-edn]]
    ))
 
-(defn write-assets [[_ {:keys [security-request-result no-related-sym] :as sec-list-response}]]
+(defn seclist->assets [[_ {:keys [security-request-result no-related-sym] :as sec-list-response}]]
   (when
    (= security-request-result :valid-request)
-    (let [assets (map (fn [asset]
-                        (rename-keys asset {:symbol-name :asset
-                                            :symbol-digits :digits
-                                            :symbol :ctrader})) no-related-sym)]
-      (spit-edn "ctrader-assets.edn" assets))))
+    (map (fn [asset]
+           (rename-keys asset {:symbol-name :asset
+                               :symbol-digits :digits
+                               :symbol :ctrader})) no-related-sym)))
+
+(defn write-assets [assets]
+  (when assets
+    (spit-edn "ctrader-assets.edn" assets)))
+
+(defn create-asset-converter [assets]
+  {:dict-by-id (->> assets
+                    (map (juxt :ctrader :asset))
+                    (into {}))
+   :dict-by-name (->> assets
+                      (map (juxt :asset :ctrader))
+                      (into {}))})
+
+(defn get-asset-id [converter asset-name]
+  (if-let [asset-id (get-in converter [:dict-by-name asset-name])]
+    asset-id
+    asset-name))
+
+(defn get-asset-name [converter asset-id]
+  (if-let [asset-name (get-in converter [:dict-by-id asset-id])]
+    asset-name
+    asset-id))
 
 (defn- eventually-add-last-volume [{:keys [bid ask] :as quote}]
   (if (and bid ask)

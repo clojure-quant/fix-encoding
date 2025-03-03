@@ -9,7 +9,12 @@
                                    create-reader
                                    fix->payload
                                    ]]
-   [fix-translator.ctrader :refer [write-assets subscribe-payload]]
+   [fix-translator.ctrader :refer [seclist->assets 
+                                   write-assets 
+                                   create-asset-converter
+                                   get-asset-id
+                                   get-asset-name
+                                   subscribe-payload]]
    [demo.data-payload :as payload]
    [demo.data-message :as msg]
    ))
@@ -54,6 +59,27 @@
 (fix->payload ctrader msg/seclist-response)
 (fix->payload ctrader msg/quote-response)
 
+
+(-> (fix->payload ctrader msg/seclist-response)
+    (seclist->assets)
+    (write-assets))
+
+(def converter 
+  (-> (fix->payload ctrader msg/seclist-response)
+      (seclist->assets)
+      (create-asset-converter)))
+
+converter
+
+
+(get-asset-name converter "1")
+(get-asset-id converter "EURUSD")
+
+(get-asset-id converter "x")
+(get-asset-name converter "x")
+
+(get-asset-id nil "x")
+(get-asset-name nil "x")
 
 (-> (fix->payload ctrader msg/seclist-response)
     (write-assets))
