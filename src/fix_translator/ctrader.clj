@@ -2,8 +2,7 @@
   (:require
    [clojure.set :refer [rename-keys]]
    [nano-id.core :refer [nano-id]]
-   [fix-translator.fipp :refer [spit-edn]]
-   ))
+   [fix-translator.fipp :refer [spit-edn]]))
 
 (defn seclist->assets [[_ {:keys [security-request-result no-related-sym] :as sec-list-response}]]
   (when
@@ -53,11 +52,16 @@
           (assoc :asset symbol)
           (eventually-add-last-volume)))))
 
-(defn incoming-quote-id-convert [s quote]
-  (update quote :asset #(get-asset-name @(:converter s) %)))
-  
+(defn incoming-quote-id-convert [fix-session quote]
+  (let [converter @(:converter fix-session)]
+    ;(println "session keys: " (keys fix-session))
+    ;(println "converter: " converter)
+    ;(println "session converter:" (:converter fix-session))
+    ;(println "incoming-quote-id-convert" converter (:asset quote))
+    (update quote :asset #(get-asset-name converter  %))))
 
-(defn subscribe-payload 
+
+(defn subscribe-payload
   "returns a fix-payload to subscribe for realtime updates 
    for a seq of asset (string)"
   [assets]
@@ -66,6 +70,6 @@
         :market-depth 1,
         :mdupdate-type :incremental-refresh,
         :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
-        :no-related-sym (->> assets 
+        :no-related-sym (->> assets
                              (map (fn [asset] {:symbol asset}))
                              (into []))}])
