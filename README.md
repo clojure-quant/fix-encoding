@@ -1,5 +1,5 @@
+# fix-encoding [![GitHub Actions status |clojure-quant/fix-encoding](https://github.com/clojure-quant/fix-encoding/workflows/CI/badge.svg)](https://github.com/clojure-quant/fix-encoding/actions?workflow=CI)[![Clojars Project](https://img.shields.io/clojars/v/io.github.clojure-quant/fix-encoding.svg)](https://clojars.org/io.github.clojure-quant/fix-encoding)
 
-# fix-encoding [![GitHub Actions status |clojure-quant/clj-service](https://github.com/clojure-quant/fix-encoding/workflows/CI/badge.svg)](https://github.com/clojure-quant/fix-encoding/actions?workflow=CI)[![Clojars Project](https://img.shields.io/clojars/v/org.pinkgorilla/fix-encoding.svg)](https://clojars.org/org.pinkgorilla/fix-encoding)
 
 ## notes awb99
 - clj-M:nrepl connect. src-demo/demo/demo1.clj test this
