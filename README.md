@@ -1,11 +1,9 @@
 
-# fix-encoding
+# fix-encoding [![GitHub Actions status |clojure-quant/clj-service](https://github.com/clojure-quant/fix-encoding/workflows/CI/badge.svg)](https://github.com/clojure-quant/fix-encoding/actions?workflow=CI)[![Clojars Project](https://img.shields.io/clojars/v/org.pinkgorilla/fix-encoding.svg)](https://clojars.org/org.pinkgorilla/fix-encoding)
 
 ## notes awb99
 - clj-M:nrepl connect. src-demo/demo/demo1.clj test this
 - date handling not used here -> removed dependency
-
-
 
 ## What is it?
 fix-translator is a library to help you translate collections into [FIX](http://www.fixprotocol.org/what-is-fix.shtml) messages and vice versa.
