@@ -1,4 +1,4 @@
-(ns demo.data-message)
+(ns fix-translator.data.message)
 
 
 (def login-response

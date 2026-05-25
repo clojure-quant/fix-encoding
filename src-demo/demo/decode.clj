@@ -4,13 +4,8 @@
                                   ; debugging of schema:
                                   types-in-spec get-msg-type get-field]]
    [fix-translator.field :refer [decode-fields]]
-   [fix-translator.message :refer [decode-fix-msg
-                                   encode-fix-body
-                                   encode-fix-msg2
-                                   checksum
-                                   encode-header
-                                   insert-begin-size
-                                   add-checksum
+   [fix-translator.message :refer [checksum
+                                   decode-message
                                    encode-fix-msg
                                    ]]
    [demo.messages :as m]))
@@ -33,6 +28,7 @@ ctrader
 
 
 (types-in-spec ctrader)
+
 
 (get-field ctrader "35")
 
@@ -57,7 +53,7 @@ ctrader
 ;; DECODING OF MESSAGE
 
 ; login
-(decode-fix-msg ctrader m/login-msg)
+(decode-message ctrader m/login-msg)
 (decode-fix-msg ctrader m/login-msg2)
 
 (decode-fix-msg ctrader m/logout-msg)
