@@ -12,12 +12,34 @@
                             :sender-sub-id "QUOTE"}}))
 
 (def quote-msg
-  [["8" "FIX.4.4"] ["9" "144"] ["35" "W"] ["34" "3"] ["49" "cServer"] ["50" "QUOTE"] ["52" "20250302-13:51:38.677"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"] ["55" "1"] ["268" "2"] ["269" "0"] ["270" "1.03752"] ["269" "1"] ["270" "1.03763"] ["10" "030"]])
+  [["8" "FIX.4.4"] ["9" "144"] ["35" "W"] ["34" "3"] ["49" "cServer"] ["50" "QUOTE"]
+   ["52" "20250302-13:51:38.677"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"] 
+   ["55" "1"]
+   ["268" "2"] ["269" "0"] ["270" "1.03752"] ["269" "1"] ["270" "1.03763"]
+   ["10" "030"]])
 
+(def quote-msg2
+  [["8" "FIX.4.4"] ["9" "144"] ["35" "W"] ["34" "41"] ["49" "CSERVER"] ["50" "QUOTE"]
+   ["52" "20260526-22:50:15.897"] ["56" "live.fxpro.8284171"] ["57" "QUOTE"]
+   ["55" "4"]
+   ["262" "GxC_b"]
+   ["268" "2"]
+   ["269" "0"] ["270" "159.281"]
+   ["269" "1"] ["270" "159.291"]
+   ["10" "192"]])
 
 (deftest quote-decode-test
-  (testing "quote decode"
+  (testing "quote decode without mdreq-id"
     (is (= [:market-data-snapshot-full-refresh
-            {:symbol "1", :no-mdentries [{:mdentry-type :bid, :mdentry-px 1.03752M}
-                                         {:mdentry-type :offer, :mdentry-px 1.03763M}]}]
-           (fix-msg-vec->payload session quote-msg)))))
+            {:symbol "1"
+             :no-mdentries [{:mdentry-type :bid :mdentry-px 1.03752M}
+                            {:mdentry-type :offer :mdentry-px 1.03763M}]}]
+           (fix-msg-vec->payload session quote-msg))))
+
+  (testing "quote decode with mdreq-id"
+    (is (= [:market-data-snapshot-full-refresh
+            {:symbol "4"
+             :mdreq-id "GxC_b"
+             :no-mdentries [{:mdentry-type :bid :mdentry-px 159.281M}
+                            {:mdentry-type :offer :mdentry-px 159.291M}]}]
+           (fix-msg-vec->payload session quote-msg2)))))

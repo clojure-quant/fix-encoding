@@ -122,8 +122,8 @@
             {:name :market-data-snapshot-full-refresh,
              :msgtype "W",
              :category "app",
-             :content ({:type :field, :name :mdreq-id, :required false}
-                       {:type :field, :name :symbol, :required true}
+             :content ({:type :field, :name :symbol, :required true}
+                       {:type :field, :name :mdreq-id, :required false}
                        {:type :group,
                         :name :no-mdentries,
                         :required true,
