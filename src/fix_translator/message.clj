@@ -215,7 +215,7 @@
                  [["10" checksum]])
          (into []))))
 
-(defn encode-fix-msg [decoder fix-msg]
+(defn encode-message [decoder fix-msg]
   (let [msg-type (get-in fix-msg [:header :msg-type])
         fix-version (get-in fix-msg [:header :begin-string])
         header-vec (encode-header decoder (:header fix-msg))

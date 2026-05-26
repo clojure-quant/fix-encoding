@@ -1,4 +1,4 @@
-(ns fix-translator.data.message)
+(ns fix-translator.data.message-vec)
 
 
 (def login-response
@@ -12,7 +12,7 @@
    ["52" "20250228-21:10:20.425"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"] 
    ["10" "069"]])
 
-(def Test
+(def test-msg
   [["8" "FIX.4.4"] ["9" "106"] ["35" "1"] ["34" "4"] ["49" "cServer"] ["50" "QUOTE"]
    ["52" "20250228-21:10:50.425"] ["56" "demo.tradeviewmarkets.3193335"] ["57" "QUOTE"]
  ;

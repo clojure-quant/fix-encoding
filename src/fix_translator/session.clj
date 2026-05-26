@@ -4,7 +4,7 @@
    [tick.core :as t]
    [fix-translator.schema :refer [create-decoder]]
    [fix-translator.message :refer [fix->payload
-                                   encode-fix-msg]]))
+                                   encode-message]]))
 
 (defn load-accounts [accounts-edn-file]
   (-> accounts-edn-file slurp edn/read-string))
@@ -26,7 +26,7 @@
                       :sending-time (t/instant))
         fix-message {:header header 
                      :payload payload}]
-    (encode-fix-msg decoder fix-message)))
+    (encode-message decoder fix-message)))
 
 (defn decode-msg [{:keys [decoder] :as session} fix-msg-vec]
   (fix->payload decoder fix-msg-vec))

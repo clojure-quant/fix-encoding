@@ -6,7 +6,7 @@
                                    encode-header
                                    insert-begin-size
                                    add-checksum
-                                   encode-fix-msg]]))
+                                   encode-message]]))
 
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
 
@@ -56,7 +56,7 @@
   ["58" "RET_NO_SUCH_LOGIN"]])
 
 
-(encode-fix-msg ctrader out-logout-msg)
+(encode-message ctrader out-logout-msg)
 
 
 
@@ -79,4 +79,4 @@
     :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
     :no-related-sym [{:symbol "4"}]}})
 
-(encode-fix-msg ctrader out-quote-subscribe-msg)
+(encode-message ctrader out-quote-subscribe-msg)

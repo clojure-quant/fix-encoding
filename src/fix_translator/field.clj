@@ -18,17 +18,15 @@
         (t/in "UTC")              ;; Convert to UTC timezone
         t/instant)))
 
-;; Example usage:
-;(parse-utc-timestamp "20250224-21:13:01.525") ;; => #inst "2025-02-24T21:13:01.525Z"
-;(parse-utc-timestamp "20250224-21:13:01")     ;; => #inst "2025-02-24T21:13:01Z"
 
 (defn format-utc-timestamp
   "Returns a UTC timestamp in a specified format."
   [inst]
   (let [;format "yyyyMMdd-HH:mm:ss.SSS"
         format "yyyyMMdd-HH:mm:ss"]
-    ; instant cannot be formatted
-    (t/format (t/formatter format) (t/date-time inst))))
+    ; format in UTC explicitly to avoid local-timezone shifts
+    (t/format (t/formatter format)
+              (t/in inst "UTC"))))
 
 ;(format-utc-timestamp (t/instant))
 
@@ -45,7 +43,7 @@
                 "NUMINGROUP" parse-long
                 "DATA" identity ; todo
                 "BOOLEAN" identity ; todo
-                "UTCTIMESTAMP" parse-utc-timestamp ; identity ; todo
+                "UTCTIMESTAMP" parse-utc-timestamp 
                 }]
     (cond
       ; do not change msgtype

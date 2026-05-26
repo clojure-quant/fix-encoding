@@ -3,7 +3,7 @@
    [clojure.test :refer [deftest is testing]]
    [fix-translator.schema :refer [create-decoder]]
    [fix-translator.message :refer [fix->payload]]
-   [fix-translator.data.message :as msg]))
+   [fix-translator.data.message-vec :as msg]))
 
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
 
@@ -20,7 +20,7 @@
 
   (testing "test-request"
     (is (= ["1" {:test-req-id "TEST"}]
-           (fix->payload ctrader msg/Test))))
+           (fix->payload ctrader msg/test-msg))))
 
   (testing "seclist-response"
     (let [[msg-type payload] (fix->payload ctrader msg/seclist-response)]

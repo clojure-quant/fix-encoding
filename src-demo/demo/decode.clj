@@ -6,9 +6,9 @@
    [fix-translator.field :refer [decode-fields]]
    [fix-translator.message :refer [checksum
                                    decode-message
-                                   encode-fix-msg
+                                   encode-message
                                    ]]
-   [demo.messages :as m]))
+   [fix-translator.data.messages :as m]))
 
 
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
@@ -79,11 +79,11 @@ ctrader
  :payload {:text "RET_NO_SUCH_LOGIN"}
  })
 
-(encode-fix-msg ctrader out-logout-msg)
+(encode-message ctrader out-logout-msg)
 
 (->> m/logout-msg
      (decode-fix-msg ctrader)
-     (encode-fix-msg ctrader)
+     (encode-message ctrader)
     )
 
 ; "8=FIX.4.49=11435=549=CSERVER56=demo.tradeviewmarkets.315219534=150=QUOTE57=QUOTE52=20250224-21:13:0158=RET_NO_SUCH_LOGIN",
