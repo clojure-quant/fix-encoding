@@ -14,7 +14,7 @@
     :body-length 114,
     :sender-comp-id "CSERVER",
     :msg-seq-num 1,
-    :msg-type "5",
+    :msg-type :logout,
     :begin-string "FIX.4.4",
     :target-sub-id "QUOTE",
     :sender-sub-id "QUOTE"}

@@ -32,3 +32,12 @@
       (is (= "39" (:tag encoded)))
       (is (= "0" (:value-str encoded))))))
 
+(deftest msg-type-enum-conversion-test
+  (testing "tag 35 (msg-type) decodes and encodes correctly"
+    (let [decoded (first (decode-fields ctrader [["35" "0"]]))
+          encoded (encode-field ctrader {:name :msg-type :value :heartbeat})]
+      (is (= :msg-type (:name decoded)))
+      (is (= :heartbeat (:value decoded)))
+      (is (= "35" (:tag encoded)))
+      (is (= "0" (:value-str encoded))))))
+

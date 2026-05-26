@@ -1,7 +1,7 @@
 (ns fix-translator.message
   (:require
-   [fix-translator.field :refer [decode-fields encode-field]]
-   [fix-translator.schema :refer [get-msg-type]]))
+   [fix-translator.field :refer [decode-fields encode-field encode-value]]
+   [fix-translator.schema :refer [get-msg-type get-field-by-name]]))
 
 (defn checksum
   "Returns a 3-character string (left-padded with zeroes) representing the
@@ -95,9 +95,10 @@
      :payload payload
      :trailer trailer}))
 
-(defn fix->payload [decoder fix-vec]
-  (let [{:keys [header payload]} (decode-message decoder fix-vec)]
-    [(:msg-type header) payload]))
+(defn msg-type->wire [decoder msg-type]
+  (encode-value (get-field-by-name decoder :msg-type) msg-type))
+
+
 
 ;; encode
 

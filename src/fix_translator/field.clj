@@ -46,10 +46,6 @@
                 "UTCTIMESTAMP" parse-utc-timestamp 
                 }]
     (cond
-      ; do not change msgtype
-      ;(= name "MsgType")
-      (= name :msg-type)
-      value
       ; enums
       (seq values)
       (some #(when (= (:enum %) value)
@@ -88,17 +84,16 @@
                 "DATA" str ; todo
                 "BOOLEAN" str ; todo
                 "UTCTIMESTAMP" format-utc-timestamp}]
-    (cond
-      ; do not change msgtype
-      ;(= name "MsgType")
-      (= name :msg-type)
-      value
-      ; enums
-      (seq values)
-      (some #(when (= (:description %) value)
-               (:enum %)) values)
-      ; parse
-      :else
+    (if (seq values)
+      (or (some #(when (= (:description %) value)
+                  (:enum %))
+               values)
+          (some #(when (= (:enum %) (str value))
+                  (:enum %))
+               values)
+          (when-let [encode-fn (get parser type)]
+            (encode-fn value))
+          value)
       (if-let [encode-fn (get parser type)]
         (encode-fn value)
         value))))

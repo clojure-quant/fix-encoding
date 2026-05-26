@@ -20,7 +20,11 @@
 (defn msg-type->message [schema]
   (->> (:messages schema)
        (map (juxt :msgtype identity))
-       ;(map (juxt :name identity))
+       (into {})))
+
+(defn name->message [schema]
+  (->> (:messages schema)
+       (map (juxt :name identity))
        (into {})))
 
 (defn create-decoder [resource-path]
@@ -29,7 +33,8 @@
      :name->field (build-name->field schema)
      :header (:header schema)
      :trailer (:trailer schema)
-     :messages (msg-type->message schema)}))
+     :messages (msg-type->message schema)
+     :name->message (name->message schema)}))
 
 (defn get-field [{:keys [tag->field] :as _decoder} tag]
   (if-let [field (get tag->field tag)]
@@ -41,10 +46,10 @@
     field
     (throw (ex-info "unknown field-name" {:field-name field-name}))))
 
-(defn get-msg-type [{:keys [messages] :as _decoder} msg-type]
-  (if-let [msg (get messages msg-type)]
-    msg
-    (throw (ex-info "unknown message-type" {:msg-type msg-type}))))
+(defn get-msg-type [{:keys [messages name->message] :as _decoder} msg-type]
+  (or (get messages msg-type)
+      (get name->message msg-type)
+      (throw (ex-info "unknown message-type" {:msg-type msg-type}))))
 
 (defn types-in-spec [decoder]
   (->> decoder
