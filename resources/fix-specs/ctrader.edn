@@ -141,26 +141,26 @@
             {:name :execution-report,
              :msgtype "8",
              :category "app",
-             :content ({:type :field, :name :order-id, :required true}
+             :content ({:type :field, :name :avg-px, :required false}
                        {:type :field, :name :cl-ord-id, :required false}
-                       {:type :field, :name :orig-cl-ord-id, :required false}
-                       {:type :field, :name :tot-num-reports, :required false}
-                       {:type :field, :name :exec-type, :required true}
-                       {:type :field, :name :ord-status, :required true}
-                       {:type :field, :name :symbol, :required false}
-                       {:type :field, :name :side, :required false}
+                       {:type :field, :name :cum-qty, :required false}
+                       {:type :field, :name :last-qty, :required false}
+                       {:type :field, :name :order-id, :required true}
                        {:type :field, :name :order-qty, :required false}
+                       {:type :field, :name :ord-status, :required true}
                        {:type :field, :name :ord-type, :required false}
                        {:type :field, :name :price, :required false}
                        {:type :field, :name :stop-px, :required false}
+                       {:type :field, :name :side, :required false}
+                       {:type :field, :name :symbol, :required false}
                        {:type :field, :name :time-in-force, :required false}
                        {:type :field, :name :expire-time, :required false}
-                       {:type :field, :name :last-qty, :required false}
-                       {:type :field, :name :last-px, :required false}
-                       {:type :field, :name :leaves-qty, :required false}
-                       {:type :field, :name :cum-qty, :required false}
-                       {:type :field, :name :avg-px, :required false}
                        {:type :field, :name :transact-time, :required false}
+                       {:type :field, :name :exec-type, :required true}
+                       {:type :field, :name :leaves-qty, :required false}
+                       {:type :field, :name :last-px, :required false}
+                       {:type :field, :name :orig-cl-ord-id, :required false}
+                       {:type :field, :name :tot-num-reports, :required false}
                        {:type :field, :name :text, :required false}
                        {:type :field, :name :ord-rej-reason, :required false}
                        {:type :field, :name :pos-maint-rpt-id, :required false}
@@ -225,16 +225,16 @@
             {:name :position-report,
              :msgtype "AP",
              :category "app",
-             :content ({:type :field, :name :pos-req-id, :required true}
+             :content ({:type :field, :name :symbol, :required false}
+                       {:type :field, :name :pos-req-id, :required true}
                        {:type :field, :name :pos-maint-rpt-id, :required false}
                        {:type :field, :name :total-num-pos-reports, :required true}
                        {:type :field, :name :pos-req-result, :required true}
-                       {:type :field, :name :symbol, :required false}
+                       {:type :field, :name :settl-price, :required false}
                        {:type :group,
                         :name :no-positions,
                         :required false,
                         :fields [{:name :long-qty, :required false} {:name :short-qty, :required false}]}
-                       {:type :field, :name :settl-price, :required false}
                        {:type :field, :name :absolute-tp, :required false}
                        {:type :field, :name :absolute-sl, :required false}
                        {:type :field, :name :trailing-sl, :required false}
