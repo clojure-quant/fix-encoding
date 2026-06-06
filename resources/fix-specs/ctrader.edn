@@ -81,9 +81,9 @@
              :category "app",
              :content ({:type :field, :name :ref-seq-num, :required false}
                        {:type :field, :name :ref-msg-type, :required false}
+                       {:type :field, :name :text, :required false}
                        {:type :field, :name :business-reject-ref-id, :required false}
                        {:type :field, :name :business-reject-reason, :required true}
-                       {:type :field, :name :text, :required false}
                        {:type :field, :name :encoded-text-len, :required false}
                        {:type :field, :name :encoded-text, :required false})}
             {:name :market-data-request,

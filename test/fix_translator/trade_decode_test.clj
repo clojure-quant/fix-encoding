@@ -59,6 +59,12 @@
    ["52" "20260526-23:57:46.306"] ["56" "demo.pepperstone.5292473"] ["57" "TRADE"]
    ["10" "086"]])
 
+(def business-reject-msg
+  [["8" "FIX.4.4"] ["9" "169"] ["35" "j"] ["34" "6"] ["49" "CSERVER"] ["50" "TRADE"]
+   ["52" "20260606-23:33:39.595"] ["56" "demo.pepperstone.5292473"] ["57" "TRADE"]
+   ["58" "MARKET_CLOSED:Trading is not available: Market is closed."]
+   ["379" "fix-4"] ["380" "0"] ["10" "149"]])
+
 (deftest trade-decode-test
   (testing "new market buy execution report"
     (is (= [:execution-report
@@ -170,4 +176,11 @@
 
   (testing "trade session heartbeat"
     (is (= [:heartbeat {}]
-           (fix-msg-vec->payload session heartbeat-msg)))))
+           (fix-msg-vec->payload session heartbeat-msg))))
+
+  (testing "business message reject with text before ref-id (cTrader wire order)"
+    (is (= [:business-message-reject
+            {:text "MARKET_CLOSED:Trading is not available: Market is closed."
+             :business-reject-ref-id "fix-4"
+             :business-reject-reason :other}]
+           (fix-msg-vec->payload session business-reject-msg)))))
