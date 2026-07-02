@@ -65,6 +65,13 @@
    ["58" "MARKET_CLOSED:Trading is not available: Market is closed."]
    ["379" "fix-4"] ["380" "0"] ["10" "149"]])
 
+(def cancel-limit-msg
+  [["8" "FIX.4.4"] ["9" "231"] ["35" "8"] ["34" "6"] ["49" "CSERVER"] ["50" "TRADE"]
+   ["52" "20260701-18:33:15.611"] ["56" "demo.pepperstone.5292473"] ["57" "TRADE"]
+   ["11" "Dz4oKsjs"] ["14" "0"] ["37" "347123251"] ["38" "10000"] ["39" "4"] ["40" "2"]
+   ["41" "KAxuPb"] ["44" "1.1035"] ["54" "1"] ["55" "1"] ["59" "1"]
+   ["60" "20260701-18:33:15.604"] ["150" "4"] ["151" "10000"] ["721" "229582264"] ["10" "038"]])
+
 (deftest trade-decode-test
   (testing "new market buy execution report"
     (is (= [:execution-report
@@ -173,6 +180,25 @@
              :leaves-qty 0M
              :pos-maint-rpt-id "221427182"}]
            (fix-msg-vec->payload session fill-buy-msg))))
+
+  (testing "cancel limit execution report with early orig-cl-ord-id"
+    (is (= [:execution-report
+            {:cl-ord-id "Dz4oKsjs"
+             :cum-qty 0M
+             :order-id "347123251"
+             :order-qty 10000M
+             :ord-status :canceled
+             :ord-type :limit
+             :orig-cl-ord-id "KAxuPb"
+             :price 1.1035M
+             :side :buy
+             :symbol "1"
+             :time-in-force :good-till-cancel
+             :transact-time (t/instant "2026-07-01T18:33:15.604Z")
+             :exec-type :canceled
+             :leaves-qty 10000M
+             :pos-maint-rpt-id "229582264"}]
+           (fix-msg-vec->payload session cancel-limit-msg))))
 
   (testing "trade session heartbeat"
     (is (= [:heartbeat {}]

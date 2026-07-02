@@ -149,6 +149,7 @@
                        {:type :field, :name :order-qty, :required false}
                        {:type :field, :name :ord-status, :required true}
                        {:type :field, :name :ord-type, :required false}
+                       {:type :field, :name :orig-cl-ord-id, :required false}
                        {:type :field, :name :price, :required false}
                        {:type :field, :name :stop-px, :required false}
                        {:type :field, :name :side, :required false}
@@ -159,7 +160,6 @@
                        {:type :field, :name :exec-type, :required true}
                        {:type :field, :name :leaves-qty, :required false}
                        {:type :field, :name :last-px, :required false}
-                       {:type :field, :name :orig-cl-ord-id, :required false}
                        {:type :field, :name :tot-num-reports, :required false}
                        {:type :field, :name :text, :required false}
                        {:type :field, :name :ord-rej-reason, :required false}
