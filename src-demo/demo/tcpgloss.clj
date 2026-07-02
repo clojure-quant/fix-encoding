@@ -106,8 +106,19 @@
                  (spit "msg.log" "\nCLOSED2 " :append true))))
 
 (defn start []
-  (let [s (-> (load-accounts "fix-accounts.edn")
-              (create-session :ctrader-tradeviewmarkets2-quote))
+  (let [s (create-session
+           {:spec "fix-specs/ctrader.edn"
+           :header {:begin-string "FIX.4.4"
+                    :target-comp-id "CSERVER"
+                    :sender-comp-id "demo.tradeviewmarkets.3193299"
+                    :target-sub-id "QUOTE"
+                    :sender-sub-id "QUOTE"}
+           :host "demo-uk-eqx-01.p.c-trader.com"
+           :port 5201 ; plain text
+                                          ;ssl-port 5211
+           :username "3193299"
+           :password "2025Florian"
+           :log? true})
         c (create-client s)]
     (handle-disconnect c)
     (handle-incoming s c)
@@ -135,10 +146,7 @@
 
   (s/closed? (:c cs)
              )
-
-  (->> (-> (load-accounts "fix-accounts.edn")
-           (create-session :ctrader-tradeviewmarkets2-quote))
-       :config)
+  
 
  ;
   )

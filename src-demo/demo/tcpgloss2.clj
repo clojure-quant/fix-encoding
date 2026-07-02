@@ -1,6 +1,6 @@
 (ns demo.tcpgloss2
   (:require
-   [fix-translator.session :refer [load-accounts create-session
+   [fix-translator.session :refer [create-session
                                    encode-msg2 decode-msg]]
    [fix-translator.gloss :refer [fix-protocol xf-fix-message without-header]]
    [aleph.tcp :as tcp]
@@ -109,8 +109,20 @@
                  (spit "msg.log" "\nCLOSED2 " :append true))))
 
 (defn create-decoder []
-  (-> (load-accounts "fix-accounts.edn")
-      (create-session :ctrader-tradeviewmarkets2-quote))
+  (create-session
+   {:spec "fix-specs/ctrader.edn"
+    :header {:begin-string "FIX.4.4"
+             :target-comp-id "CSERVER"
+             :sender-comp-id "demo.tradeviewmarkets.3193299"
+             :target-sub-id "QUOTE"
+             :sender-sub-id "QUOTE"}
+    :host "demo-uk-eqx-01.p.c-trader.com"
+    :port 5201 ; plain text
+                                            ;ssl-port 5211
+    :username "3193299"
+    :password "2025Florian"
+    :log? true})
+  
   )
 
 (defn start []
@@ -150,9 +162,7 @@
   ; source closed 
   ; sink open
 
-  (->> (-> (load-accounts "fix-accounts.edn")
-           (create-session :ctrader-tradeviewmarkets2-quote))
-       :config)
+
 
  ;
   )

@@ -10,6 +10,12 @@
                                    ]]
    [fix-translator.data.messages :as m]))
 
+;Fields that must be in a fixed order:
+;BeginString (8) – Always the first field.
+;BodyLength (9) – Always second, since it defines the length of the message.
+;MsgType (35) – Must appear immediately after BodyLength.
+; CheckSum (10) – Always the last field.
+
 
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
 
@@ -54,16 +60,16 @@ ctrader
 
 ; login
 (decode-message ctrader m/login-msg)
-(decode-fix-msg ctrader m/login-msg2)
+(decode-message ctrader m/login-msg2)
 
-(decode-fix-msg ctrader m/logout-msg)
+(decode-message ctrader m/logout-msg)
 
 ; quote
-(decode-fix-msg ctrader m/security-list-req)
-(decode-fix-msg ctrader m/quote-subscribe-msg)
-(decode-fix-msg ctrader m/new-order-msg)
+(decode-message ctrader m/security-list-req)
+(decode-message ctrader m/quote-subscribe-msg)
+(decode-message ctrader m/new-order-msg)
 
-(decode-fix-msg ctrader m/test-msg)
+(decode-message ctrader m/test-msg)
 
 (def out-logout-msg 
 {:header
@@ -82,7 +88,7 @@ ctrader
 (encode-message ctrader out-logout-msg)
 
 (->> m/logout-msg
-     (decode-fix-msg ctrader)
+     (decode-message ctrader)
      (encode-message ctrader)
     )
 
@@ -91,10 +97,6 @@ ctrader
 ;:checksum "172",
 ;:body-length 118
 
-
-8=FIX.4.49=14335=A49=demo.tradeviewmarkets.319329956=CSERVER34=1
-50=QUOTE57=QUOTE52=20250226-04:41:02.868
-98=0108=60141=Y553=3193299554=2025Florian10=219
 
 ; count equals to all fields minus 8, 0 and 10.
 (def b "35=A49=demo.tradeviewmarkets.319329956=CSERVER34=150=QUOTE57=QUOTE52=20250226-04:41:02.86898=0108=60141=Y553=3193299554=2025Florian")
@@ -117,12 +119,7 @@ ctrader
 (checksum (str header body))
 (count body)
 
- (decode-fix-msg ctrader logon-err-msg)
+ (decode-message ctrader logon-err-msg)
 
 
 
-Fields that must be in a fixed order:
-BeginString (8) – Always the first field.
-BodyLength (9) – Always second, since it defines the length of the message.
-MsgType (35) – Must appear immediately after BodyLength.
- CheckSum (10) – Always the last field.

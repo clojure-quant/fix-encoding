@@ -32,5 +32,13 @@
                 slipset/deps-deploy {:mvn/version "0.2.1"}}
         :ns-default build}
 
-;
+  :lint {:extra-deps {clj-kondo/clj-kondo {:mvn/version "2025.09.22"}}}
+
+  :lint-lib {:main-opts ["-m" "clj-kondo.main" "--lint" "src" "--fail-level" "error"]}
+
+  :lint-demo {:extra-paths ["src-demo"]
+              :extra-deps {aleph/aleph {:mvn/version "0.7.0"}
+                           org.clj-commons/byte-streams {:mvn/version "0.3.4"}}
+              :main-opts ["-m" "clj-kondo.main" "--lint" "src-demo" "--fail-level" "error"]}
+
   }}

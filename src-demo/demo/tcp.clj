@@ -1,6 +1,6 @@
 (ns demo.tcp
   (:require
-   [fix-translator.session :refer [load-accounts create-session
+   [fix-translator.session :refer [create-session
                                    encode-msg decode-msg]]
    [aleph.tcp :as tcp]
    [manifold.deferred :as d]
@@ -31,8 +31,7 @@
                  :heart-bt-int 60,
                  :reset-seq-num-flag "Y",
                  :username (str (get-in s [:config :username]))
-                 :password (str (get-in s [:config :password]))
-                 }})
+                 :password (str (get-in s [:config :password]))}})
 
 (def subscribe-payload
   {:fix-type "V"
@@ -43,7 +42,7 @@
                  :no-mdentry-types [{:mdentry-type :bid} {:mdentry-type :offer}],
                  :no-related-sym [{:symbol "4"}]}})
 
-(def security-list-request 
+(def security-list-request
   {:fix-type "x"
    :fix-payload {:security-req-id "125" ; req id
                  :security-list-request-type :symbol}})
@@ -59,8 +58,19 @@
 
 
 (defn start []
-  (let [s (-> (load-accounts "fix-accounts.edn")
-              (create-session :ctrader-tradeviewmarkets2-quote))
+  (let [s (create-session
+           {:spec "fix-specs/ctrader.edn"
+            :header {:begin-string "FIX.4.4"
+                     :target-comp-id "CSERVER"
+                     :sender-comp-id "demo.tradeviewmarkets.3193299"
+                     :target-sub-id "QUOTE"
+                     :sender-sub-id "QUOTE"}
+            :host "demo-uk-eqx-01.p.c-trader.com"
+            :port 5201 ; plain text
+                                ;ssl-port 5211
+            :username "3193299"
+            :password "2025Florian"
+            :log? true})
         c (create-client s)]
     (handle-incoming s c)
     @(s/put! c (create-fix-msg s (login-payload s)))
@@ -71,11 +81,6 @@
 
 (start)
 
-(->>(-> (load-accounts "fix-accounts.edn")
-        (create-session :ctrader-tradeviewmarkets2-quote))
- :config
- )
- 
 
 
 

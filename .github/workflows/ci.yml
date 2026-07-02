@@ -23,6 +23,10 @@ jobs:
       uses: DeLaGuardo/setup-clojure@3.5
       with:
         cli: 1.10.3.929 # Clojure CLI based on tools.deps
+    - name: Lint library
+      run: clojure -M:lint:lint-lib
+    - name: Lint demo
+      run: clojure -M:lint:lint-demo
     - name: Release
       if: success()
       # if: github.event_name == 'push'
