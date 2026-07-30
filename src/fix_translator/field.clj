@@ -16,7 +16,7 @@
                   formats)]
     (-> ldt
         (t/in "UTC")              ;; Convert to UTC timezone
-        t/instant)))
+        t/inst)))
 
 
 (defn format-utc-timestamp

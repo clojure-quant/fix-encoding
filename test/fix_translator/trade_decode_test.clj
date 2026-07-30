@@ -84,7 +84,7 @@
              :side :buy
              :symbol "1"
              :time-in-force :immediate-or-cancel
-             :transact-time (t/instant "2026-05-26T23:56:45.605Z")
+             :transact-time (t/inst "2026-05-26T23:56:45.605Z")
              :exec-type :new
              :leaves-qty 1000M
              :pos-maint-rpt-id "221427182"}]
@@ -101,7 +101,7 @@
              :side :sell
              :symbol "2"
              :time-in-force :immediate-or-cancel
-             :transact-time (t/instant "2026-05-26T23:56:45.605Z")
+             :transact-time (t/inst "2026-05-26T23:56:45.605Z")
              :exec-type :new
              :leaves-qty 1000M
              :pos-maint-rpt-id "221427183"}]
@@ -119,7 +119,7 @@
              :side :buy
              :symbol "3"
              :time-in-force :good-till-cancel
-             :transact-time (t/instant "2026-05-26T23:56:45.606Z")
+             :transact-time (t/inst "2026-05-26T23:56:45.606Z")
              :exec-type :new
              :leaves-qty 1000M
              :pos-maint-rpt-id "221427184"}]
@@ -137,7 +137,7 @@
              :side :sell
              :symbol "4"
              :time-in-force :good-till-cancel
-             :transact-time (t/instant "2026-05-26T23:56:45.606Z")
+             :transact-time (t/inst "2026-05-26T23:56:45.606Z")
              :exec-type :new
              :leaves-qty 1000M
              :pos-maint-rpt-id "221427185"}]
@@ -156,7 +156,7 @@
              :side :sell
              :symbol "2"
              :time-in-force :immediate-or-cancel
-             :transact-time (t/instant "2026-05-26T23:56:45.810Z")
+             :transact-time (t/inst "2026-05-26T23:56:45.810Z")
              :exec-type :trade
              :leaves-qty 0M
              :pos-maint-rpt-id "221427183"}]
@@ -175,7 +175,7 @@
              :side :buy
              :symbol "1"
              :time-in-force :immediate-or-cancel
-             :transact-time (t/instant "2026-05-26T23:56:45.856Z")
+             :transact-time (t/inst "2026-05-26T23:56:45.856Z")
              :exec-type :trade
              :leaves-qty 0M
              :pos-maint-rpt-id "221427182"}]
@@ -194,7 +194,7 @@
              :side :buy
              :symbol "1"
              :time-in-force :good-till-cancel
-             :transact-time (t/instant "2026-07-01T18:33:15.604Z")
+             :transact-time (t/inst "2026-07-01T18:33:15.604Z")
              :exec-type :canceled
              :leaves-qty 10000M
              :pos-maint-rpt-id "229582264"}]

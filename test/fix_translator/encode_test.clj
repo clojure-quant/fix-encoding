@@ -10,7 +10,7 @@
 (def out-logout-msg
   {:header
    {:target-comp-id "demo.tradeviewmarkets.3152195",
-    :sending-time #time/instant "2025-02-24T21:13:01Z",
+    :sending-time #inst "2025-02-24T21:13:01.000-00:00",
     :body-length 114,
     :sender-comp-id "CSERVER",
     :msg-seq-num 1,

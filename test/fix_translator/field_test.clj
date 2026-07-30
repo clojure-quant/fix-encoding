@@ -12,8 +12,9 @@
 
 (deftest utc-test
   (testing "utc-test"
-    (let [i (t/instant "2026-05-26T17:28:09Z")
+    (let [i (t/inst "2026-05-26T17:28:09Z")
           s "20250224-21:13:01"]
+      (is (inst? (parse-utc-timestamp s)))
       (is (= i (-> i format-utc-timestamp parse-utc-timestamp)))
       (is (= s (-> s parse-utc-timestamp format-utc-timestamp))))))
 
@@ -21,7 +22,18 @@
 (def ctrader (create-decoder "fix-specs/ctrader.edn"))
 
 (encode-field ctrader {:name :sending-time 
-                       :value (t/instant "2026-05-26T17:28:09Z")})
+                       :value (t/inst "2026-05-26T17:28:09Z")})
+
+(deftest utc-timestamp-fields-decode-to-date
+  (let [expected (t/inst "2026-05-26T17:28:09.123Z")
+        decoded (decode-fields ctrader [["52" "20260526-17:28:09.123"]
+                                        ["60" "20260526-17:28:09.123"]
+                                        ["122" "20260526-17:28:09.123"]
+                                        ["126" "20260526-17:28:09.123"]])]
+    (is (= #{:sending-time :transact-time :orig-sending-time :expire-time}
+           (set (map :name decoded))))
+    (is (every? inst? (map :value decoded)))
+    (is (every? #(= expected %) (map :value decoded)))))
 
 (deftest char-enum-conversion-test
   (testing "CHAR enums decode and encode correctly"
