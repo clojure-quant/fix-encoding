@@ -72,6 +72,14 @@
    ["41" "KAxuPb"] ["44" "1.1035"] ["54" "1"] ["55" "1"] ["59" "1"]
    ["60" "20260701-18:33:15.604"] ["150" "4"] ["151" "10000"] ["721" "229582264"] ["10" "038"]])
 
+(def mass-status-execution-report-msg
+  [["8" "FIX.4.4"] ["9" "251"] ["35" "8"] ["34" "12"] ["49" "CSERVER"] ["50" "TRADE"]
+   ["52" "20260730-19:49:34.000"] ["56" "demo.pepperstone.5292473"] ["57" "TRADE"]
+   ["11" "fix-1"] ["14" "0"] ["37" "343560725"] ["38" "1000"] ["39" "0"] ["40" "2"]
+   ["44" "1.05"] ["54" "1"] ["55" "1"] ["59" "1"] ["60" "20260611-00:59:09.369"]
+   ["150" "I"] ["151" "1000"] ["584" "J4g2J-MI"] ["721" "221436915"] ["911" "48"]
+   ["10" "000"]])
+
 (deftest trade-decode-test
   (testing "new market buy execution report"
     (is (= [:execution-report
@@ -199,6 +207,26 @@
              :leaves-qty 10000M
              :pos-maint-rpt-id "229582264"}]
            (fix-msg-vec->payload session cancel-limit-msg))))
+
+  (testing "mass-status execution report preserves correlation and completion fields"
+    (is (= [:execution-report
+            {:cl-ord-id "fix-1"
+             :cum-qty 0M
+             :order-id "343560725"
+             :order-qty 1000M
+             :ord-status :new
+             :ord-type :limit
+             :price 1.05M
+             :side :buy
+             :symbol "1"
+             :time-in-force :good-till-cancel
+             :transact-time (t/inst "2026-06-11T00:59:09.369Z")
+             :exec-type :order-status
+             :leaves-qty 1000M
+             :mass-status-req-id "J4g2J-MI"
+             :pos-maint-rpt-id "221436915"
+             :tot-num-reports 48}]
+           (fix-msg-vec->payload session mass-status-execution-report-msg))))
 
   (testing "trade session heartbeat"
     (is (= [:heartbeat {}]

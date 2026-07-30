@@ -160,12 +160,12 @@
                        {:type :field, :name :exec-type, :required true}
                        {:type :field, :name :leaves-qty, :required false}
                        {:type :field, :name :last-px, :required false}
+                       {:type :field, :name :mass-status-req-id, :required false}
+                       {:type :field, :name :pos-maint-rpt-id, :required false}
                        {:type :field, :name :tot-num-reports, :required false}
                        {:type :field, :name :text, :required false}
                        {:type :field, :name :ord-rej-reason, :required false}
-                       {:type :field, :name :pos-maint-rpt-id, :required false}
                        {:type :field, :name :designation, :required false}
-                       {:type :field, :name :mass-status-req-id, :required false}
                        {:type :field, :name :absolute-tp, :required false}
                        {:type :field, :name :relative-tp, :required false}
                        {:type :field, :name :absolute-sl, :required false}
